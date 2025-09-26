@@ -9,7 +9,7 @@ class QuizModel extends BaseModel {
   final String categoryId;
   final CategoryModel category;
   final String title;
-  final String imageUrl;
+  String? imageUrl;
   final int time;
 
   QuizModel({
@@ -26,7 +26,7 @@ class QuizModel extends BaseModel {
     required this.categoryId,
     required this.category,
     required this.title,
-    required this.imageUrl,
+    this.imageUrl,
     required this.time,
   });
 
