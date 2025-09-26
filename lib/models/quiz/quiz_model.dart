@@ -1,0 +1,43 @@
+import 'package:quiz_app/models/base_model.dart';
+import 'package:quiz_app/models/identity/user_model.dart';
+import 'package:quiz_app/models/quiz/category_model.dart';
+
+class QuizModel extends BaseModel {
+  final String quizId;
+  final String userId;
+  final UserModel user;
+  final String categoryId;
+  final CategoryModel category;
+  final String title;
+  final String imageUrl;
+  final int time;
+
+  QuizModel({
+    required super.version,
+    required super.description,
+    required super.recordStatus,
+    required super.createdTime,
+    required super.createdBy,
+    required super.modifiedTime,
+    required super.modifiedBy,
+    required this.quizId,
+    required this.userId,
+    required this.user,
+    required this.categoryId,
+    required this.category,
+    required this.title,
+    required this.imageUrl,
+    required this.time,
+  });
+
+  QuizModel.fromJson(Map<String, dynamic> json) :
+    quizId = json['quizId'], 
+    userId = json['userId'], 
+    user = UserModel.fromJson(json['user']), 
+    categoryId = json['categoryId'], 
+    category = CategoryModel.fromJson(json['category']), 
+    title = json['title'], 
+    imageUrl = json['imageUrl'], 
+    time = json['time'],
+    super.fromJson(json);
+}
