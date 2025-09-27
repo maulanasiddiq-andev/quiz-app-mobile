@@ -5,11 +5,11 @@ import 'package:quiz_app/states/quiz/quiz_exam_state.dart';
 class QuizExamNotifier extends StateNotifier<QuizExamState> {
   QuizExamNotifier() : super(QuizExamState());
 
-  void assignQuestions(List<QuestionsModel> questions) {
+  void assignQuestions(List<QuestionModel> questions) {
     state = state.copyWith(
       questionIndex: 0,
       questions: [...questions],
-      currentQuestion: questions[0]
+      currentQuestion: questions[0],
     );
   }
 
@@ -17,7 +17,10 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
     if (state.questionIndex < state.questions.length - 1) {
       var index = state.questionIndex + 1;
 
-      state = state.copyWith(questionIndex: index, currentQuestion: state.questions[index]);
+      state = state.copyWith(
+        questionIndex: index,
+        currentQuestion: state.questions[index],
+      );
     }
   }
 
@@ -25,9 +28,14 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
     if (state.questionIndex > 0) {
       var index = state.questionIndex - 1;
 
-      state = state.copyWith(questionIndex: index, currentQuestion: state.questions[index]);
+      state = state.copyWith(
+        questionIndex: index,
+        currentQuestion: state.questions[index],
+      );
     }
   }
 }
 
-final quizExamProvider = StateNotifierProvider<QuizExamNotifier, QuizExamState>((ref) => QuizExamNotifier());
+final quizExamProvider = StateNotifierProvider<QuizExamNotifier, QuizExamState>(
+  (ref) => QuizExamNotifier(),
+);

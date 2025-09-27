@@ -12,7 +12,7 @@ class QuizModel extends BaseModel {
   final String title;
   String? imageUrl;
   final int time;
-  final List<QuestionsModel> questions;
+  final List<QuestionModel> questions;
 
   QuizModel({
     required super.version,
@@ -30,18 +30,20 @@ class QuizModel extends BaseModel {
     required this.title,
     this.imageUrl,
     required this.time,
-    this.questions = const []
+    this.questions = const [],
   });
 
-  QuizModel.fromJson(Map<String, dynamic> json) :
-    quizId = json['quizId'], 
-    userId = json['userId'], 
-    user = UserModel.fromJson(json['user']), 
-    categoryId = json['categoryId'], 
-    category = CategoryModel.fromJson(json['category']), 
-    title = json['title'], 
-    imageUrl = json['imageUrl'], 
-    time = json['time'],
-    questions = (json['questions'] as List).map((data) => QuestionsModel.fromJson(data)).toList(),
-    super.fromJson(json);
+  QuizModel.fromJson(Map<String, dynamic> json)
+    : quizId = json['quizId'],
+      userId = json['userId'],
+      user = UserModel.fromJson(json['user']),
+      categoryId = json['categoryId'],
+      category = CategoryModel.fromJson(json['category']),
+      title = json['title'],
+      imageUrl = json['imageUrl'],
+      time = json['time'],
+      questions = (json['questions'] as List)
+          .map((data) => QuestionModel.fromJson(data))
+          .toList(),
+      super.fromJson(json);
 }
