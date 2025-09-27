@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiz_app/notifiers/quiz_notifier.dart';
+import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
 
 class QuizListPage extends ConsumerStatefulWidget {
   const QuizListPage({super.key});

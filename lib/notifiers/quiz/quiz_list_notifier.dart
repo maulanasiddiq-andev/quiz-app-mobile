@@ -7,8 +7,8 @@ import 'package:quiz_app/models/responses/search_responses.dart';
 import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz_state.dart';
 
-class QuizNotifier extends StateNotifier<QuizState> {
-  QuizNotifier(): super(QuizState());
+class QuizListNotifier extends StateNotifier<QuizState> {
+  QuizListNotifier(): super(QuizState());
 
   Future<void> getDatas() async {
     if (state.pageIndex == 0) {
@@ -54,4 +54,4 @@ class QuizNotifier extends StateNotifier<QuizState> {
   }
 }
 
-final quizProvider = StateNotifierProvider<QuizNotifier, QuizState>((ref) => QuizNotifier());
+final quizProvider = StateNotifierProvider<QuizListNotifier, QuizState>((ref) => QuizListNotifier());
