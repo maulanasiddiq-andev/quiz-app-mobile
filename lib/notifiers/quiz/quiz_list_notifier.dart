@@ -55,6 +55,6 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
   }
 }
 
-final quizProvider = StateNotifierProvider<QuizListNotifier, QuizListState>(
+final quizListProvider = StateNotifierProvider<QuizListNotifier, QuizListState>(
   (ref) => QuizListNotifier(),
 );
