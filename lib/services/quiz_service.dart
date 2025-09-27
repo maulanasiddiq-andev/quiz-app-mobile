@@ -41,5 +41,23 @@ class QuizService {
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
     return result;
-  } 
+  }
+
+  static Future<BaseResponse<QuizModel>> getQuizById(String id) async {
+    final token = await storage.read(key: 'token');
+    final response = await http.get(
+      Uri.parse('$url/$id'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    final dynamic responseJson = jsonDecode(response.body);
+    final BaseResponse<QuizModel> result = BaseResponse.fromJson(
+      responseJson,
+      (data) => QuizModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
 }
