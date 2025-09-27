@@ -18,8 +18,7 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
     }
 
     try {
-      final BaseResponse<SearchResponse<QuizModel>> result =
-          await QuizService.getQuizzes(state.pageIndex, state.pageSize);
+      final BaseResponse<SearchResponse<QuizModel>> result = await QuizService.getQuizzes(state.pageIndex, state.pageSize);
 
       if (result.data != null) {
         state = state.copyWith(
@@ -35,6 +34,7 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith();
     } catch (e) {
+      print(e.toString());
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith();
     }
@@ -55,6 +55,4 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
   }
 }
 
-final quizListProvider = StateNotifierProvider<QuizListNotifier, QuizListState>(
-  (ref) => QuizListNotifier(),
-);
+final quizListProvider = StateNotifierProvider<QuizListNotifier, QuizListState>((ref) => QuizListNotifier());
