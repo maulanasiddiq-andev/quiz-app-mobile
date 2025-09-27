@@ -1,6 +1,7 @@
 import 'package:quiz_app/models/base_model.dart';
 import 'package:quiz_app/models/identity/user_model.dart';
 import 'package:quiz_app/models/quiz/category_model.dart';
+import 'package:quiz_app/models/quiz/questions_model.dart';
 
 class QuizModel extends BaseModel {
   final String quizId;
@@ -11,6 +12,7 @@ class QuizModel extends BaseModel {
   final String title;
   String? imageUrl;
   final int time;
+  final List<QuestionsModel> questions;
 
   QuizModel({
     required super.version,
@@ -28,6 +30,7 @@ class QuizModel extends BaseModel {
     required this.title,
     this.imageUrl,
     required this.time,
+    this.questions = const []
   });
 
   QuizModel.fromJson(Map<String, dynamic> json) :
@@ -39,5 +42,6 @@ class QuizModel extends BaseModel {
     title = json['title'], 
     imageUrl = json['imageUrl'], 
     time = json['time'],
+    questions = (json['questions'] as List).map((data) => QuestionsModel.fromJson(data)).toList(),
     super.fromJson(json);
 }
