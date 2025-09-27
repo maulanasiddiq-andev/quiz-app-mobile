@@ -5,10 +5,10 @@ import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/responses/search_responses.dart';
 import 'package:quiz_app/services/quiz_service.dart';
-import 'package:quiz_app/states/quiz_state.dart';
+import 'package:quiz_app/states/quiz/quiz_list_state.dart';
 
-class QuizListNotifier extends StateNotifier<QuizState> {
-  QuizListNotifier(): super(QuizState());
+class QuizListNotifier extends StateNotifier<QuizListState> {
+  QuizListNotifier() : super(QuizListState());
 
   Future<void> getDatas() async {
     if (state.pageIndex == 0) {
@@ -18,14 +18,15 @@ class QuizListNotifier extends StateNotifier<QuizState> {
     }
 
     try {
-      final BaseResponse<SearchResponse<QuizModel>> result = await QuizService.getQuizzes(state.pageIndex, state.pageSize);
+      final BaseResponse<SearchResponse<QuizModel>> result =
+          await QuizService.getQuizzes(state.pageIndex, state.pageSize);
 
       if (result.data != null) {
         state = state.copyWith(
-          isLoading: false, 
+          isLoading: false,
           isLoadingMore: false,
           quizzes: [...state.quizzes, ...result.data!.items],
-          hasNextPage: result.data!.hasNextPage
+          hasNextPage: result.data!.hasNextPage,
         );
       } else {
         state = state.copyWith(isLoading: false, isLoadingMore: false);
@@ -54,4 +55,6 @@ class QuizListNotifier extends StateNotifier<QuizState> {
   }
 }
 
-final quizProvider = StateNotifierProvider<QuizListNotifier, QuizState>((ref) => QuizListNotifier());
+final quizProvider = StateNotifierProvider<QuizListNotifier, QuizListState>(
+  (ref) => QuizListNotifier(),
+);
