@@ -46,7 +46,7 @@ class QuizService {
   static Future<BaseResponse<QuizModel>> getQuizById(String id) async {
     final token = await storage.read(key: 'token');
     final response = await http.get(
-      Uri.parse('$url/$id'),
+      Uri.parse('$url$id'),
       headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
     );
 
