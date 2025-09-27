@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:quiz_app/constants/environment_contant.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
-import 'package:quiz_app/models/base_response.dart';
+import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/responses/search_responses.dart';
 

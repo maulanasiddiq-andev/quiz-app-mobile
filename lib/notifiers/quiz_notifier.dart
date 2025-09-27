@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
-import 'package:quiz_app/models/base_response.dart';
+import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/responses/search_responses.dart';
 import 'package:quiz_app/services/quiz_service.dart';

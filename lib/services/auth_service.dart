@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:quiz_app/constants/environment_contant.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/auth/token_model.dart';
-import 'package:quiz_app/models/base_response.dart';
+import 'package:quiz_app/models/responses/base_response.dart';
 
 class AuthService {
   static const storage = FlutterSecureStorage();
