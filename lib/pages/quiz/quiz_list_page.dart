@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
+import 'package:quiz_app/pages/auth/login_page.dart';
 import 'package:quiz_app/pages/quiz/quiz_detail_page.dart';
 
 class QuizListPage extends ConsumerStatefulWidget {
@@ -23,7 +25,22 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
     final state = ref.watch(quizListProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Quiz List")),
+      appBar: AppBar(
+        title: Text("Quiz List"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.read(authProvider.notifier).logout();
+
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginPage()), 
+                (route) => false
+              );
+            }, 
+            icon: Icon(Icons.logout)
+          )
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: () => ref.read(quizListProvider.notifier).refreshDatas(),
         child: state.isLoading
@@ -38,10 +55,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              QuizDetailPage(quizId: quiz.quizId),
-                        ),
+                        MaterialPageRoute(builder: (context) => QuizDetailPage(quizId: quiz.quizId)),
                       );
                     },
                     child: Container(

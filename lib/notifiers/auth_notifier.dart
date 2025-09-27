@@ -78,6 +78,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     return emails;
   }
+
+  Future<void> logout() async {
+    await storage.delete(key: 'token');
+    await storage.delete(key: 'user');
+  }
 }
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) => AuthNotifier());

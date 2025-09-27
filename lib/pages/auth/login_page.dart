@@ -118,8 +118,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
                                   _emailController = textEditingController;
 
-                                  return 
-                                  TextField(
+                                  return TextField(
                                     controller: _emailController,
                                     keyboardType: TextInputType.emailAddress,
                                     textInputAction: TextInputAction.next,
@@ -133,8 +132,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(0)
                                     ),
-                                  )
-                                  ;
+                                  );
                                 },
                               )
                               ,
