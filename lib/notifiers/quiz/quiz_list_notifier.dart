@@ -34,7 +34,6 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith();
     } catch (e) {
-      print(e.toString());
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith();
     }
