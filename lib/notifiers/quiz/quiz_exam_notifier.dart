@@ -13,7 +13,6 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
 
     for (var question in quiz.questions) {
       final questionExam = QuestionExamModel(
-        questionId: question.questionId, 
         questionOrder: question.questionOrder,
         text: question.text, 
         answers: []
@@ -21,8 +20,6 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
 
       for (var answer in question.answers) {
         final answerExam = AnswerExamModel(
-          answerId: answer.answerId, 
-          questionId: answer.questionId, 
           answerOrder: answer.answerOrder,
           text: answer.text,
           imageUrl: answer.imageUrl,
@@ -67,8 +64,7 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
 
   void finishQuiz(int duration) {
     var quizExam = QuizExamModel(
-      quizExamId: '', 
-      quizId: state.quiz!.quizId, 
+      quizVersion: state.quiz!.version,
       questions: [], 
       questionCount: state.questions.length, 
       duration: duration,
