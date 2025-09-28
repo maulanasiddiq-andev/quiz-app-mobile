@@ -10,4 +10,13 @@ class AnswerExamModel {
     this.text,
     this.imageUrl
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'answerOrder': answerOrder,
+      'text': text,
+      'imageUrl': imageUrl,
+      'isTrueAnswer': isTrueAnswer
+    };
+  }
 }

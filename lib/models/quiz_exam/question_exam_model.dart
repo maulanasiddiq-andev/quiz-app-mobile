@@ -16,4 +16,15 @@ class QuestionExamModel {
     this.selectedAnswerOrder,
     this.isAnswerTrue = true,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'text': text,
+      'questionOrder': questionOrder,
+      'imageUrl': imageUrl,
+      'answers': answers.map((a) => a.toJson()).toList(),
+      'selectedAnswerOrder': selectedAnswerOrder,
+      'isAnswerTrue': isAnswerTrue
+    };
+  }
 }

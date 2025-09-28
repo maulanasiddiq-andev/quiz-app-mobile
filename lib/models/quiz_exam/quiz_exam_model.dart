@@ -18,4 +18,16 @@ class QuizExamModel {
     required this.wrongAnswers,
     required this.score
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'quizVersion': quizVersion,
+      'questions': questions.map((q) => q.toJson()).toList(),
+      'questionCount': questionCount,
+      'duration': duration,
+      'trueAnswers': trueAnswers,
+      'wrongAnswers': wrongAnswers,
+      'score': score
+    };
+  }
 }
