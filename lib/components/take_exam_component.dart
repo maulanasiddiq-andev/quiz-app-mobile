@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_exam_notifier.dart';
+import 'package:quiz_app/utils/format_time.dart';
 
 class TakeExamComponent extends ConsumerStatefulWidget {
   final QuizModel quiz;
@@ -45,13 +46,6 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
     });
   }
 
-  String timeFormatted() {
-    var minute = (seconds ~/ 60).toString().padLeft(2, '0');
-    var second = (seconds % 60).toString().padLeft(2, '0');
-
-    return '$minute:$second';
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizExamProvider);
@@ -61,7 +55,7 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Center(child: Text(timeFormatted())),
+            child: Center(child: Text(formatTime(seconds))),
           ),
           Expanded(
             child: state.currentQuestion != null

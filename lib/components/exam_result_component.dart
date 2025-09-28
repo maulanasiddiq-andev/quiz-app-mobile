@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
+import 'package:quiz_app/utils/format_time.dart';
 
 class ExamResultComponent extends StatefulWidget {
   final QuizExamModel quizExam;
@@ -25,6 +26,12 @@ class _ExamResultComponentState extends State<ExamResultComponent> {
             children: [
               Text("Nilai: "),
               Text(widget.quizExam.score.toString())
+            ],
+          ),
+          Row(
+            children: [
+              Text("Durasi Pengerjaan: "),
+              Text(formatTime(widget.quizExam.duration))
             ],
           ),
         ],
