@@ -19,11 +19,10 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith();
     } catch (e) {
-      print(e.toString());
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith();
     }
   }
 }
 
-final quizDetailProvider = StateNotifierProvider<QuizDetailNotifier, QuizDetailState>((ref) => QuizDetailNotifier());
+final quizDetailProvider = StateNotifierProvider.autoDispose<QuizDetailNotifier, QuizDetailState>((ref) => QuizDetailNotifier());
