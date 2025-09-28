@@ -14,6 +14,7 @@ class TakeExamComponent extends ConsumerStatefulWidget {
 
 class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
   late int seconds;
+  int duration = 0;
   Timer? timer;
 
   @override
@@ -34,7 +35,10 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
   void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (_) {
       if (seconds > 0) {
-        setState(() => seconds--);
+        setState(() {
+          seconds--;
+          duration++;
+        });
       } else {
         timer?.cancel();
       }
@@ -122,8 +126,13 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
               Expanded(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () =>
-                      ref.read(quizExamProvider.notifier).toNextQuestion(),
+                  onTap: () {
+                    if (state.questionIndex < state.questions.length - 1) {
+                      ref.read(quizExamProvider.notifier).toNextQuestion();
+                    } else {
+                      ref.read(quizExamProvider.notifier).finishQuiz(duration);
+                    }
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Row(

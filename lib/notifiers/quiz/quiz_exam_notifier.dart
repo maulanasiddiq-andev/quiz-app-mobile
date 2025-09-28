@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/quiz_exam/answer_exam_model.dart';
 import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
-import 'package:quiz_app/models/quiz_exam/quiz_exam.dart';
+import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
 import 'package:quiz_app/states/quiz/quiz_exam_state.dart';
 
 class QuizExamNotifier extends StateNotifier<QuizExamState> {
@@ -51,8 +51,6 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
         questionIndex: index,
         currentQuestion: state.questions[index],
       );
-    } else {
-      finishQuiz();
     }
   }
 
@@ -67,12 +65,13 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
     }
   }
 
-  void finishQuiz() {
+  void finishQuiz(int duration) {
     var quizExam = QuizExamModel(
       quizExamId: '', 
       quizId: state.quiz!.quizId, 
       questions: [], 
       questionCount: state.questions.length, 
+      duration: duration,
       trueAnswers: 0, 
       wrongAnswers: 0, 
       score: 0

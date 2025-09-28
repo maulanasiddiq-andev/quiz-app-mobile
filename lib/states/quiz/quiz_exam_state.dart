@@ -1,6 +1,6 @@
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
-import 'package:quiz_app/models/quiz_exam/quiz_exam.dart';
+import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
 
 class QuizExamState {
   final QuizModel? quiz;
