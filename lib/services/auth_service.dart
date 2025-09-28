@@ -24,7 +24,6 @@ class AuthService {
     );
 
     final responseJson = jsonDecode(response.body);
-    print(responseJson);
     final BaseResponse<TokenModel> result = BaseResponse.fromJson(
       responseJson,
       (data) => TokenModel.fromJson(data)
