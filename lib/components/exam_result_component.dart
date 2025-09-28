@@ -13,27 +13,59 @@ class ExamResultComponent extends StatefulWidget {
 class _ExamResultComponentState extends State<ExamResultComponent> {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
-          Row(
-            children: [
-              Text("Jawaban benar: "),
-              Text(widget.quizExam.trueAnswers.toString())
-            ],
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text("Jawaban benar: "),
+                    Text(widget.quizExam.trueAnswers.toString())
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text("Nilai: "),
+                    Text(widget.quizExam.score.toString())
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text("Durasi Pengerjaan: "),
+                    Text(formatTime(widget.quizExam.duration))
+                  ],
+                ),
+              ],
+            ),
           ),
-          Row(
-            children: [
-              Text("Nilai: "),
-              Text(widget.quizExam.score.toString())
-            ],
-          ),
-          Row(
-            children: [
-              Text("Durasi Pengerjaan: "),
-              Text(formatTime(widget.quizExam.duration))
-            ],
-          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Center(
+                  child: Text(
+                    'Kembali',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                )
+              ),
+            )
+          )
         ],
       ),
     );
