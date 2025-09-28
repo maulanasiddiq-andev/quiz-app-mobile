@@ -1,8 +1,11 @@
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/quiz_exam/answer_exam_model.dart';
 import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
 import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
+import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/quiz_exam_state.dart';
 
 class QuizExamNotifier extends StateNotifier<QuizExamState> {
@@ -62,38 +65,51 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
     }
   }
 
-  void finishQuiz(int duration) {
-    var quizExam = QuizExamModel(
-      quizVersion: state.quiz!.version,
-      questions: [], 
-      questionCount: state.questions.length, 
-      duration: duration,
-      trueAnswers: 0, 
-      wrongAnswers: 0, 
-      score: 0
-    );
+  Future<void> finishQuiz(int duration) async {
+    state = state.copyWith(isLoading: true);
 
-    for (var question in state.questions) {
-      var trueAnswer = question.answers.firstWhere((answer) => answer.isTrueAnswer == true);
+    try {
+      var quizExam = QuizExamModel(
+        quizVersion: state.quiz!.version,
+        questions: [], 
+        questionCount: state.questions.length, 
+        duration: duration,
+        trueAnswers: 0, 
+        wrongAnswers: 0, 
+        score: 0
+      );
 
-      if (question.selectedAnswerOrder == trueAnswer.answerOrder) {
-        question.isAnswerTrue = true;
-        quizExam.trueAnswers += 1;
-      } else {
-        question.isAnswerTrue = false;
-        quizExam.wrongAnswers += 1;
+      for (var question in state.questions) {
+        var trueAnswer = question.answers.firstWhere((answer) => answer.isTrueAnswer == true);
+
+        if (question.selectedAnswerOrder == trueAnswer.answerOrder) {
+          question.isAnswerTrue = true;
+          quizExam.trueAnswers += 1;
+        } else {
+          question.isAnswerTrue = false;
+          quizExam.wrongAnswers += 1;
+        }
+
+        quizExam.questions.add(question);
       }
 
-      quizExam.questions.add(question);
+      quizExam.score = (quizExam.trueAnswers / quizExam.questionCount * 100).round();
+
+      await QuizService.takeQuiz(state.quiz!.quizId, quizExam);
+
+      state = state.copyWith(
+        isLoading: false,
+        quizExam: quizExam,
+        isDone: true, 
+        questionIndex: 0
+      );
+    }  on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      state = state.copyWith(isLoading: false);
     }
-
-    quizExam.score = (quizExam.trueAnswers / quizExam.questionCount * 100).round();
-
-    state = state.copyWith(
-      quizExam: quizExam,
-      isDone: true, 
-      questionIndex: 0
-    );
   }
 }
 

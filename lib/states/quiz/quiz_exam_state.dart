@@ -3,6 +3,7 @@ import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
 import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
 
 class QuizExamState {
+  final bool isLoading;
   final QuizModel? quiz;
   final QuizExamModel? quizExam;
   final bool isDone;
@@ -11,6 +12,7 @@ class QuizExamState {
   final QuestionExamModel? currentQuestion;
 
   QuizExamState({
+    this.isLoading = false,
     this.quiz,
     this.quizExam,
     this.isDone = false,
@@ -20,6 +22,7 @@ class QuizExamState {
   });
 
   QuizExamState copyWith({
+    bool? isLoading,
     QuizModel? quiz,
     QuizExamModel? quizExam,
     bool? isDone,
@@ -28,6 +31,7 @@ class QuizExamState {
     QuestionExamModel? currentQuestion,
   }) {
     return QuizExamState(
+      isLoading: isLoading ?? this.isLoading,
       quiz: quiz ?? this.quiz,
       quizExam: quizExam ?? this.quizExam,
       isDone: isDone ?? this.isDone,
