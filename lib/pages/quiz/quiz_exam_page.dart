@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/exam_result_component.dart';
 import 'package:quiz_app/components/take_exam_component.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
@@ -29,7 +30,7 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
     final state = ref.watch(quizExamProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.quiz.title)),
+      appBar: customAppbarComponent(widget.quiz.title, automaticallyImplyLeading: false),
       body: state.isDone && state.quizExam != null
         ? ExamResultComponent(quizExam: state.quizExam!)
         : TakeExamComponent(quiz: widget.quiz),

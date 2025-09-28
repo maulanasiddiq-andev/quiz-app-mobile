@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
@@ -25,8 +26,8 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
     final state = ref.watch(quizListProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Quiz List"),
+      appBar: customAppbarComponent(
+        "Quiz List", 
         actions: [
           IconButton(
             onPressed: () {
@@ -39,7 +40,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
             }, 
             icon: Icon(Icons.logout)
           )
-        ],
+        ]
       ),
       body: RefreshIndicator(
         onRefresh: () => ref.read(quizListProvider.notifier).refreshDatas(),

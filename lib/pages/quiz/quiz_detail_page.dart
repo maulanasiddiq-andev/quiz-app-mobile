@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/pages/quiz/quiz_exam_page.dart';
 
@@ -22,9 +23,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
   Widget build(BuildContext context) {
     final state = ref.watch(quizDetailProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Quiz Detail"),
-      ),
+      appBar: customAppbarComponent("Quiz Detail"),
       body: state.isLoading
         ? Center(
             child: CircularProgressIndicator(color: Colors.blue),
