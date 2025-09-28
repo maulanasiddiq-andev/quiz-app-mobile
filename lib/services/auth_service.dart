@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:quiz_app/constants/environment_contant.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/auth/token_model.dart';
+import 'package:quiz_app/models/identity/user_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 
 class AuthService {
@@ -27,6 +28,27 @@ class AuthService {
     final BaseResponse<TokenModel> result = BaseResponse.fromJson(
       responseJson,
       (data) => TokenModel.fromJson(data)
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<UserModel>> checkAuth(String token) async {
+    final response = await http.get(
+      Uri.parse('${url}check-auth'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    if (response.statusCode == 401) {
+      throw ApiException("Unauthorized");
+    }
+
+    final responseJson = jsonDecode(response.body);
+    final BaseResponse<UserModel> result = BaseResponse.fromJson(
+      responseJson,
+      (data) => UserModel.fromJson(data)
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);

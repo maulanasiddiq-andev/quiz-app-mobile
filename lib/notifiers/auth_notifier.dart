@@ -34,24 +34,22 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<bool> checkAuth() async {
+  Future checkAuth() async {
     state = state.copyWith(isLoading: true);
 
     try {
       var token = await storage.read(key: 'token');
 
       if (token == null) {
+        await deleteCredential();
         state = state.copyWith(isLoading: false, isAuthenticated: false);
-        return false;
       }
 
-      // final BaseResponse<UserModel> result = await AuthService.checkAuth(token);
+      await AuthService.checkAuth(token!);
       state = state.copyWith(isLoading: false, isAuthenticated: true);
-
-      return true;
     } on ApiException catch (_) {
+      await deleteCredential();
       state = state.copyWith(isLoading: false, isAuthenticated: false);
-      return false;
     }
   }
 
@@ -80,6 +78,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
+    await deleteCredential();
+    state = state.copyWith(isAuthenticated: false);
+  }
+
+  Future<void> deleteCredential() async {
     await storage.delete(key: 'token');
     await storage.delete(key: 'user');
   }
