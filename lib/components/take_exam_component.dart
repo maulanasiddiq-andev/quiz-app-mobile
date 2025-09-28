@@ -102,16 +102,22 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
               Expanded(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () =>
-                      ref.read(quizExamProvider.notifier).toPreviousQuestion(),
-                  child: Padding(
+                  onTap: () => ref.read(quizExamProvider.notifier).toPreviousQuestion(),
+                  child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
+                    color: Colors.blue,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       spacing: 10,
                       children: [
-                        Icon(Icons.arrow_back),
-                        Text("Sebelumnya", style: TextStyle(fontSize: 16)),
+                        Icon(Icons.arrow_back, color: Colors.white),
+                        Text(
+                          "Sebelumnya", 
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white
+                          )
+                        ),
                       ],
                     ),
                   ),
@@ -127,8 +133,9 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
                       ref.read(quizExamProvider.notifier).finishQuiz(duration);
                     }
                   },
-                  child: Padding(
+                  child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
+                    color: Colors.blue,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       spacing: 10,
@@ -137,12 +144,16 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
                           state.questionIndex < state.questions.length - 1
                               ? "Selanjutnya"
                               : "Selesai",
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white
+                          ),
                         ),
                         Icon(
                           state.questionIndex < state.questions.length - 1
                               ? Icons.arrow_forward
                               : Icons.check,
+                          color: Colors.white,
                         ),
                       ],
                     ),
