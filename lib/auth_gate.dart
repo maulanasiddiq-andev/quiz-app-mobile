@@ -13,7 +13,7 @@ class AuthGate extends ConsumerWidget {
 
     if (authState.isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: CircularProgressIndicator(color: Colors.blue)),
       );
     }
     
