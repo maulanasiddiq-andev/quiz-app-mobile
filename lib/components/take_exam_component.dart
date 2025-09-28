@@ -65,27 +65,27 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Pertanyaan ${(state.questionIndex + 1).toString()}/${state.questions.length.toString()}",
-                          ),
+                          Text("Pertanyaan ${(state.questionIndex + 1).toString()}/${state.questions.length.toString()}"),
                           Text(state.currentQuestion!.text),
                           RadioGroup(
-                            groupValue:
-                                state.currentQuestion!.selectedAnswerOrder,
+                            groupValue: state.currentQuestion!.selectedAnswerOrder,
                             onChanged: (int? value) {
-                              state.currentQuestion!.selectedAnswerOrder =
-                                  value;
+                              state.currentQuestion!.selectedAnswerOrder = value;
                             },
                             child: Column(
                               children: [
                                 ...state.currentQuestion!.answers.map((answer) {
-                                  return Row(
-                                    children: [
-                                      Radio(value: answer.answerOrder),
-                                      answer.text != null
-                                          ? Text(answer.text!)
-                                          : SizedBox(),
-                                    ],
+                                  return RadioListTile(
+                                    value: answer.answerOrder,
+                                    title: answer.text != null ? Text(answer.text!) : null,
+                                    secondary: answer.imageUrl != null 
+                                      ? Image.network(
+                                          answer.imageUrl!,
+                                          width: 40,
+                                          height: 40,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
                                   );
                                 }),
                               ],
