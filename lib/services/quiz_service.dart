@@ -65,7 +65,7 @@ class QuizService {
 
   static Future<BaseResponse<QuizModel>> takeQuiz(String quizId, QuizExamModel quizExam) async {
     final token = await storage.read(key: 'token');
-    final baseUri = Uri.parse('${url}take-quiz/$quizId');
+    final baseUri = Uri.parse('$url$quizId/take-quiz');
     final body = jsonEncode(quizExam.toJson());
 
     final response = await http.post(
@@ -94,7 +94,7 @@ class QuizService {
     int page,
     int pageSize
   ) async {
-    final baseUri = Uri.parse('${url}history/$quizId');
+    final baseUri = Uri.parse('$url$quizId/history');
     final uri = baseUri.replace(
       queryParameters: {
         'page': page.toString(),
