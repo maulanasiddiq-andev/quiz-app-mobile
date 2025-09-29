@@ -17,7 +17,10 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
   void initState() {
     super.initState();
 
-    Future.microtask(() => ref.read(quizDetailProvider.notifier).getQuizById(widget.quizId));
+    Future.microtask(() {
+      ref.read(quizDetailProvider.notifier).getQuizById(widget.quizId);
+      ref.read(quizDetailProvider.notifier).getHistoriesByQuizId(widget.quizId);
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -50,6 +53,31 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                             fontSize: 16
                           ),
                         ),
+                        SizedBox(),
+                        Text("Peserta Kuis"),
+                        state.isLoadingHistories 
+                        ? CircularProgressIndicator(color: Colors.blue)
+                        : Column(
+                          children: [
+                            ...state.histories.map((history) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  border: Border.all(),
+                                  borderRadius: BorderRadius.circular(5)
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(history.user.name),
+                                    Text("Nilai: ${history.score.toString()}")
+                                  ],
+                                ),
+                              );
+                            })
+                          ],
+                        )
                       ],
                     ),
                   ),
