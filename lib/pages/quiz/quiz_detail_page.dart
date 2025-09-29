@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/pages/quiz/quiz_exam_page.dart';
+import 'package:quiz_app/utils/format_time.dart';
 
 class QuizDetailPage extends ConsumerStatefulWidget {
   final String quizId;
@@ -71,7 +72,8 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(history.user.name),
-                                    Text("Nilai: ${history.score.toString()}")
+                                    Text("Nilai: ${history.score.toString()}"),
+                                    Text("Durasi: ${formatTime(history.duration)}")
                                   ],
                                 ),
                               );
