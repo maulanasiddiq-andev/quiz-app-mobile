@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/pages/quiz/quiz_exam_page.dart';
+import 'package:quiz_app/pages/quiz_history/quiz_history_detail_page.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
 class QuizDetailPage extends ConsumerStatefulWidget {
@@ -59,27 +60,36 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                         state.isLoadingHistories 
                         ? CircularProgressIndicator(color: Colors.blue)
                         : Column(
-                          children: [
-                            ...state.histories.map((history) {
-                              return Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(5)
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(history.user.name),
-                                    Text("Nilai: ${history.score.toString()}"),
-                                    Text("Durasi: ${formatTime(history.duration)}")
-                                  ],
-                                ),
-                              );
-                            })
-                          ],
-                        )
+                            children: [
+                              ...state.histories.map((history) {
+                                return Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      Navigator.push(
+                                        context, 
+                                        MaterialPageRoute(builder: (context) => QuizHistoryDetailPage(quizHistory: history))  
+                                      );
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(history.user.name),
+                                        Text("Nilai: ${history.score.toString()}"),
+                                        Text("Durasi: ${formatTime(history.duration)}")
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              })
+                            ],
+                          )
                       ],
                     ),
                   ),
