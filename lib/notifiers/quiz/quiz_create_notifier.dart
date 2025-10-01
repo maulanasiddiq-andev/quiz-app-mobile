@@ -51,6 +51,25 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     state = state.copyWith(questions: questions);
   }
 
+  void determineTrueAnswer(int? answerIndex) {
+    int index = state.questionIndex;
+    var questions = [...state.questions];
+    var currentQuestion = questions[index];
+
+    var answers = [...currentQuestion.answers];
+
+    for (var answer in answers) {
+      answer = answer.copyWith(isTrueAnswer: false);
+    }
+
+    if (answerIndex != null) {
+      answers[answerIndex] = answers[answerIndex].copyWith(isTrueAnswer: true);
+    }
+
+    questions[index] = currentQuestion.copyWith(answers: answers, trueAnswerIndex: answerIndex);
+    state = state.copyWith(questions: questions);
+  }
+
   void addQuestion() {
     var question = QuestionCreateModel();
     question = question.copyWith(answers: [AnswerCreateModel()]);

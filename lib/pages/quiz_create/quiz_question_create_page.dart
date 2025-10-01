@@ -58,22 +58,33 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                       ),
                       onChanged: (value) => notifier.updateQuestion(value),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
+                    RadioGroup(
+                      groupValue: currentQuestion.trueAnswerIndex,
+                      onChanged: (int? value) {
+                        notifier.determineTrueAnswer(value);
+                      },
                       child: Column(
+                        spacing: 5,
                         children: [
                           for (var i = 0; i < currentQuestion.answers.length; i++)
-                            TextField(
-                              controller: TextEditingController.fromValue(
-                                TextEditingValue(
-                                  text: currentQuestion.answers[i].text,
-                                  selection: TextSelection.collapsed(offset: currentQuestion.answers[i].text.length)
+                            Row(
+                              children: [
+                                Radio(value: i),
+                                Expanded(
+                                  child: TextField(
+                                    controller: TextEditingController.fromValue(
+                                      TextEditingValue(
+                                        text: currentQuestion.answers[i].text,
+                                        selection: TextSelection.collapsed(offset: currentQuestion.answers[i].text.length)
+                                      )
+                                    ),
+                                    decoration: InputDecoration(
+                                      hintText: "Jawaban ${i + 1}"
+                                    ),
+                                    onChanged: (value) => notifier.updateAnswer(i, value),
+                                  ),
                                 )
-                              ),
-                              decoration: InputDecoration(
-                                hintText: "Jawaban ${i + 1}"
-                              ),
-                              onChanged: (value) => notifier.updateAnswer(i, value),
+                              ],
                             )
                         ],
                       ),
