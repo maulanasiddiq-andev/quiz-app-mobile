@@ -3,6 +3,7 @@ import 'package:quiz_app/models/quiz_create/question_create_model.dart';
 
 class QuizCreateState {
   final bool isLoadingCategories;
+  final bool isLoadingCreate;
   final String categoryId;
   final List<CategoryModel> categories;
   final String title;
@@ -13,6 +14,7 @@ class QuizCreateState {
 
   QuizCreateState({
     this.isLoadingCategories = false,
+    this.isLoadingCreate = false,
     this.categories = const [],
     this.categoryId = "",
     this.title = "",
@@ -24,6 +26,7 @@ class QuizCreateState {
 
   QuizCreateState copyWith({
     bool? isLoadingCategories,
+    bool? isLoadingCreate,
     List<CategoryModel>? categories,
     String? categoryId,
     String? title,
@@ -34,6 +37,7 @@ class QuizCreateState {
   }) {
     return QuizCreateState(
       isLoadingCategories: isLoadingCategories ?? this.isLoadingCategories,
+      isLoadingCreate: isLoadingCreate ?? this.isLoadingCreate,
       categories: categories ?? this.categories,
       categoryId: categoryId ?? this.categoryId,
       title: title ?? this.title,

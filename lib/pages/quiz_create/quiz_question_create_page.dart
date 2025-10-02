@@ -118,14 +118,21 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
               Expanded(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    notifier.createQuiz();
+                  onTap: () async {
+                    final result = await notifier.createQuiz();
+
+                    if (result && context.mounted) {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    }
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     color: Colors.blue,
                     child: Center(
-                      child: Icon(Icons.save, color: Colors.white)
+                      child: state.isLoadingCreate
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Icon(Icons.save, color: Colors.white)
                     ),
                   ),
                 ),

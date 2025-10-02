@@ -74,7 +74,6 @@ class QuizService {
       },
       body: jsonEncode(quiz)
     );
-    print(response.statusCode);
 
     final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<QuizModel> result = BaseResponse.fromJson(

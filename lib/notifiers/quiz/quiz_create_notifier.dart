@@ -85,8 +85,8 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
 
     var answers = [...currentQuestion.answers];
 
-    for (var answer in answers) {
-      answer = answer.copyWith(isTrueAnswer: false);
+    for (var i = 0; i < answers.length; i++) {
+      answers[i] = answers[i].copyWith(isTrueAnswer: false);
     }
 
     if (answerIndex != null) {
@@ -139,7 +139,9 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     }
   }
 
-  Future<void> createQuiz() async {
+  Future<bool> createQuiz() async {
+    state = state.copyWith(isLoadingCreate: true);
+
     try {
       Map<String, dynamic> quiz = {
         "categoryId": state.categoryId,
@@ -151,14 +153,20 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
 
       var result = await QuizService.createQuiz(quiz);
 
+      state = state.copyWith(isLoadingCreate: false);
       Fluttertoast.showToast(msg: result.messages[0]);
+
+      return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      // state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoadingCreate: false);
+
+      return false;
     } catch (e) {
-      print(e.toString());
       Fluttertoast.showToast(msg: e.toString());
-      // state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoadingCreate: false);
+
+      return false;
     }
   }
 }
