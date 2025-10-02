@@ -15,7 +15,7 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController timeController = TextEditingController(text: "0");
-  String selectedCategoryId = "";
+  String? selectedCategoryId;
 
   @override
   Widget build(BuildContext context) {
@@ -55,20 +55,22 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                             hintText: "Waktu Pengerjaan Kuis"
                           ),
                         ),
-                        DropdownButton<String>(
-                          value: selectedCategoryId,
-                          items: state.categories.map((category) {
-                            return DropdownMenuItem<String>(
-                              value: category.categoryId,
-                              child: Text(category.name),
-                            );
-                          }).toList(), 
-                          onChanged: (value) {
-                            setState(() {
-                              selectedCategoryId = value ?? "";
-                            });
-                          },
-                        )
+                        state.categories.isNotEmpty
+                        ? DropdownButton<String>(
+                            value: selectedCategoryId,
+                            items: state.categories.map((category) {
+                              return DropdownMenuItem<String>(
+                                value: category.categoryId,
+                                child: Text(category.name),
+                              );
+                            }).toList(), 
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCategoryId = value ?? "";
+                              });
+                            },
+                          )
+                        : SizedBox()
                       ],
                     ),
                   ),
@@ -78,14 +80,12 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: GestureDetector(
                   onTap: () {
-                    Future.microtask(() {
-                      ref.read(quizCreateProvider.notifier).createDescription(
-                        selectedCategoryId,
-                        titleController.text, 
-                        descriptionController.text, 
-                        int.parse(timeController.text)
-                      );
-                    });
+                    ref.read(quizCreateProvider.notifier).createDescription(
+                      selectedCategoryId!,
+                      titleController.text, 
+                      descriptionController.text, 
+                      int.parse(timeController.text)
+                    );
 
                     Navigator.push(
                       context,

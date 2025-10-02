@@ -109,19 +109,23 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     color: Colors.blue,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 10,
-                      children: [
-                        Icon(Icons.arrow_back, color: Colors.white),
-                        Text(
-                          "Sebelumnya", 
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white
-                          )
-                        ),
-                      ],
+                    child: Center(
+                      child: Icon(Icons.arrow_back, color: Colors.white)
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    notifier.createQuiz();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    color: Colors.blue,
+                    child: Center(
+                      child: Icon(Icons.save, color: Colors.white)
                     ),
                   ),
                 ),
@@ -135,26 +139,13 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     color: Colors.blue,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 10,
-                      children: [
-                        Text(
-                          state.questionIndex < state.questions.length - 1
-                              ? "Selanjutnya"
-                              : "Tambah Pertanyaan",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white
-                          ),
-                        ),
-                        Icon(
-                          state.questionIndex < state.questions.length - 1
-                              ? Icons.arrow_forward
-                              : Icons.add,
-                          color: Colors.white,
-                        ),
-                      ],
+                    child: Center(
+                      child: Icon(
+                        state.questionIndex < state.questions.length - 1
+                            ? Icons.arrow_forward
+                            : Icons.add,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

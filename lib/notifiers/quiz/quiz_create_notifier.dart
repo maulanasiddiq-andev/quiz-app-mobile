@@ -1,6 +1,10 @@
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz_create/answer_create_model.dart';
 import 'package:quiz_app/models/quiz_create/question_create_model.dart';
+import 'package:quiz_app/services/category_service.dart';
+import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/quiz_create_state.dart';
 
 class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
@@ -13,10 +17,33 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     state = state.copyWith(
       questions: [...state.questions, question],
     );
+
+    getCategories();
   }
 
-  void createDescription(String title, String description, int time) {
+  Future<void> getCategories() async {
+    state = state.copyWith(isLoadingCategories: true);
+
+    try {
+      var result = await CategoryService.getQuizzes(0, 10);
+
+      if (result.data != null) {
+        state = state.copyWith(isLoadingCategories: false, categories: result.data!.items);
+      }
+
+      state = state.copyWith(isLoadingCategories: false);
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      state = state.copyWith(isLoadingCategories: false);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      state = state.copyWith(isLoadingCategories: false);
+    }
+  }
+
+  void createDescription(String categoryId, String title, String description, int time) {
     state = state.copyWith(
+      categoryId: categoryId,
       title: title,
       description: description,
       time: time
@@ -109,6 +136,29 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
       state = state.copyWith(
         questionIndex: index,
       );
+    }
+  }
+
+  Future<void> createQuiz() async {
+    try {
+      Map<String, dynamic> quiz = {
+        "categoryId": state.categoryId,
+        "title": state.title,
+        "description": state.description,
+        "time": state.time,
+        "questions": state.questions.map((question) => question.toJson()).toList()
+      };
+
+      var result = await QuizService.createQuiz(quiz);
+
+      Fluttertoast.showToast(msg: result.messages[0]);
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      // state = state.copyWith(isLoading: false);
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(msg: e.toString());
+      // state = state.copyWith(isLoading: false);
     }
   }
 }
