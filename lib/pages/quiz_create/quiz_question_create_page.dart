@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
+import 'package:quiz_app/components/quiz_navigation_button_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
 
 class QuizQuestionCreatePage extends ConsumerStatefulWidget {
@@ -103,21 +104,13 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
           Row(
             children: [
               Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => notifier.toPreviousQuestion(),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    color: Colors.blue,
-                    child: Center(
-                      child: Icon(Icons.arrow_back, color: Colors.white)
-                    ),
-                  ),
+                child: QuizNavigationButtonComponent(
+                  onTap: () => notifier.toPreviousQuestion(), 
+                  icon: Icons.arrow_back,
                 ),
               ),
               Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
+                child: QuizNavigationButtonComponent(
                   onTap: () async {
                     final result = await notifier.createQuiz();
 
@@ -125,36 +118,16 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                       Navigator.pop(context);
                       Navigator.pop(context);
                     }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    color: Colors.blue,
-                    child: Center(
-                      child: state.isLoadingCreate
-                        ? CircularProgressIndicator(color: Colors.white)
-                        : Icon(Icons.save, color: Colors.white)
-                    ),
-                  ),
-                ),
+                  }, 
+                  icon: Icons.save
+                )
               ),
               Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    notifier.toNextQuestion();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    color: Colors.blue,
-                    child: Center(
-                      child: Icon(
-                        state.questionIndex < state.questions.length - 1
-                            ? Icons.arrow_forward
-                            : Icons.add,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                child: QuizNavigationButtonComponent(
+                  onTap: () => notifier.toNextQuestion(), 
+                  icon: state.questionIndex < state.questions.length - 1
+                    ? Icons.arrow_forward
+                    : Icons.add,
                 ),
               ),
             ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
+import 'package:quiz_app/components/quiz_navigation_button_component.dart';
 import 'package:quiz_app/models/quiz_history/answer_history_model.dart';
 import 'package:quiz_app/models/quiz_history/question_history_model.dart';
 import 'package:quiz_app/notifiers/quiz_history/quiz_history_detail_notifier.dart';
@@ -28,6 +29,7 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizHistoryDetailProvider);
+    final notifier = ref.read(quizHistoryDetailProvider.notifier);
 
     return Scaffold(
       appBar: customAppbarComponent("Review Quiz"),
@@ -78,62 +80,26 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
           Row(
             children: [
               Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => ref.read(quizHistoryDetailProvider.notifier).toPreviousQuestion(),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    color: Colors.blue,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 10,
-                      children: [
-                        Icon(Icons.arrow_back, color: Colors.white),
-                        Text(
-                          "Sebelumnya", 
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white
-                          )
-                        ),
-                      ],
-                    ),
-                  ),
+                child: QuizNavigationButtonComponent(
+                  onTap: () => notifier.toPreviousQuestion(), 
+                  icon: Icons.arrow_back,
+                  text: "Sebelumnya",
                 ),
               ),
               Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
+                child: QuizNavigationButtonComponent(
                   onTap: () {
                     if (state.questionIndex < state.questions.length - 1) {
-                      ref.read(quizHistoryDetailProvider.notifier).toNextQuestion();
+                      notifier.toNextQuestion();
                     }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    color: Colors.blue,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 10,
-                      children: [
-                        Text(
-                          state.questionIndex < state.questions.length - 1
-                              ? "Selanjutnya"
-                              : "Selesai",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white
-                          ),
-                        ),
-                        Icon(
-                          state.questionIndex < state.questions.length - 1
-                              ? Icons.arrow_forward
-                              : Icons.check,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
+                  }, 
+                  icon: state.questionIndex < state.questions.length - 1
+                    ? Icons.arrow_forward
+                    : Icons.check,
+                  text: state.questionIndex < state.questions.length - 1
+                    ? "Selanjutnya"
+                    : "Selesai",
+                  textDirection: TextDirection.rtl,
                 ),
               ),
             ],
