@@ -43,10 +43,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (token == null) {
         await deleteCredential();
         state = state.copyWith(isLoading: false, isAuthenticated: false);
+      } else {
+        await AuthService.checkAuth(token);
+        state = state.copyWith(isLoading: false, isAuthenticated: true);
       }
-
-      await AuthService.checkAuth(token!);
-      state = state.copyWith(isLoading: false, isAuthenticated: true);
     } on ApiException catch (_) {
       await deleteCredential();
       state = state.copyWith(isLoading: false, isAuthenticated: false);
