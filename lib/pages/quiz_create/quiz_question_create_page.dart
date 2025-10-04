@@ -52,6 +52,7 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                 child: Column(
                   spacing: 15,
                   children: [
+                    Text("Pertanyaan ${state.questionIndex + 1}/${state.questions.length}"),
                     TextField(
                       controller: questionController,
                       decoration: InputDecoration(
