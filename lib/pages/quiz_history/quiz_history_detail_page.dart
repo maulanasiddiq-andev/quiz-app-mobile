@@ -29,13 +29,13 @@ class _QuizHistoryDetailPageState extends ConsumerState<QuizHistoryDetailPage> {
 
     return Scaffold(
       appBar: customAppbarComponent("Riwayat"),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 10,
@@ -87,25 +87,25 @@ class _QuizHistoryDetailPageState extends ConsumerState<QuizHistoryDetailPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: CustomButtonComponent(
-                onTap: () {
-                  if (state.isLoading == false && state.currentQuestion != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QuizHistoryReviewPage(),
-                      ),
-                    );
-                  }
-                }, 
-                text: "Review",
-                isLoading: state.isLoading,
-              )
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: CustomButtonComponent(
+              onTap: () {
+                if (state.isLoading == false && state.currentQuestion != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => QuizHistoryReviewPage(),
+                    ),
+                  );
+                }
+              }, 
+              text: "Review",
+              isLoading: state.isLoading,
             )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

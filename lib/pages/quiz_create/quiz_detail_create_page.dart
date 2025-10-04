@@ -33,7 +33,7 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     child: Column(
                       spacing: 15,
                       children: [
