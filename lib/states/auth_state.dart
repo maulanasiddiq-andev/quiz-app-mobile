@@ -8,12 +8,12 @@ class AuthState {
   });
 
   AuthState copyWith({
-    bool isLoading = false,
-    bool isAuthenticated = false
+    bool? isLoading,
+    bool? isAuthenticated
   }) {
     return AuthState(
-      isLoading: isLoading,
-      isAuthenticated: isAuthenticated
+      isLoading: isLoading ?? this.isLoading,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated
     );
   }
 }

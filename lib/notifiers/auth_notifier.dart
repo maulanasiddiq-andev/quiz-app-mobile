@@ -27,10 +27,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(isLoading: false, isAuthenticated: true);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith();
+      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith();
+      state = state.copyWith(isLoading: false);
     }
   }
 
