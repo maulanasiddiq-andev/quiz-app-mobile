@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+
+class InputComponent extends StatelessWidget {
+  final String title;
+  final TextEditingController controller;
+  final int? maxLength;
+  final TextInputAction? action;
+  final Function? onSubmit;
+  final Function(String value)? onChanged;
+  final FocusNode? focusNode;
+  final TextInputType textInputType;
+
+  const InputComponent({
+    super.key, 
+    required this.title,
+    required this.controller,
+    this.maxLength,
+    this.action,
+    this.onSubmit,
+    this.onChanged,
+    this.focusNode,
+    this.textInputType = TextInputType.text
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return TextField(
+      controller: controller,
+      focusNode: focusNode,
+      cursorColor: colors.primary,
+      maxLines: null,
+      maxLength: maxLength,
+      keyboardType: textInputType,
+      textInputAction: action,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: InputDecoration(
+        label: Text(title),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: colors.secondary
+          )
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: colors.primary
+          )
+        ),
+        errorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: colors.error
+          )
+        )
+      ),
+      onSubmitted: (_) {
+        if (onSubmit != null) {
+          onSubmit!();
+        }
+      },
+      onChanged: (value) {
+        if (onChanged != null) {
+          onChanged!(value);
+        }
+      },
+    );
+  }
+}
