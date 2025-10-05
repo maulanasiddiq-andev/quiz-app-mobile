@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
@@ -43,27 +44,12 @@ class _ExamResultComponentState extends State<ExamResultComponent> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: GestureDetector(
+            child: CustomButtonComponent(
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
-              },
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10)
-                ),
-                child: Center(
-                  child: Text(
-                    'Kembali',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
-                )
-              ),
+              }, 
+              text: "Kembali"
             )
           )
         ],
