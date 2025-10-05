@@ -36,9 +36,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     final authState = ref.watch(authProvider);
     final screenHeight = MediaQuery.of(context).size.height;
+    final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: colors.primary,
       body: SingleChildScrollView(
         child: Container(
           height: screenHeight,
@@ -52,7 +53,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 child: Text(
                   'Login',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: colors.onPrimary,
                     fontSize: 45
                   ),
                 ),
@@ -62,7 +63,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 child: Text(
                   'MS Developer video app',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: colors.onPrimary,
                     fontSize: 20
                   ),
                 ),
@@ -72,7 +73,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 child: Container(
                   padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colors.surface,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(60),
                       topRight: Radius.circular(60)
@@ -82,10 +83,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: colors.surface,
                           boxShadow: [
                             BoxShadow(
-                              color: Color.fromRGBO(26, 120, 194, 0.4),
+                              color: colors.shadow,
                               blurRadius: 20,
                               offset: Offset(0, 10)
                             ),
@@ -127,7 +128,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       isDense: true,
                                       hintText: 'Email',
                                       hintStyle: TextStyle(
-                                        color: Colors.grey
+                                        color: colors.secondary
                                       ),
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(0)
@@ -150,7 +151,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         isDense: true,
                                         hintText: 'Password',
                                         hintStyle: TextStyle(
-                                          color: Colors.grey
+                                          color: colors.secondary
                                         ),
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(0),
@@ -179,7 +180,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       Text(
                         'Lupa Password?',
                         style: TextStyle(
-                          color: Colors.grey
+                          color: colors.secondary
                         ),
                       ),
                       SizedBox(height: 50),
@@ -190,7 +191,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: colors.primary,
                             borderRadius: BorderRadius.circular(25)
                           ),
                           child: Center(
@@ -199,13 +200,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   height: 45,
                                   width: 45,
                                   child: Center(
-                                    child: CircularProgressIndicator(color: Colors.white)
+                                    child: CircularProgressIndicator(color: colors.onPrimary)
                                   ),
                                 )
                               : Text(
                                 'Login',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: colors.onPrimary,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold
                                 ),
@@ -220,7 +221,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           Text(
                             'Belum punya akun? ',
                             style: TextStyle(
-                              color: Colors.grey
+                              color: colors.secondary
                             ),
                           ),
                           GestureDetector(
@@ -230,7 +231,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             child: Text(
                               'Daftar',
                               style: TextStyle(
-                                color: Colors.blue
+                                color: colors.primary
                               ),
                             ),
                           )

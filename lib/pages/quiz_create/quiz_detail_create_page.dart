@@ -21,12 +21,17 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizCreateProvider);
+    final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent("Buat Detail Kuis"),
+      appBar: customAppbarComponent(
+        "Buat Detail Kuis",
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary
+      ),
       body: state.isLoadingCategories
         ? Center(
-            child: CircularProgressIndicator(color: Colors.blue),
+            child: CircularProgressIndicator(color: colors.primary),
           )
         : Column(
             children: [

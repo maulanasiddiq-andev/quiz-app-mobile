@@ -28,6 +28,7 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
   
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final state = ref.watch(quizHistoryDetailProvider);
     final notifier = ref.read(quizHistoryDetailProvider.notifier);
     QuestionHistoryModel? currentQuestion;
@@ -37,7 +38,11 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
     }
 
     return Scaffold(
-      appBar: customAppbarComponent("Review Quiz"),
+      appBar: customAppbarComponent(
+        "Review Quiz",
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

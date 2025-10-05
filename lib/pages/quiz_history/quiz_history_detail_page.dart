@@ -26,9 +26,14 @@ class _QuizHistoryDetailPageState extends ConsumerState<QuizHistoryDetailPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizHistoryDetailProvider);
+    final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent("Riwayat"),
+      appBar: customAppbarComponent(
+        "Riwayat",
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -58,23 +63,23 @@ class _QuizHistoryDetailPageState extends ConsumerState<QuizHistoryDetailPage> {
                             PieChartData(
                               sections: [
                                 PieChartSectionData(
-                                  color: Colors.blue,
+                                  color: colors.primary,
                                   value: widget.quizHistory.trueAnswers / widget.quizHistory.questionCount * 100,
                                   title: "Benar",
                                   radius: 80,
                                   titleStyle: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.white
+                                    color: colors.onPrimary
                                   )
                                 ),
                                 PieChartSectionData(
-                                  color: Colors.red,
+                                  color: colors.error,
                                   value: widget.quizHistory.wrongAnswers / widget.quizHistory.questionCount * 100,
                                   title: "Salah",
                                   radius: 80,
                                   titleStyle: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.white
+                                    color: colors.onError
                                   )
                                 ),
                               ]

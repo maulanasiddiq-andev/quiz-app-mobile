@@ -28,8 +28,14 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizDetailProvider);
+    final colors = Theme.of(context).colorScheme;
+
     return Scaffold(
-      appBar: customAppbarComponent("Quiz Detail"),
+      appBar: customAppbarComponent(
+        "Quiz Detail",
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary
+      ),
       body: state.isLoading
         ? Center(
             child: CircularProgressIndicator(color: Colors.blue),
@@ -59,7 +65,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                         SizedBox(),
                         Text("Peserta Kuis"),
                         state.isLoadingHistories 
-                        ? CircularProgressIndicator(color: Colors.blue)
+                        ? CircularProgressIndicator(color: colors.primary)
                         : Column(
                             children: [
                               ...state.histories.map((history) {
@@ -67,7 +73,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    border: Border.all(),
+                                    border: Border.all(color: colors.onSurface),
                                     borderRadius: BorderRadius.circular(5)
                                   ),
                                   child: GestureDetector(

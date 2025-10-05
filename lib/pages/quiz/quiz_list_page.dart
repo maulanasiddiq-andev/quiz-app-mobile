@@ -25,6 +25,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizListProvider);
+    final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: customAppbarComponent(
@@ -41,12 +42,14 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
             }, 
             icon: Icon(Icons.logout)
           )
-        ]
+        ],
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary
       ),
       body: RefreshIndicator(
         onRefresh: () => ref.read(quizListProvider.notifier).refreshDatas(),
         child: state.isLoading
-            ? Center(child: CircularProgressIndicator(color: Colors.blue))
+            ? Center(child: CircularProgressIndicator(color: colors.primary))
             : Column(
                 children: [
                   Expanded(
@@ -70,7 +73,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                                 vertical: 10,
                               ),
                               decoration: BoxDecoration(
-                                border: Border.all(),
+                                border: Border.all(color: colors.onSurface),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(quiz.title, style: TextStyle(fontSize: 18)),

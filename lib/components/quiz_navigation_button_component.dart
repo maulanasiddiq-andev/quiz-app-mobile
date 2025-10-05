@@ -15,25 +15,27 @@ class QuizNavigationButtonComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return InkWell(
       onTap: () => onTap(),
       splashColor: Colors.white.withAlpha(100),
       child: Ink(
         padding: const EdgeInsets.symmetric(vertical: 10),
-        color: Colors.blue,
+        color: colors.primary,
         child: Row(
           textDirection: textDirection,
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: text == null ? 0 : 10,
           children: [
-            Icon(icon, color: Colors.white),
+            Icon(icon, color: colors.onPrimary),
             text == null
             ? SizedBox()
             : Text(
                 text!, 
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.white
+                  color: colors.onPrimary
                 )
               ),
           ],

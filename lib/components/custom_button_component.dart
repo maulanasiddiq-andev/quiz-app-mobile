@@ -13,13 +13,15 @@ class CustomButtonComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return InkWell(
       onTap: () => onTap(),
       splashColor: Colors.white.withAlpha(100),
       child: Ink(
         height: 50,
         decoration: BoxDecoration(
-          color: Colors.blue,
+          color: colors.primary,
           borderRadius: BorderRadius.circular(10)
         ),
         child: Center(
@@ -28,13 +30,13 @@ class CustomButtonComponent extends StatelessWidget {
               height: 45,
               width: 45,
               child: Center(
-                child: CircularProgressIndicator(color: Colors.white)
+                child: CircularProgressIndicator(color: colors.onPrimary)
               ),
             )
           : Text(
               text,
               style: TextStyle(
-                color: Colors.white,
+                color: colors.onPrimary,
                 fontSize: 16,
               ),
           ),

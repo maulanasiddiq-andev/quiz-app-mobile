@@ -74,6 +74,7 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizExamProvider);
+    final colors = Theme.of(context).colorScheme;
 
     return PopScope(
       canPop: false,
@@ -95,7 +96,12 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
         }
       },
       child: Scaffold(
-        appBar: customAppbarComponent(widget.quiz.title, automaticallyImplyLeading: false),
+        appBar: customAppbarComponent(
+          widget.quiz.title, 
+          automaticallyImplyLeading: false,
+          backgroundColor: colors.primary,
+          foregroundColor: colors.onPrimary
+        ),
         body: state.isDone && state.quizExam != null
           ? ExamResultComponent(quizExam: state.quizExam!)
           : TakeExamComponent(quiz: widget.quiz),

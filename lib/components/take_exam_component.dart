@@ -19,7 +19,6 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
   late int seconds;
   int duration = 0;
   Timer? timer;
-  Color timerColor = Colors.black;
 
   @override
   void initState() {
@@ -42,14 +41,6 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
         setState(() {
           seconds--;
           duration++;
-
-          if (seconds <= 10) {
-            if (seconds % 2 != 0) {
-              timerColor = Colors.red;
-            } else {
-              timerColor = Colors.black;
-            }
-          }
         });
       } else {
         timer?.cancel();
@@ -59,6 +50,7 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final state = ref.watch(quizExamProvider);
     final notifier = ref.read(quizExamProvider.notifier);
     QuestionExamModel? currentQuestion;
@@ -76,7 +68,11 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
               child: Text(
                 formatTime(seconds),
                 style: TextStyle(
-                  color: timerColor
+                  color: seconds > 10
+                    ? colors.onSurface
+                    : seconds % 2 == 0
+                      ? colors.onSurface
+                      : colors.error
                 ),
               )
             ),
