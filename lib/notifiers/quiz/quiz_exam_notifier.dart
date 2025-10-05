@@ -111,6 +111,10 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  confirmToLeave() {
+    state = state.copyWith(isConfirmedToLeave: true);
+  }
 }
 
 final quizExamProvider = StateNotifierProvider.autoDispose<QuizExamNotifier, QuizExamState>((ref) => QuizExamNotifier());

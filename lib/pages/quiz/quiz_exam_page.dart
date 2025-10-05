@@ -25,15 +25,81 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
     });
   }
 
+  Future<bool> confirmLeaveDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Perhatian"),
+          content: Text(
+            "Apakah anda yakin ingin meninggalkan kuis ini?",
+            style: TextStyle(
+              fontSize: 16
+            )
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                ref.read(quizExamProvider.notifier).confirmToLeave();
+                // close the dialog
+                Navigator.of(context).pop(true);
+              }, 
+              child: Text(
+                "Ya",
+                style: TextStyle(
+                  color: Colors.red
+                ),
+              )
+            ),
+            TextButton(
+              onPressed: () {
+                // close the dialog
+                Navigator.of(context).pop(false);
+              }, 
+              child: Text(
+                "Tidak",
+                style: TextStyle(
+                  color: Colors.blue
+                ),
+              )
+            ),
+          ],
+        );
+      },
+    );
+
+    return result ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizExamProvider);
 
-    return Scaffold(
-      appBar: customAppbarComponent(widget.quiz.title, automaticallyImplyLeading: false),
-      body: state.isDone && state.quizExam != null
-        ? ExamResultComponent(quizExam: state.quizExam!)
-        : TakeExamComponent(quiz: widget.quiz),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          // the user can leave this page if the quiz is already done
+          // or the user is sure to leave the page after confirming it on modal popup
+          if (state.isDone || state.isConfirmedToLeave) {
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
+          } else {
+            final bool shouldPop = await confirmLeaveDialog();
+
+            if (shouldPop && context.mounted) {
+              Navigator.of(context).pop();
+            }
+          }
+        }
+      },
+      child: Scaffold(
+        appBar: customAppbarComponent(widget.quiz.title, automaticallyImplyLeading: false),
+        body: state.isDone && state.quizExam != null
+          ? ExamResultComponent(quizExam: state.quizExam!)
+          : TakeExamComponent(quiz: widget.quiz),
+      ),
     );
   }
 }
