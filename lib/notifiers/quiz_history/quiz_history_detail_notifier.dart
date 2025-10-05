@@ -17,7 +17,6 @@ class QuizHistoryDetailNotifier extends StateNotifier<QuizHistoryDetailState> {
       if (result.data != null) {
         state = state.copyWith(
           questions: [...state.questions, ...result.data!.questions],
-          currentQuestion: result.data!.questions[0]
         );
       }
 
@@ -37,7 +36,6 @@ class QuizHistoryDetailNotifier extends StateNotifier<QuizHistoryDetailState> {
 
       state = state.copyWith(
         questionIndex: index,
-        currentQuestion: state.questions[index],
       );
     }
   }
@@ -48,7 +46,6 @@ class QuizHistoryDetailNotifier extends StateNotifier<QuizHistoryDetailState> {
 
       state = state.copyWith(
         questionIndex: index,
-        currentQuestion: state.questions[index],
       );
     }
   }

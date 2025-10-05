@@ -5,13 +5,11 @@ class QuizHistoryDetailState {
   final String? quizHistoryId;
   final List<QuestionHistoryModel> questions;
   final int questionIndex;
-  final QuestionHistoryModel? currentQuestion;
 
   QuizHistoryDetailState({
     this.isLoading = false,
     this.quizHistoryId,
     this.questions = const [],
-    this.currentQuestion,
     this.questionIndex = 0
   });
 
@@ -20,13 +18,11 @@ class QuizHistoryDetailState {
     String? quizHistoryId,
     List<QuestionHistoryModel>? questions,
     int? questionIndex,
-    QuestionHistoryModel? currentQuestion
   }) {
     return QuizHistoryDetailState(
       isLoading: isLoading ?? this.isLoading,
       quizHistoryId: quizHistoryId ?? this.quizHistoryId,
       questions: questions ?? this.questions,
-      currentQuestion: currentQuestion ?? this.currentQuestion,
       questionIndex: questionIndex ?? this.questionIndex
     );
   }

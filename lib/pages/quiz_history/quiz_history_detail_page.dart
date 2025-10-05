@@ -92,7 +92,7 @@ class _QuizHistoryDetailPageState extends ConsumerState<QuizHistoryDetailPage> {
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: CustomButtonComponent(
               onTap: () {
-                if (state.isLoading == false && state.currentQuestion != null) {
+                if (state.isLoading == false && state.questions.isNotEmpty) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(

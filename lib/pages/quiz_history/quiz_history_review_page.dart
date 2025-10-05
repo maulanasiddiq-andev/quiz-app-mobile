@@ -30,6 +30,11 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
   Widget build(BuildContext context) {
     final state = ref.watch(quizHistoryDetailProvider);
     final notifier = ref.read(quizHistoryDetailProvider.notifier);
+    QuestionHistoryModel? currentQuestion;
+
+    if (state.questions.isNotEmpty) {
+      currentQuestion = state.questions[state.questionIndex];
+    }
 
     return Scaffold(
       appBar: customAppbarComponent("Review Quiz"),
@@ -37,7 +42,7 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: state.currentQuestion != null
+            child: currentQuestion != null
               ? SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(10),
@@ -45,15 +50,15 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Pertanyaan ${(state.questionIndex + 1).toString()}/${state.questions.length.toString()}"),
-                        Text(state.currentQuestion!.text),
+                        Text(currentQuestion.text),
                         RadioGroup(
-                          groupValue: state.currentQuestion!.selectedAnswerOrder,
+                          groupValue: currentQuestion.selectedAnswerOrder,
                           onChanged: (_) {},
                           child: Column(
                             children: [
-                              ...state.currentQuestion!.answers.map((answer) {
+                              ...currentQuestion.answers.map((answer) {
                                 return Container(
-                                  color: changeBackgroundColor(state.currentQuestion, answer),
+                                  color: changeBackgroundColor(currentQuestion, answer),
                                   child: RadioListTile<int>(
                                     value: answer.answerOrder,
                                     title: answer.text != null ? Text(answer.text!) : null,
