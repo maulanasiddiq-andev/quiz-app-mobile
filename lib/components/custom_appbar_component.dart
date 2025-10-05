@@ -4,19 +4,22 @@ AppBar customAppbarComponent(
   String title,
   {
     List<Widget>? actions,
-    bool automaticallyImplyLeading = true
+    bool automaticallyImplyLeading = true,
+    Color backgroundColor = Colors.blue,
+    Color foregroundColor = Colors.white
   }
 ) {
+
   return AppBar(
     title: Text(
       title,
       style: TextStyle(
-        color: Colors.white
+        color: foregroundColor
       ),
     ),
     actions: actions,
-    backgroundColor: Colors.blue,
-    foregroundColor: Colors.white,
+    backgroundColor: backgroundColor,
+    foregroundColor: foregroundColor,
     automaticallyImplyLeading: automaticallyImplyLeading,
   );
 }
