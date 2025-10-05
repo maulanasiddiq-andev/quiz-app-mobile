@@ -4,11 +4,13 @@ class CustomButtonComponent extends StatelessWidget {
   final Function onTap;
   final String text;
   final bool isLoading;
+  final bool isError;
   const CustomButtonComponent({
     super.key, 
     required this.onTap, 
     required this.text,
-    this.isLoading = false
+    this.isLoading = false,
+    this.isError = false
   });
 
   @override
@@ -21,7 +23,7 @@ class CustomButtonComponent extends StatelessWidget {
       child: Ink(
         height: 50,
         decoration: BoxDecoration(
-          color: colors.primary,
+          color: isError ? colors.error : colors.primary,
           borderRadius: BorderRadius.circular(10)
         ),
         child: Center(
