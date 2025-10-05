@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
+import 'package:quiz_app/components/input_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_question_create_page.dart';
 
@@ -15,7 +16,7 @@ class QuizDetailCreatePage extends ConsumerStatefulWidget {
 class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController timeController = TextEditingController(text: "0");
+  TextEditingController timeController = TextEditingController();
   String? selectedCategoryId;
 
   @override
@@ -42,24 +43,18 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                     child: Column(
                       spacing: 15,
                       children: [
-                        TextField(
-                          controller: titleController,
-                          decoration: InputDecoration(
-                            hintText: "Judul Kuis"
-                          ),
+                        InputComponent(
+                          title: "Judul Kuis", 
+                          controller: titleController
                         ),
-                        TextField(
-                          controller: descriptionController,
-                          decoration: InputDecoration(
-                            hintText: "Deskripsi Kuis"
-                          ),
+                        InputComponent(
+                          title: "Deskripsi Kuis", 
+                          controller: descriptionController
                         ),
-                        TextField(
+                        InputComponent(
+                          title: "Waktu pengerjaan kuis (menit)", 
                           controller: timeController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            hintText: "Waktu Pengerjaan Kuis"
-                          ),
+                          textInputType: TextInputType.number,
                         ),
                         state.categories.isNotEmpty
                         ? DropdownButton<String>(
