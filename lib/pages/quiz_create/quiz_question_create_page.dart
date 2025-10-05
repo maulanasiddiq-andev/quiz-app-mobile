@@ -125,7 +125,9 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                                           ),
                                           Expanded(child: SizedBox()),
                                           IconButton(
-                                            onPressed: () {}, 
+                                            onPressed: () {
+                                              notifier.deleteAnswer(i);
+                                            }, 
                                             icon: Icon(Icons.delete, size: 20, color: colors.error)
                                           ),
                                         ],
@@ -155,7 +157,9 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
           Padding(
             padding: EdgeInsets.all(10),
             child: CustomButtonComponent(
-              onTap: () {}, 
+              onTap: () {
+                notifier.deleteQuestion();
+              }, 
               text: "Hapus Pertanyaan",
               isError: true,
             ),

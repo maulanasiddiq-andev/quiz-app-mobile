@@ -66,6 +66,23 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     );
   }
 
+  void deleteAnswer(int answerIndex) {
+    var currentQuestion = state.questions[state.questionIndex];
+    var questions = [...state.questions];
+
+    var answers = [...currentQuestion.answers];
+    answers.removeAt(answerIndex);
+
+    currentQuestion = currentQuestion.copyWith(answers: answers);
+
+    if (currentQuestion.trueAnswerIndex == answerIndex) {
+      currentQuestion = currentQuestion.copyWith(trueAnswerIndex: null);
+    }
+
+    questions[state.questionIndex] = currentQuestion;
+    state = state.copyWith(questions: questions);
+  }
+
   void updateAnswer(int answerIndex, String text) {
     int index = state.questionIndex;
     var questions = [...state.questions];
@@ -104,6 +121,21 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     state = state.copyWith(
       questions: [...state.questions, question],
       questionIndex: state.questionIndex + 1
+    );
+  }
+
+  void deleteQuestion() {
+    var questions = [...state.questions];
+
+    int removedIndex = state.questionIndex;
+    // if the current question index is the last question and the last question is removed
+    if (state.questionIndex == questions.length - 1) {
+      state = state.copyWith(questionIndex: state.questionIndex - 1);
+    }
+
+    questions.removeAt(removedIndex);
+    state = state.copyWith(
+      questions: questions
     );
   }
 
