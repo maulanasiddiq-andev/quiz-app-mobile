@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
+import 'package:quiz_app/components/custom_button_component.dart';
+import 'package:quiz_app/components/input_component.dart';
 import 'package:quiz_app/components/quiz_navigation_button_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
 
@@ -56,14 +58,26 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   spacing: 15,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Pertanyaan ${state.questionIndex + 1}/${state.questions.length}"),
-                    TextField(
+                    InputComponent(
+                      title: "Pertanyaan", 
                       controller: questionController,
-                      decoration: InputDecoration(
-                        hintText: "Pertanyaan"
-                      ),
                       onChanged: (value) => notifier.updateQuestion(value),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {}, 
+                          icon: Icon(Icons.image, size: 20)
+                        ),
+                        IconButton(
+                          onPressed: () {}, 
+                          icon: Icon(Icons.camera, size: 20)
+                        ),
+                      ],
                     ),
                     RadioGroup(
                       groupValue: currentQuestion.trueAnswerIndex,
@@ -72,40 +86,79 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                       },
                       child: Column(
                         spacing: 5,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            "Jawaban",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                            ),  
+                          ),
                           for (var i = 0; i < currentQuestion.answers.length; i++)
                             Row(
                               children: [
                                 Radio(value: i),
                                 Expanded(
-                                  child: TextField(
-                                    controller: TextEditingController.fromValue(
-                                      TextEditingValue(
-                                        text: currentQuestion.answers[i].text,
-                                        selection: TextSelection.collapsed(offset: currentQuestion.answers[i].text.length)
-                                      )
-                                    ),
-                                    decoration: InputDecoration(
-                                      hintText: "Jawaban ${i + 1}"
-                                    ),
-                                    onChanged: (value) => notifier.updateAnswer(i, value),
-                                  ),
+                                  child: Column(
+                                    children: [
+                                      InputComponent(
+                                        title: "Jawaban ${i + 1}", 
+                                        controller: TextEditingController.fromValue(
+                                          TextEditingValue(
+                                            text: currentQuestion.answers[i].text,
+                                            selection: TextSelection.collapsed(offset: currentQuestion.answers[i].text.length)
+                                          )
+                                        ),
+                                        onChanged: (value) => notifier.updateAnswer(i, value),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {}, 
+                                            icon: Icon(Icons.image, size: 20)
+                                          ),
+                                          IconButton(
+                                            onPressed: () {}, 
+                                            icon: Icon(Icons.camera, size: 20)
+                                          ),
+                                          Expanded(child: SizedBox()),
+                                          IconButton(
+                                            onPressed: () {}, 
+                                            icon: Icon(Icons.delete, size: 20, color: colors.error)
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
                                 )
                               ],
                             )
                         ],
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        notifier.addAnswer();
-                      }, 
-                      child: Text("Tambah Jawaban")
+                    Padding(
+                      padding: const EdgeInsets.only(left: 35),
+                      child: TextButton(
+                        onPressed: () {
+                          notifier.addAnswer();
+                        }, 
+                        child: Text("Tambah Jawaban")
+                      ),
                     )
                   ],
                 ),
               ),
             )
+          ),
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: CustomButtonComponent(
+              onTap: () {}, 
+              text: "Hapus Pertanyaan",
+              isError: true,
+            ),
           ),
           Row(
             children: [
