@@ -14,14 +14,9 @@ class QuizQuestionCreatePage extends ConsumerStatefulWidget {
 }
 
 class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage> {
-  late TextEditingController questionController;
-  late List<TextEditingController> answerControllers;
-
   @override
   void initState() {
     super.initState();
-    questionController = TextEditingController();
-    answerControllers = [];
   }
 
   @override
@@ -30,19 +25,6 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
     final state = ref.watch(quizCreateProvider);
     final notifier = ref.read(quizCreateProvider.notifier);
     var currentQuestion = state.questions[state.questionIndex];
-
-    if (questionController.text != currentQuestion.text) {
-      final oldSelection = questionController.selection;
-
-      questionController.text = currentQuestion.text;
-
-      final newSelection = TextSelection(
-        baseOffset: oldSelection.baseOffset.clamp(0, questionController.text.length), 
-        extentOffset: oldSelection.extentOffset.clamp(0, questionController.text.length)
-      );
-
-      questionController.selection = newSelection;
-    }
 
     return Scaffold(
       appBar: customAppbarComponent(
@@ -63,7 +45,12 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                     Text("Pertanyaan ${state.questionIndex + 1}/${state.questions.length}"),
                     InputComponent(
                       title: "Pertanyaan", 
-                      controller: questionController,
+                      controller: TextEditingController.fromValue(
+                        TextEditingValue(
+                          text: currentQuestion.text,
+                          selection: TextSelection.collapsed(offset: currentQuestion.text.length)
+                        )
+                      ),
                       onChanged: (value) => notifier.updateQuestion(value),
                     ),
                     Row(
