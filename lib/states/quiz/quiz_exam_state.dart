@@ -10,7 +10,6 @@ class QuizExamState {
   final bool isConfirmedToLeave;
   final int questionIndex;
   final List<QuestionExamModel> questions;
-  final QuestionExamModel? currentQuestion;
 
   QuizExamState({
     this.isLoading = false,
@@ -20,7 +19,6 @@ class QuizExamState {
     this.isConfirmedToLeave = false,
     this.questionIndex = 0,
     this.questions = const [],
-    this.currentQuestion,
   });
 
   QuizExamState copyWith({
@@ -31,7 +29,6 @@ class QuizExamState {
     bool? isConfirmedToLeave,
     int? questionIndex,
     List<QuestionExamModel>? questions,
-    QuestionExamModel? currentQuestion,
   }) {
     return QuizExamState(
       isLoading: isLoading ?? this.isLoading,
@@ -41,7 +38,6 @@ class QuizExamState {
       isConfirmedToLeave: isConfirmedToLeave ?? this.isConfirmedToLeave,
       questionIndex: questionIndex ?? this.questionIndex,
       questions: questions ?? this.questions,
-      currentQuestion: currentQuestion ?? this.currentQuestion,
     );
   }
 }

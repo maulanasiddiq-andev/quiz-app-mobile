@@ -20,7 +20,7 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
   void initState() {
     super.initState();
 
-    Future(() {
+    Future.microtask(() {
       ref.read(quizExamProvider.notifier).assignQuestions(widget.quiz);
     });
   }

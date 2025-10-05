@@ -39,7 +39,6 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
       quiz: quiz,
       questionIndex: 0,
       questions: [...questionExams],
-      currentQuestion: questionExams[0],
     );
   }
 
@@ -49,7 +48,6 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
 
       state = state.copyWith(
         questionIndex: index,
-        currentQuestion: state.questions[index],
       );
     }
   }
@@ -60,7 +58,6 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
 
       state = state.copyWith(
         questionIndex: index,
-        currentQuestion: state.questions[index],
       );
     }
   }
