@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
+import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
@@ -76,7 +77,25 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                                 border: Border.all(color: colors.onSurface),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Text(quiz.title, style: TextStyle(fontSize: 18)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 10,
+                                children: [
+                                  Text(quiz.title, style: TextStyle(fontSize: 18)),
+                                  Text("Dikerjakan: ${quiz.historiesCount} kali"),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    spacing: 5,
+                                    children: [
+                                      Text("Oleh:"),
+                                      ProfileImageComponent(
+                                        radius: 10,
+                                      ),
+                                      Text(quiz.user.name)
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
+import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/pages/quiz/quiz_exam_page.dart';
 import 'package:quiz_app/pages/quiz_history/quiz_history_detail_page.dart';
@@ -63,11 +64,14 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                           ),
                         ),
                         SizedBox(),
-                        Text("Peserta Kuis"),
                         state.isLoadingHistories 
                         ? CircularProgressIndicator(color: colors.primary)
                         : Column(
+                            spacing: 10,
                             children: [
+                              state.histories.isNotEmpty
+                              ? Text("Peserta Kuis")
+                              : SizedBox(),
                               ...state.histories.map((history) {
                                 return Container(
                                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -86,8 +90,15 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                                     },
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                      spacing: 5,
                                       children: [
-                                        Text(history.user.name),
+                                        Row(
+                                          spacing: 5,
+                                          children: [
+                                            ProfileImageComponent(radius: 10),
+                                            Text(history.user.name),
+                                          ],
+                                        ),
                                         Text("Nilai: ${history.score.toString()}"),
                                         Text("Durasi: ${formatTime(history.duration)}")
                                       ],
