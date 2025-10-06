@@ -14,6 +14,7 @@ class QuizDetailCreatePage extends ConsumerStatefulWidget {
 }
 
 class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
+  final formKey = GlobalKey<FormState>();
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController timeController = TextEditingController();
@@ -40,39 +41,66 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    child: Column(
-                      spacing: 15,
-                      children: [
-                        InputComponent(
-                          title: "Judul Kuis", 
-                          controller: titleController
-                        ),
-                        InputComponent(
-                          title: "Deskripsi Kuis", 
-                          controller: descriptionController
-                        ),
-                        InputComponent(
-                          title: "Waktu pengerjaan kuis (menit)", 
-                          controller: timeController,
-                          textInputType: TextInputType.number,
-                        ),
-                        state.categories.isNotEmpty
-                        ? DropdownButton<String>(
-                            value: selectedCategoryId,
-                            items: state.categories.map((category) {
-                              return DropdownMenuItem<String>(
-                                value: category.categoryId,
-                                child: Text(category.name),
-                              );
-                            }).toList(), 
-                            onChanged: (value) {
-                              setState(() {
-                                selectedCategoryId = value ?? "";
-                              });
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        spacing: 15,
+                        children: [
+                          InputComponent(
+                            title: "Judul Kuis", 
+                            controller: titleController,
+                            action: TextInputAction.next,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Judul kuis harus diisi";
+                              }
+
+                              return null;
                             },
-                          )
-                        : SizedBox()
-                      ],
+                          ),
+                          InputComponent(
+                            title: "Deskripsi Kuis", 
+                            controller: descriptionController,
+                            action: TextInputAction.next,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Deskripsi kuis harus diisi";
+                              }
+
+                              return null;
+                            },
+                          ),
+                          InputComponent(
+                            title: "Waktu pengerjaan kuis (menit)", 
+                            controller: timeController,
+                            textInputType: TextInputType.number,
+                            action: TextInputAction.next,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Waktu pengerjaan kuis harus diisi";
+                              }
+
+                              return null;
+                            },
+                          ),
+                          state.categories.isNotEmpty
+                          ? DropdownButton<String>(
+                              value: selectedCategoryId,
+                              items: state.categories.map((category) {
+                                return DropdownMenuItem<String>(
+                                  value: category.categoryId,
+                                  child: Text(category.name),
+                                );
+                              }).toList(), 
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedCategoryId = value ?? "";
+                                });
+                              },
+                            )
+                          : SizedBox()
+                        ],
+                      ),
                     ),
                   ),
                 )
@@ -81,19 +109,21 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: CustomButtonComponent(
                   onTap: () {
-                    ref.read(quizCreateProvider.notifier).createDescription(
-                      selectedCategoryId!,
-                      titleController.text, 
-                      descriptionController.text, 
-                      int.parse(timeController.text)
-                    );
+                    if (formKey.currentState!.validate()) {
+                      ref.read(quizCreateProvider.notifier).createDescription(
+                        selectedCategoryId!,
+                        titleController.text, 
+                        descriptionController.text, 
+                        int.parse(timeController.text)
+                      );
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QuizQuestionCreatePage(),
-                      ),
-                    );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuizQuestionCreatePage(),
+                        ),
+                      );
+                    }
                   }, 
                   text: "Buat pertanyaan"
                 )
