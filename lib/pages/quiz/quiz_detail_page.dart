@@ -37,11 +37,12 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
         backgroundColor: colors.primary,
         foregroundColor: colors.onPrimary
       ),
-      body: state.isLoading
+      body: state.isLoading && state.quiz == null
         ? Center(
             child: CircularProgressIndicator(color: Colors.blue),
           )
         : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: SingleChildScrollView(
@@ -63,10 +64,13 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                             fontSize: 16
                           ),
                         ),
+                        Text("Jumlah Pertanyaan: ${state.quiz?.questionsCount ?? 0}"),
+                        Text("Waktu pengerjaan: ${formatTime(state.quiz?.time ?? 0)}"),
                         SizedBox(),
                         state.isLoadingHistories 
                         ? CircularProgressIndicator(color: colors.primary)
                         : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                             spacing: 10,
                             children: [
                               state.histories.isNotEmpty
