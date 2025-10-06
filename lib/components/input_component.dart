@@ -5,10 +5,10 @@ class InputComponent extends StatelessWidget {
   final TextEditingController controller;
   final int? maxLength;
   final TextInputAction? action;
-  final Function? onSubmit;
   final Function(String value)? onChanged;
   final FocusNode? focusNode;
   final TextInputType textInputType;
+  final String? Function(String? value)? validator;
 
   const InputComponent({
     super.key, 
@@ -16,9 +16,9 @@ class InputComponent extends StatelessWidget {
     required this.controller,
     this.maxLength,
     this.action,
-    this.onSubmit,
     this.onChanged,
     this.focusNode,
+    this.validator,
     this.textInputType = TextInputType.text
   });
 
@@ -26,7 +26,7 @@ class InputComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return TextField(
+    return TextFormField(
       controller: controller,
       focusNode: focusNode,
       cursorColor: colors.primary,
@@ -53,16 +53,12 @@ class InputComponent extends StatelessWidget {
           )
         )
       ),
-      onSubmitted: (_) {
-        if (onSubmit != null) {
-          onSubmit!();
-        }
-      },
       onChanged: (value) {
         if (onChanged != null) {
           onChanged!(value);
         }
       },
+      validator: validator,
     );
   }
 }
