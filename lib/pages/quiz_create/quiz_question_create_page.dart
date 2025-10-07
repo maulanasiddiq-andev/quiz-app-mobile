@@ -1,8 +1,9 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
-import 'package:quiz_app/components/input_component.dart';
+import 'package:quiz_app/components/question_create_component.dart';
 import 'package:quiz_app/components/quiz_navigation_button_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
 
@@ -14,17 +15,13 @@ class QuizQuestionCreatePage extends ConsumerStatefulWidget {
 }
 
 class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  final CarouselSliderController carouselController = CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final state = ref.watch(quizCreateProvider);
     final notifier = ref.read(quizCreateProvider.notifier);
-    var currentQuestion = state.questions[state.questionIndex];
 
     return Scaffold(
       appBar: customAppbarComponent(
@@ -35,109 +32,24 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  spacing: 15,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Pertanyaan ${state.questionIndex + 1}/${state.questions.length}"),
-                    InputComponent(
-                      title: "Pertanyaan", 
-                      controller: TextEditingController.fromValue(
-                        TextEditingValue(
-                          text: currentQuestion.text,
-                          selection: TextSelection.collapsed(offset: currentQuestion.text.length)
-                        )
-                      ),
-                      onChanged: (value) => notifier.updateQuestion(value),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () {}, 
-                          icon: Icon(Icons.image, size: 20)
-                        ),
-                        IconButton(
-                          onPressed: () {}, 
-                          icon: Icon(Icons.camera, size: 20)
-                        ),
-                      ],
-                    ),
-                    RadioGroup(
-                      groupValue: currentQuestion.trueAnswerIndex,
-                      onChanged: (int? value) {
-                        notifier.determineTrueAnswer(value);
-                      },
-                      child: Column(
-                        spacing: 5,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Jawaban",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
-                            ),  
-                          ),
-                          for (var i = 0; i < currentQuestion.answers.length; i++)
-                            Row(
-                              children: [
-                                Radio(value: i),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      InputComponent(
-                                        title: "Jawaban ${i + 1}", 
-                                        controller: TextEditingController.fromValue(
-                                          TextEditingValue(
-                                            text: currentQuestion.answers[i].text,
-                                            selection: TextSelection.collapsed(offset: currentQuestion.answers[i].text.length)
-                                          )
-                                        ),
-                                        onChanged: (value) => notifier.updateAnswer(i, value),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {}, 
-                                            icon: Icon(Icons.image, size: 20)
-                                          ),
-                                          IconButton(
-                                            onPressed: () {}, 
-                                            icon: Icon(Icons.camera, size: 20)
-                                          ),
-                                          Expanded(child: SizedBox()),
-                                          IconButton(
-                                            onPressed: () {
-                                              notifier.deleteAnswer(i);
-                                            }, 
-                                            icon: Icon(Icons.delete, size: 20, color: colors.error)
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                )
-                              ],
-                            )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 35),
-                      child: TextButton(
-                        onPressed: () {
-                          notifier.addAnswer();
-                        }, 
-                        child: Text("Tambah Jawaban")
-                      ),
-                    )
-                  ],
-                ),
+            child: CarouselSlider.builder(
+              carouselController: carouselController,
+              itemCount: state.questions.length,
+              itemBuilder: (context, index, realIndex) {
+                return QuestionCreateComponent(
+                  question: state.questions[index],
+                  questionIndex: index,
+                  questionsCount: state.questions.length,
+                );
+              },
+              options: CarouselOptions(
+                viewportFraction: 1.0,
+                enableInfiniteScroll: false,
+                padEnds: false,
+                height: double.infinity,
+                onPageChanged: (index, reason) {
+                  notifier.changeQuestionIndex(index);
+                },
               ),
             )
           ),
@@ -155,7 +67,11 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
             children: [
               Expanded(
                 child: QuizNavigationButtonComponent(
-                  onTap: () => notifier.toPreviousQuestion(), 
+                  onTap: () {
+                    if (state.questionIndex > 0) {
+                      carouselController.animateToPage(state.questionIndex - 1);
+                    }
+                  }, 
                   icon: Icons.arrow_back,
                 ),
               ),
@@ -174,7 +90,14 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
               ),
               Expanded(
                 child: QuizNavigationButtonComponent(
-                  onTap: () => notifier.toNextQuestion(), 
+                  onTap: () {
+                    if (state.questionIndex < state.questions.length - 1) {
+                      carouselController.animateToPage(state.questionIndex + 1);
+                    } else {
+                      notifier.addQuestion();
+                      carouselController.animateToPage(state.questionIndex + 1);
+                    }
+                  }, 
                   icon: state.questionIndex < state.questions.length - 1
                     ? Icons.arrow_forward
                     : Icons.add,

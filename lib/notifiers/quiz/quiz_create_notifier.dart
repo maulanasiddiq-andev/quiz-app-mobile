@@ -120,7 +120,6 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
 
     state = state.copyWith(
       questions: [...state.questions, question],
-      questionIndex: state.questionIndex + 1
     );
   }
 
@@ -149,26 +148,8 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     state = state.copyWith(questions: questions);
   }
 
-  void toNextQuestion() {
-    if (state.questionIndex < state.questions.length - 1) {
-      var index = state.questionIndex + 1;
-
-      state = state.copyWith(
-        questionIndex: index,
-      );
-    } else {
-      addQuestion();
-    }
-  }
-
-  void toPreviousQuestion() {
-    if (state.questionIndex > 0) {
-      var index = state.questionIndex - 1;
-
-      state = state.copyWith(
-        questionIndex: index,
-      );
-    }
+  void changeQuestionIndex(int questionIndex) {
+    state = state.copyWith(questionIndex: questionIndex);
   }
 
   Future<bool> createQuiz() async {
