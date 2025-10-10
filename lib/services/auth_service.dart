@@ -27,7 +27,7 @@ class AuthService {
     final responseJson = jsonDecode(response.body);
     final BaseResponse<TokenModel> result = BaseResponse.fromJson(
       responseJson,
-      (data) => TokenModel.fromJson(data)
+      fromJsonT: (data) => TokenModel.fromJson(data)
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
@@ -48,7 +48,7 @@ class AuthService {
     final responseJson = jsonDecode(response.body);
     final BaseResponse<UserModel> result = BaseResponse.fromJson(
       responseJson,
-      (data) => UserModel.fromJson(data)
+      fromJsonT: (data) => UserModel.fromJson(data)
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);

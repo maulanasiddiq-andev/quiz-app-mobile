@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:quiz_app/constants/environment_contant.dart';
@@ -8,6 +9,7 @@ import 'package:quiz_app/models/quiz_history/quiz_history_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/responses/search_responses.dart';
+import 'package:quiz_app/utils/convert_media_type.dart';
 
 class QuizService {
   static const storage = FlutterSecureStorage();
@@ -34,7 +36,7 @@ class QuizService {
     final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<SearchResponse<QuizModel>> result = BaseResponse.fromJson(
       responseJson,
-      (data) => SearchResponse.fromJson(
+      fromJsonT: (data) => SearchResponse.fromJson(
         data,
         (item) => QuizModel.fromJson(item),
       ),
@@ -55,7 +57,7 @@ class QuizService {
     final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<QuizModel> result = BaseResponse.fromJson(
       responseJson,
-      (data) => QuizModel.fromJson(data),
+      fromJsonT: (data) => QuizModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
@@ -78,12 +80,45 @@ class QuizService {
     final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<QuizModel> result = BaseResponse.fromJson(
       responseJson,
-      (data) => QuizModel.fromJson(data),
+      fromJsonT: (data) => QuizModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
     return result;
+  }
+
+  static Future<String> uploadQuizImage(String directory, File image) async {
+    var token = await storage.read(key: 'token');
+    final uri = Uri.parse('${url}upload-image');
+
+    var request = http.MultipartRequest('POST', uri);
+    request.headers.addAll({
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    request.fields.addAll({
+      'directory': directory,
+    });
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'image',
+        image.path,
+        contentType: convertPathToMediaType(image.path),
+      ),
+    );
+
+    final streamedBody = await request.send();
+    final response = await streamedBody.stream.bytesToString();
+    final responseJson = jsonDecode(response);
+
+    var result = BaseResponse<String>.fromJson(responseJson);
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result.data!;
   }
 
   static Future<BaseResponse<QuizModel>> takeQuiz(String quizId, QuizExamModel quizExam) async {
@@ -104,7 +139,7 @@ class QuizService {
     final responseJson = jsonDecode(response.body);
     final BaseResponse<QuizModel> result = BaseResponse.fromJson(
       responseJson,
-      (data) => QuizModel.fromJson(data)
+      fromJsonT: (data) => QuizModel.fromJson(data)
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
@@ -134,7 +169,7 @@ class QuizService {
     final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<SearchResponse<QuizHistoryModel>> result = BaseResponse.fromJson(
       responseJson,
-      (data) => SearchResponse.fromJson(
+      fromJsonT: (data) => SearchResponse.fromJson(
         data,
         (item) => QuizHistoryModel.fromJson(item),
       ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:quiz_app/models/quiz_create/answer_create_model.dart';
+import 'package:quiz_app/services/quiz_service.dart';
 
 class QuestionCreateModel {
   final String text;
@@ -28,9 +29,10 @@ class QuestionCreateModel {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Future<Map<String, dynamic>> toJson() async {
     return {
       "text": text,
+      "imageUrl": image != null ? await QuizService.uploadQuizImage("question", image!) : null,
       "answers": answers.map((answer) => answer.toJson()).toList()
     };
   }
