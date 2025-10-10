@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/input_component.dart';
+import 'package:quiz_app/components/pick_image_component.dart';
 import 'package:quiz_app/models/quiz_create/question_create_model.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
 
@@ -58,12 +59,6 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final notifier = ref.read(quizCreateProvider.notifier);
-    // final state = ref.watch(quizCreateProvider);
-
-    // for (var answer in widget.question.answers) {
-    //   final controller = TextEditingController(text: answer.text);
-    //   answerControllers.add(controller);
-    // }
 
     return SingleChildScrollView(
       child: Padding(
@@ -78,18 +73,22 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
               controller: questionController,
               onChanged: (value) => notifier.updateQuestion(value),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {}, 
-                  icon: Icon(Icons.image, size: 20)
-                ),
-                IconButton(
-                  onPressed: () {}, 
-                  icon: Icon(Icons.camera, size: 20)
-                ),
-              ],
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     IconButton(
+            //       onPressed: () {}, 
+            //       icon: Icon(Icons.image, size: 20)
+            //     ),
+            //     IconButton(
+            //       onPressed: () {}, 
+            //       icon: Icon(Icons.camera, size: 20)
+            //     ),
+            //   ],
+            // ),
+            PickImageComponent(
+              pickImage: () => notifier.pickQuestionImage(colors.primary, colors.onPrimary),
+              image: widget.question.image,
             ),
             RadioGroup(
               groupValue: widget.question.trueAnswerIndex,

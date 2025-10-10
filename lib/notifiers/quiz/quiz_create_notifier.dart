@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz_create/answer_create_model.dart';
 import 'package:quiz_app/models/quiz_create/question_create_model.dart';
@@ -11,12 +16,10 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
   QuizCreateNotifier() : super(QuizCreateState()) {
     var question = QuestionCreateModel();
     question = question.copyWith(
-      answers: [...question.answers, AnswerCreateModel()]
+      answers: [...question.answers, AnswerCreateModel()],
     );
 
-    state = state.copyWith(
-      questions: [...state.questions, question],
-    );
+    state = state.copyWith(questions: [...state.questions, question]);
 
     getCategories();
   }
@@ -28,7 +31,10 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
       var result = await CategoryService.getQuizzes(0, 10);
 
       if (result.data != null) {
-        state = state.copyWith(isLoadingCategories: false, categories: result.data!.items);
+        state = state.copyWith(
+          isLoadingCategories: false,
+          categories: result.data!.items,
+        );
       }
 
       state = state.copyWith(isLoadingCategories: false);
@@ -41,13 +47,65 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     }
   }
 
-  void createDescription(String categoryId, String title, String description, int time) {
+  void createDescription(
+    String categoryId,
+    String title,
+    String description,
+    int time,
+  ) {
     state = state.copyWith(
       categoryId: categoryId,
       title: title,
       description: description,
-      time: time
+      time: time,
     );
+  }
+
+  Future<File?> pickImage(
+    Color toolbarColor,
+    Color toolbarWidgetColor,
+  ) async {
+    final picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      final croppedImage = await ImageCropper().cropImage(
+        sourcePath: pickedFile.path,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Atur Gambar',
+            toolbarColor: toolbarColor,
+            toolbarWidgetColor: toolbarWidgetColor,
+            initAspectRatio: CropAspectRatioPreset.ratio16x9,
+            lockAspectRatio: true,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.ratio16x9,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio4x3,
+            ],
+          ),
+        ],
+      );
+
+      if (croppedImage != null) {
+        return File(croppedImage.path);
+      }
+
+      return null;
+    }
+
+    return null;
+  }
+
+  Future<void> pickDescriptionImage(
+    Color toolbarColor,
+    Color toolbarWidgetColor,
+  ) async {
+    final image = await pickImage(toolbarColor, toolbarWidgetColor);
+    state = state.copyWith(image: image);
   }
 
   void addAnswer() {
@@ -57,13 +115,11 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     var questions = [...state.questions];
 
     currentQuestion = currentQuestion.copyWith(
-      answers: [...currentQuestion.answers, answer]
+      answers: [...currentQuestion.answers, answer],
     );
 
     questions[state.questionIndex] = currentQuestion;
-    state = state.copyWith(
-      questions: questions
-    );
+    state = state.copyWith(questions: questions);
   }
 
   void deleteAnswer(int answerIndex) {
@@ -110,7 +166,10 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
       answers[answerIndex] = answers[answerIndex].copyWith(isTrueAnswer: true);
     }
 
-    questions[index] = currentQuestion.copyWith(answers: answers, trueAnswerIndex: answerIndex);
+    questions[index] = currentQuestion.copyWith(
+      answers: answers,
+      trueAnswerIndex: answerIndex,
+    );
     state = state.copyWith(questions: questions);
   }
 
@@ -118,9 +177,24 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     var question = QuestionCreateModel();
     question = question.copyWith(answers: [AnswerCreateModel()]);
 
-    state = state.copyWith(
-      questions: [...state.questions, question],
-    );
+    state = state.copyWith(questions: [...state.questions, question]);
+  }
+
+  Future<void> pickQuestionImage(
+    Color toolbarColor,
+    Color toolbarWidgetColor,
+  ) async {
+    final image = await pickImage(toolbarColor, toolbarWidgetColor);
+
+    if (image != null) {
+      var questions = [...state.questions];
+      var currentQuestion = questions[state.questionIndex];
+
+      currentQuestion = currentQuestion.copyWith(image: image);
+      questions[state.questionIndex] = currentQuestion;
+
+      state = state.copyWith(questions: questions);
+    }
   }
 
   void deleteQuestion() {
@@ -133,9 +207,7 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     }
 
     questions.removeAt(removedIndex);
-    state = state.copyWith(
-      questions: questions
-    );
+    state = state.copyWith(questions: questions);
   }
 
   void updateQuestion(String text) {
@@ -161,7 +233,9 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
         "title": state.title,
         "description": state.description,
         "time": state.time,
-        "questions": state.questions.map((question) => question.toJson()).toList()
+        "questions": state.questions
+            .map((question) => question.toJson())
+            .toList(),
       };
 
       var result = await QuizService.createQuiz(quiz);
@@ -184,4 +258,6 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
   }
 }
 
-final quizCreateProvider = StateNotifierProvider.autoDispose((ref) => QuizCreateNotifier());
+final quizCreateProvider = StateNotifierProvider.autoDispose(
+  (ref) => QuizCreateNotifier(),
+);
