@@ -32,7 +32,7 @@ class CategoryService {
     final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<SearchResponse<CategoryModel>> result = BaseResponse.fromJson(
       responseJson,
-      (data) => SearchResponse.fromJson(
+      fromJsonT: (data) => SearchResponse.fromJson(
         data,
         (item) => CategoryModel.fromJson(item),
       ),

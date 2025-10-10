@@ -20,7 +20,7 @@ class QuizHistoryService {
     final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<QuizHistoryModel> result = BaseResponse.fromJson(
       responseJson,
-      (data) => QuizHistoryModel.fromJson(data),
+      fromJsonT: (data) => QuizHistoryModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);

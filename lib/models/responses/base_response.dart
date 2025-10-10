@@ -9,9 +9,18 @@ class BaseResponse<T> {
     required this.succeed
   });
 
-  factory BaseResponse.fromJson(Map<String, dynamic> json, T Function(Map<String, dynamic>) fromjsonT) => BaseResponse(
-    data: json['data'] != null ? fromjsonT(json['data']) : null, 
-    messages: List<String>.from(json['messages']), 
-    succeed: json['succeed']
-  );
+  factory BaseResponse.fromJson(
+    Map<String, dynamic> json, 
+    {T Function(Map<String, dynamic>)? fromJsonT}
+  ) {
+    final dataJson = json['data'];
+
+    return BaseResponse(
+      data: dataJson == null
+        ? null
+        : (fromJsonT != null ? fromJsonT(dataJson) : dataJson as T),
+      messages: List<String>.from(json['messages']),
+      succeed: json['succeed'],
+    );
+  }
 }
