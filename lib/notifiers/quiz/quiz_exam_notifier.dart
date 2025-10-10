@@ -18,6 +18,7 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
       final questionExam = QuestionExamModel(
         questionOrder: question.questionOrder,
         text: question.text, 
+        imageUrl: question.imageUrl,
         answers: []
       );
 

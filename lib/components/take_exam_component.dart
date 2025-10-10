@@ -84,7 +84,6 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
-                    spacing: 10,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -94,12 +93,25 @@ class _TakeExamComponentState extends ConsumerState<TakeExamComponent> {
                           fontWeight: FontWeight.bold
                         ),
                       ),
+                      SizedBox(height: 10),
                       Text(
                         currentQuestion.text,
                         style: TextStyle(
                           fontSize: 18
                         ),
                       ),
+                      currentQuestion.imageUrl != null
+                        ? Column(
+                            children: [
+                              SizedBox(height: 10),
+                              Image.network(
+                                currentQuestion.imageUrl!,
+                                width: double.infinity,  
+                              ),
+                              SizedBox(height: 10)
+                            ],
+                          )
+                        : SizedBox(height: 10),
                       RadioGroup(
                         groupValue: currentQuestion.selectedAnswerOrder,
                         onChanged: (int? value) {

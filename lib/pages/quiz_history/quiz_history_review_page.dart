@@ -56,6 +56,12 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
                       children: [
                         Text("Pertanyaan ${(state.questionIndex + 1).toString()}/${state.questions.length.toString()}"),
                         Text(currentQuestion.text),
+                        currentQuestion.imageUrl != null
+                          ? Image.network(
+                              currentQuestion.imageUrl!,
+                              width: double.infinity,
+                            )
+                          : SizedBox(),
                         RadioGroup(
                           groupValue: currentQuestion.selectedAnswerOrder,
                           onChanged: (_) {},

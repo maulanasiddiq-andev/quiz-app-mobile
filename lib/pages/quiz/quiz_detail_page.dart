@@ -49,7 +49,6 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     child: Column(
-                      spacing: 10,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -58,15 +57,32 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                             fontSize: 20
                           ),
                         ),
+                        state.quiz?.imageUrl != null
+                          ? Column(
+                              children: [
+                                SizedBox(height: 10),
+                                ClipRRect(
+                                  borderRadius: BorderRadiusGeometry.circular(10),
+                                  child: Image.network(
+                                    state.quiz!.imageUrl!,
+                                    width: double.infinity,  
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            )
+                          : SizedBox(height: 10),
                         Text(
                           state.quiz?.description ?? "Deskripsi Kuis",
                           style: TextStyle(
                             fontSize: 16
                           ),
                         ),
+                        SizedBox(height: 10),
                         Text("Jumlah Pertanyaan: ${state.quiz?.questionsCount ?? 0}"),
-                        Text("Waktu pengerjaan: ${formatTime(state.quiz?.time ?? 0)}"),
-                        SizedBox(),
+                        SizedBox(height: 10),
+                        Text("Waktu pengerjaan: ${formatTime(state.quiz?.time == null ? 0 : state.quiz!.time * 60)}"),
+                        SizedBox(height: 10),
                         state.isLoadingHistories 
                         ? CircularProgressIndicator(color: colors.primary)
                         : Column(
