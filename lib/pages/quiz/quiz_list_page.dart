@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
-import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/components/quiz_container_component.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
@@ -60,43 +60,13 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                         itemBuilder: (context, index) {
                           final quiz = state.quizzes[index];
                     
-                          return GestureDetector(
+                          return QuizContainerComponent(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => QuizDetailPage(quizId: quiz.quizId)),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => QuizDetailPage(quizId: quiz.quizId))
                               );
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 10),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: colors.onSurface),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                spacing: 10,
-                                children: [
-                                  Text(quiz.title, style: TextStyle(fontSize: 18)),
-                                  Text("Dikerjakan: ${quiz.historiesCount} kali"),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    spacing: 5,
-                                    children: [
-                                      Text("Oleh:"),
-                                      ProfileImageComponent(
-                                        radius: 10,
-                                      ),
-                                      Text(quiz.user.name)
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
+                            }, 
+                            quiz: quiz
                           );
                         },
                       ),
