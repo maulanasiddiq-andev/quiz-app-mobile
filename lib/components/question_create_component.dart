@@ -23,25 +23,43 @@ class QuestionCreateComponent extends ConsumerStatefulWidget {
 class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponent> {
   final TextEditingController questionController = TextEditingController();
   final List<TextEditingController> answerControllers = [];
+  final List<FocusNode> answerFocuses = [];
 
   @override
   void initState() {
     super.initState();
 
-    questionController.text = widget.question.text;
-    for (var answer in widget.question.answers) {
-      final controller = TextEditingController(text: answer.text);
-      answerControllers.add(controller);
-    }
+    initControllers();
   }
 
   @override
   void didUpdateWidget(covariant QuestionCreateComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    // add answer
     if (widget.question.answers.length > oldWidget.question.answers.length) {
       final controller = TextEditingController();
       answerControllers.add(controller);
+      answerFocuses.add(FocusNode());
+
+      // immediately focus the newly added answer field
+      answerFocuses[answerFocuses.length - 1].requestFocus();
+    }
+
+    // delete the answer
+    if (widget.question.answers.length < oldWidget.question.answers.length) {
+      for (var i = 0; i < oldWidget.question.answers.length; i++) {
+        if (oldWidget.question.answers[i] != widget.question.answers[i]) {
+          answerControllers.removeAt(i);
+          answerFocuses.removeAt(i);
+          break;
+        }
+      }
+    }
+
+    // case: the current question is removed and the next question become of this index
+    if (widget.question != oldWidget.question && widget.questionsCount != oldWidget.questionsCount) {
+      initControllers();
     }
   }
 
@@ -53,6 +71,17 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
     }
 
     super.dispose();
+  }
+
+  void initControllers() {
+    questionController.text = widget.question.text;
+    answerControllers.clear();
+    answerFocuses.clear();
+    for (var answer in widget.question.answers) {
+      final controller = TextEditingController(text: answer.text);
+      answerControllers.add(controller);
+      answerFocuses.add(FocusNode());
+    }
   }
 
   @override
@@ -72,20 +101,23 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
               title: "Pertanyaan", 
               controller: questionController,
               onChanged: (value) => notifier.updateQuestion(value),
+              action: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Pertanyaan harus diisi";
+                }
+
+                if (widget.question.answers.length == 1) {
+                  return "Jawaban harus lebih dari satu";
+                }
+
+                if (widget.question.trueAnswerIndex == null) {
+                  return "Tentukan jawaban benar terlebih dahulu";
+                }
+
+                return null;
+              },
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     IconButton(
-            //       onPressed: () {}, 
-            //       icon: Icon(Icons.image, size: 20)
-            //     ),
-            //     IconButton(
-            //       onPressed: () {}, 
-            //       icon: Icon(Icons.camera, size: 20)
-            //     ),
-            //   ],
-            // ),
             PickImageComponent(
               pickImage: () => notifier.pickQuestionImage(colors.primary, colors.onPrimary),
               image: widget.question.image,
@@ -114,28 +146,33 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
                           child: Column(
                             children: [
                               InputComponent(
+                                focusNode: answerFocuses[i],
                                 title: "Jawaban ${i + 1}", 
                                 controller: answerControllers[i],
                                 onChanged: (value) => notifier.updateAnswer(i, value),
+                                action: i == answerControllers.length - 1
+                                  ? TextInputAction.done
+                                  : TextInputAction.next,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Jawaban harus diisi";
+                                  }
+
+                                  return null;
+                                },
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  IconButton(
-                                    onPressed: () {}, 
-                                    icon: Icon(Icons.image, size: 20)
-                                  ),
-                                  IconButton(
-                                    onPressed: () {}, 
-                                    icon: Icon(Icons.camera, size: 20)
-                                  ),
                                   Expanded(child: SizedBox()),
-                                  IconButton(
-                                    onPressed: () {
-                                      notifier.deleteAnswer(i);
-                                    }, 
-                                    icon: Icon(Icons.delete, size: 20, color: colors.error)
-                                  ),
+                                  widget.question.answers.length > 1
+                                    ? IconButton(
+                                        onPressed: () {
+                                          notifier.deleteAnswer(i);
+                                        }, 
+                                        icon: Icon(Icons.delete, size: 20, color: colors.error)
+                                      )
+                                    : SizedBox(),
                                 ],
                               ),
                             ],
@@ -146,15 +183,17 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 35),
-              child: TextButton(
-                onPressed: () {
-                  notifier.addAnswer();
-                }, 
-                child: Text("Tambah Jawaban")
-              ),
-            )
+            widget.question.answers.length > 3
+              ? SizedBox()
+              : Padding(
+                  padding: const EdgeInsets.only(left: 35),
+                  child: TextButton(
+                    onPressed: () {
+                      notifier.addAnswer();
+                    }, 
+                    child: Text("Tambah Jawaban")
+                  ),
+                )
           ],
         ),
       ),
