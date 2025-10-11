@@ -47,6 +47,7 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                 enableInfiniteScroll: false,
                 padEnds: false,
                 height: double.infinity,
+                initialPage: state.questionIndex,
                 onPageChanged: (index, reason) {
                   notifier.changeQuestionIndex(index);
                 },
