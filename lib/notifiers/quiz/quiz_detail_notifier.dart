@@ -36,7 +36,6 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoadingHistories: false);
     } catch (e) {
-      print(e.toString());
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoadingHistories: false);
     }
