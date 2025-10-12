@@ -7,7 +7,7 @@ class QuizHistoryModel extends BaseModel {
   final String quizId;
   final int quizVersion;
   final String userId;
-  final UserModel user;
+  final UserModel? user;
   final List<QuestionHistoryModel> questions;
   final int questionCount;
   final int duration; 
@@ -41,7 +41,7 @@ class QuizHistoryModel extends BaseModel {
     quizId = json['quizId'],
     quizVersion = json['quizVersion'],
     userId = json['userId'],
-    user = UserModel.fromJson(json['user']),
+    user = json['user'] != null ? UserModel.fromJson(json['user']) : null,
     questions = (json['questions'] as List)
       .map((question) => QuestionHistoryModel.fromJson(question))
       .toList(),

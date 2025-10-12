@@ -135,7 +135,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                                               ProfileImageComponent(
                                                 radius: 10,
                                               ),
-                                              Text(history.user.name),
+                                              Text(history.user?.name ?? "user"),
                                             ],
                                           ),
                                           Text(

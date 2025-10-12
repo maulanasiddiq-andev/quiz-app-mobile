@@ -46,7 +46,7 @@ class _QuizHistoryDetailPageState extends ConsumerState<QuizHistoryDetailPage> {
                   spacing: 10,
                   children: [
                     Text(
-                      widget.quizHistory.user.name,
+                      widget.quizHistory.user?.name ?? "user",
                       style: TextStyle(
                         fontSize: 20
                       ),
