@@ -13,7 +13,7 @@ class QuizModel extends BaseModel {
   String? imageUrl;
   final int time;
   final int historiesCount;
-  final int questionsCount;
+  final int questionCount;
   final List<QuestionModel> questions;
 
   QuizModel({
@@ -33,7 +33,7 @@ class QuizModel extends BaseModel {
     this.imageUrl,
     required this.time,
     required this.historiesCount,
-    required this.questionsCount,
+    required this.questionCount,
     this.questions = const [],
   });
 
@@ -50,6 +50,6 @@ class QuizModel extends BaseModel {
           .map((data) => QuestionModel.fromJson(data))
           .toList(),
       historiesCount = json['historiesCount'],
-      questionsCount = json['questionsCount'],
+      questionCount = json['questionCount'],
       super.fromJson(json);
 }
