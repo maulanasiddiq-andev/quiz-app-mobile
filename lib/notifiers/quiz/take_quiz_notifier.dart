@@ -11,7 +11,7 @@ import 'package:quiz_app/states/quiz/take_quiz_state.dart';
 class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
   TakeQuizNotifier() : super(TakeQuizState());
 
-  Future<bool> assignQuestions(QuizModel quiz) async {
+  Future<bool> getQuizWithQuestions(QuizModel quiz) async {
     state = state.copyWith(isLoading: true);
     List<QuestionExamModel> questionExams = [];
 
@@ -111,7 +111,7 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
   }
 }
 
-final quizExamProvider =
+final takeQuizProvider =
     StateNotifierProvider.autoDispose<TakeQuizNotifier, TakeQuizState>(
       (ref) => TakeQuizNotifier(),
     );

@@ -15,7 +15,7 @@ class TakeQuizResultPage extends ConsumerStatefulWidget {
 class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(quizExamProvider);
+    final state = ref.watch(takeQuizProvider);
 
     return Scaffold(
       appBar: customAppbarComponent("Hasil Kuis"),
@@ -29,19 +29,19 @@ class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
                   Row(
                     children: [
                       Text("Jawaban benar: "),
-                      Text(state.quizHistory!.trueAnswers.toString())
+                      Text(state.quizHistory!.trueAnswers.toString()),
                     ],
                   ),
                   Row(
                     children: [
                       Text("Nilai: "),
-                      Text(state.quizHistory!.score.toString())
+                      Text(state.quizHistory!.score.toString()),
                     ],
                   ),
                   Row(
                     children: [
                       Text("Durasi Pengerjaan: "),
-                      Text(formatTime(state.quizHistory!.duration))
+                      Text(formatTime(state.quizHistory!.duration)),
                     ],
                   ),
                 ],
@@ -54,10 +54,10 @@ class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                   Navigator.pop(context);
-                }, 
-                text: "Kembali"
-              )
-            )
+                },
+                text: "Kembali",
+              ),
+            ),
           ],
         ),
       ),

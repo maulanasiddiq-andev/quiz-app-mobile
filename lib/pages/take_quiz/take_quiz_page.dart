@@ -24,7 +24,7 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
     super.initState();
 
     Future.microtask(() {
-      final state = ref.read(quizExamProvider);
+      final state = ref.read(takeQuizProvider);
       seconds = state.quiz!.time * 60;
       startTimer();
     });
@@ -63,7 +63,7 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
           actions: [
             TextButton(
               onPressed: () {
-                ref.read(quizExamProvider.notifier).confirmToLeave();
+                ref.read(takeQuizProvider.notifier).confirmToLeave();
                 // close the dialog
                 Navigator.of(context).pop(true);
               },
@@ -86,8 +86,8 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(quizExamProvider);
-    final notifier = ref.read(quizExamProvider.notifier);
+    final state = ref.watch(takeQuizProvider);
+    final notifier = ref.read(takeQuizProvider.notifier);
     final colors = Theme.of(context).colorScheme;
     final currentQuestion = state.questions[state.questionIndex];
 

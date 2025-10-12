@@ -162,11 +162,11 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: CustomButtonComponent(
-                    isLoading: ref.watch(quizExamProvider).isLoading,
+                    isLoading: ref.watch(takeQuizProvider).isLoading,
                     onTap: () async {
                       var result = await ref
-                          .read(quizExamProvider.notifier)
-                          .assignQuestions(state.quiz!);
+                          .read(takeQuizProvider.notifier)
+                          .getQuizWithQuestions(state.quiz!);
 
                       if (result == true && context.mounted) {
                         Navigator.push(
