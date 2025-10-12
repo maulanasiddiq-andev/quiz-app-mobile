@@ -82,6 +82,24 @@ class QuizService {
 
     return result;
   }
+  
+  static Future<BaseResponse<QuizHistoryModel>> checkQuiz(String id, Map<String, dynamic> quiz) async {
+    final token = await storage.read(key: 'token');
+    final response = await http.get(
+      Uri.parse('$url$id/check-quiz'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    final dynamic responseJson = jsonDecode(response.body);
+    final BaseResponse<QuizHistoryModel> result = BaseResponse.fromJson(
+      responseJson,
+      fromJsonT: (data) => QuizHistoryModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
 
   static Future<BaseResponse<QuizModel>> createQuiz(Map<String, dynamic> quiz) async {
     final token = await storage.read(key: 'token');
