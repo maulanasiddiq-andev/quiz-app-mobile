@@ -78,18 +78,32 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
     }
   }
 
-  Future<void> finishQuiz(int duration) async {
+  Future<bool> finishQuiz(int duration) async {
     state = state.copyWith(isLoading: true);
 
     try {
-      
+      var quiz = {
+        "quizVersion": state.quiz!.version,
+        "questionCount": state.questions.length,
+        "duration": duration,
+        "questions": state.questions.map((question) => question.toJson()).toList()
+      };
+
+      var result = await QuizService.checkQuiz(state.quiz!.quizId, quiz);
+
+      state = state.copyWith(quizHistory: result.data);
+      Fluttertoast.showToast(msg: result.messages[0]);
+
       state = state.copyWith(isLoading: false);
+      return true;
     }  on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoading: false);
+      return false;
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoading: false);
+      return false;
     }
   }
 

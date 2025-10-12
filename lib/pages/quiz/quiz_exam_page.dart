@@ -2,9 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
-import 'package:quiz_app/components/exam_result_component.dart';
-import 'package:quiz_app/components/take_exam_component.dart';
+import 'package:quiz_app/components/quiz_navigation_button_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_exam_notifier.dart';
+import 'package:quiz_app/pages/take_quiz/take_quiz_result_page.dart';
+import 'package:quiz_app/utils/format_time.dart';
 
 class QuizExamPage extends ConsumerStatefulWidget {
   const QuizExamPage({super.key});
@@ -14,9 +15,39 @@ class QuizExamPage extends ConsumerStatefulWidget {
 }
 
 class _QuizExamPageState extends ConsumerState<QuizExamPage> {
+  int seconds = 0;
+  int duration = 0;
+  Timer? timer;
+
   @override
   void initState() {
     super.initState();
+
+    Future.microtask(() {
+      final state = ref.read(quizExamProvider);
+      seconds = state.quiz!.time * 60;
+      startTimer();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+
+    super.dispose();
+  }
+  
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) {
+      if (seconds > 0) {
+        setState(() {
+          seconds--;
+          duration++;
+        });
+      } else {
+        timer?.cancel();
+      }
+    });
   }
 
   Future<bool> confirmLeaveDialog() async {
@@ -68,7 +99,9 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizExamProvider);
+    final notifier = ref.read(quizExamProvider.notifier);
     final colors = Theme.of(context).colorScheme;
+    final currentQuestion = state.questions[state.questionIndex];
 
     return PopScope(
       canPop: false,
@@ -96,9 +129,130 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
           backgroundColor: colors.primary,
           foregroundColor: colors.onPrimary
         ),
-        body: state.isDone && state.quizExam != null
-          ? ExamResultComponent(quizExam: state.quizExam!)
-          : TakeExamComponent(quiz: state.quiz!),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Center(
+                child: Text(
+                  formatTime(seconds),
+                  style: TextStyle(
+                    color: seconds > 10
+                      ? colors.onSurface
+                      : seconds % 2 == 0
+                        ? colors.onSurface
+                        : colors.error
+                  ),
+                )
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Pertanyaan ${(state.questionIndex + 1).toString()}/${state.questions.length.toString()}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        currentQuestion.text,
+                        style: TextStyle(
+                          fontSize: 18
+                        ),
+                      ),
+                      currentQuestion.imageUrl != null
+                        ? Column(
+                            children: [
+                              SizedBox(height: 10),
+                              Image.network(
+                                currentQuestion.imageUrl!,
+                                width: double.infinity,  
+                              ),
+                              SizedBox(height: 10)
+                            ],
+                          )
+                        : SizedBox(height: 10),
+                      RadioGroup(
+                        groupValue: currentQuestion.selectedAnswerOrder,
+                        onChanged: (int? value) {
+                          currentQuestion.selectedAnswerOrder = value;
+                        },
+                        child: Column(
+                          children: [
+                            ...currentQuestion.answers.map((answer) {
+                              return RadioListTile(
+                                value: answer.answerOrder,
+                                title: answer.text != null 
+                                  ? Text(
+                                      answer.text!,
+                                      style: TextStyle(
+                                        fontSize: 18
+                                      ),
+                                    ) 
+                                  : null,
+                                secondary: answer.imageUrl != null 
+                                  ? Image.network(
+                                      answer.imageUrl!,
+                                      width: 40,
+                                      height: 40,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: QuizNavigationButtonComponent(
+                    onTap: () => notifier.toPreviousQuestion(), 
+                    icon: Icons.arrow_back,
+                    text: "Sebelumnya",
+                  ),
+                ),
+                Expanded(
+                  child: QuizNavigationButtonComponent(
+                    onTap: () async {
+                      if (state.questionIndex < state.questions.length - 1) {
+                        notifier.toNextQuestion();
+                      } else {
+                        final result = await notifier.finishQuiz(duration);
+
+                        if (result == true && context.mounted) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => TakeQuizResultPage())
+                          );
+                        }
+                      }
+                    }, 
+                    icon: state.questionIndex < state.questions.length - 1
+                      ? Icons.arrow_forward
+                      : Icons.check,
+                    text: state.questionIndex < state.questions.length - 1
+                      ? "Selanjutnya"
+                      : "Selesai",
+                    textDirection: TextDirection.rtl,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

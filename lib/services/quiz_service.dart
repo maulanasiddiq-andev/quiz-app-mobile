@@ -85,9 +85,10 @@ class QuizService {
   
   static Future<BaseResponse<QuizHistoryModel>> checkQuiz(String id, Map<String, dynamic> quiz) async {
     final token = await storage.read(key: 'token');
-    final response = await http.get(
+    final response = await http.post(
       Uri.parse('$url$id/check-quiz'),
-      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json', 'Content-Type': 'application/json'},
+      body: jsonEncode(quiz)
     );
 
     final dynamic responseJson = jsonDecode(response.body);

@@ -1,6 +1,7 @@
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
 import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
+import 'package:quiz_app/models/quiz_history/quiz_history_model.dart';
 
 class QuizExamState {
   final bool isLoading;
@@ -10,6 +11,7 @@ class QuizExamState {
   final bool isConfirmedToLeave;
   final int questionIndex;
   final List<QuestionExamModel> questions;
+  final QuizHistoryModel? quizHistory;
 
   QuizExamState({
     this.isLoading = false,
@@ -19,6 +21,7 @@ class QuizExamState {
     this.isConfirmedToLeave = false,
     this.questionIndex = 0,
     this.questions = const [],
+    this.quizHistory
   });
 
   QuizExamState copyWith({
@@ -29,6 +32,7 @@ class QuizExamState {
     bool? isConfirmedToLeave,
     int? questionIndex,
     List<QuestionExamModel>? questions,
+    QuizHistoryModel? quizHistory
   }) {
     return QuizExamState(
       isLoading: isLoading ?? this.isLoading,
@@ -38,6 +42,7 @@ class QuizExamState {
       isConfirmedToLeave: isConfirmedToLeave ?? this.isConfirmedToLeave,
       questionIndex: questionIndex ?? this.questionIndex,
       questions: questions ?? this.questions,
+      quizHistory: quizHistory ?? this.quizHistory
     );
   }
 }
