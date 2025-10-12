@@ -6,7 +6,7 @@ import 'package:quiz_app/models/quiz/questions_model.dart';
 class QuizModel extends BaseModel {
   final String quizId;
   final String userId;
-  final UserModel user;
+  final UserModel? user;
   final String categoryId;
   final CategoryModel category;
   final String title;
@@ -40,7 +40,7 @@ class QuizModel extends BaseModel {
   QuizModel.fromJson(Map<String, dynamic> json)
     : quizId = json['quizId'],
       userId = json['userId'],
-      user = UserModel.fromJson(json['user']),
+      user = json['user'] != null ? UserModel.fromJson(json['user']) : null,
       categoryId = json['categoryId'],
       category = CategoryModel.fromJson(json['category']),
       title = json['title'],

@@ -53,7 +53,7 @@ class QuizContainerComponent extends StatelessWidget {
                 ProfileImageComponent(
                   radius: 10,
                 ),
-                Text(quiz.user.name)
+                Text(quiz.user?.name ?? "Penyusun")
               ],
             )
           ],
