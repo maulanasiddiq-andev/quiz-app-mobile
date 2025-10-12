@@ -4,43 +4,58 @@ import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/quiz_exam/answer_exam_model.dart';
 import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
-import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
+import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/quiz_exam_state.dart';
 
 class QuizExamNotifier extends StateNotifier<QuizExamState> {
   QuizExamNotifier() : super(QuizExamState());
 
-  void assignQuestions(QuizModel quiz) {
+  Future<bool> assignQuestions(QuizModel quiz) async {
+    state = state.copyWith(isLoading: true);
     List<QuestionExamModel> questionExams = [];
 
-    for (var question in quiz.questions) {
-      final questionExam = QuestionExamModel(
-        questionOrder: question.questionOrder,
-        text: question.text, 
-        imageUrl: question.imageUrl,
-        answers: []
-      );
+    try {
+      BaseResponse<QuizModel> result = await QuizService.getQuizByIdWithQuestions(quiz.quizId);
 
-      for (var answer in question.answers) {
-        final answerExam = AnswerExamModel(
-          answerOrder: answer.answerOrder,
-          text: answer.text,
-          imageUrl: answer.imageUrl,
-          isTrueAnswer: answer.isTrueAnswer
+      for (var question in result.data!.questions) {
+        final questionExam = QuestionExamModel(
+          questionOrder: question.questionOrder,
+          text: question.text, 
+          imageUrl: question.imageUrl,
+          answers: []
         );
 
-        questionExam.answers.add(answerExam);
+        for (var answer in question.answers) {
+          final answerExam = AnswerExamModel(
+            answerOrder: answer.answerOrder,
+            text: answer.text,
+            imageUrl: answer.imageUrl,
+          );
+
+          questionExam.answers.add(answerExam);
+        }
+
+        questionExams.add(questionExam);
       }
 
-      questionExams.add(questionExam);
-    }
+      state = state.copyWith(
+        quiz: quiz,
+        questionIndex: 0,
+        questions: [...questionExams],
+      ); 
 
-    state = state.copyWith(
-      quiz: quiz,
-      questionIndex: 0,
-      questions: [...questionExams],
-    );
+      state = state.copyWith(isLoading: false);
+      return true;
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      state = state.copyWith(isLoading: false);
+      return false;
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      state = state.copyWith(isLoading: false);
+      return false;
+    }
   }
 
   void toNextQuestion() {
@@ -67,40 +82,8 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      var quizExam = QuizExamModel(
-        quizVersion: state.quiz!.version,
-        questions: [], 
-        questionCount: state.questions.length, 
-        duration: duration,
-        trueAnswers: 0, 
-        wrongAnswers: 0, 
-        score: 0
-      );
-
-      for (var question in state.questions) {
-        var trueAnswer = question.answers.firstWhere((answer) => answer.isTrueAnswer == true);
-
-        if (question.selectedAnswerOrder == trueAnswer.answerOrder) {
-          question.isAnswerTrue = true;
-          quizExam.trueAnswers += 1;
-        } else {
-          question.isAnswerTrue = false;
-          quizExam.wrongAnswers += 1;
-        }
-
-        quizExam.questions.add(question);
-      }
-
-      quizExam.score = (quizExam.trueAnswers / quizExam.questionCount * 100).round();
-
-      await QuizService.takeQuiz(state.quiz!.quizId, quizExam);
-
-      state = state.copyWith(
-        isLoading: false,
-        quizExam: quizExam,
-        isDone: true, 
-        questionIndex: 0
-      );
+      
+      state = state.copyWith(isLoading: false);
     }  on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoading: false);

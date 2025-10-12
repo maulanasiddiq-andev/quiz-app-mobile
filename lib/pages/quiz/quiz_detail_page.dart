@@ -4,6 +4,7 @@ import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
+import 'package:quiz_app/notifiers/quiz/quiz_exam_notifier.dart';
 import 'package:quiz_app/pages/quiz/quiz_exam_page.dart';
 import 'package:quiz_app/pages/quiz_history/quiz_history_detail_page.dart';
 import 'package:quiz_app/utils/format_time.dart';
@@ -158,13 +159,18 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: CustomButtonComponent(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QuizExamPage(quiz: state.quiz!),
-                      ),
-                    );
+                  isLoading: ref.watch(quizExamProvider).isLoading,
+                  onTap: () async {
+                    var result = await ref.read(quizExamProvider.notifier).assignQuestions(state.quiz!);
+
+                    if (result == true && context.mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuizExamPage(),
+                        ),
+                      ); 
+                    }
                   },
                   text: "Mulai",
                 ),
