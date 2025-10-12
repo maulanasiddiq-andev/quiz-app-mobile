@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
-import 'package:quiz_app/notifiers/quiz/quiz_exam_notifier.dart';
+import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
 class TakeQuizResultPage extends ConsumerStatefulWidget {

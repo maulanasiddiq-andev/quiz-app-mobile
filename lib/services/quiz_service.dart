@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:quiz_app/constants/environment_contant.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
-import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
 import 'package:quiz_app/models/quiz_history/quiz_history_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
@@ -156,32 +155,6 @@ class QuizService {
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
     return result.data!;
-  }
-
-  static Future<BaseResponse<QuizModel>> takeQuiz(String quizId, QuizExamModel quizExam) async {
-    final token = await storage.read(key: 'token');
-    final baseUri = Uri.parse('$url$quizId/take-quiz');
-    final body = jsonEncode(quizExam.toJson());
-
-    final response = await http.post(
-      baseUri,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
-      body: body
-    );
-
-    final responseJson = jsonDecode(response.body);
-    final BaseResponse<QuizModel> result = BaseResponse.fromJson(
-      responseJson,
-      fromJsonT: (data) => QuizModel.fromJson(data)
-    );
-
-    if (result.succeed == false) throw ApiException(result.messages[0]);
-
-    return result;
   }
 
   static Future<BaseResponse<SearchResponse<QuizHistoryModel>>> getHistoriesByQuizId(

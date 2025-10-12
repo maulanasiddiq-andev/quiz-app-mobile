@@ -6,24 +6,25 @@ import 'package:quiz_app/models/quiz_exam/answer_exam_model.dart';
 import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/services/quiz_service.dart';
-import 'package:quiz_app/states/quiz/quiz_exam_state.dart';
+import 'package:quiz_app/states/quiz/take_quiz_state.dart';
 
-class QuizExamNotifier extends StateNotifier<QuizExamState> {
-  QuizExamNotifier() : super(QuizExamState());
+class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
+  TakeQuizNotifier() : super(TakeQuizState());
 
   Future<bool> assignQuestions(QuizModel quiz) async {
     state = state.copyWith(isLoading: true);
     List<QuestionExamModel> questionExams = [];
 
     try {
-      BaseResponse<QuizModel> result = await QuizService.getQuizByIdWithQuestions(quiz.quizId);
+      BaseResponse<QuizModel> result =
+          await QuizService.getQuizByIdWithQuestions(quiz.quizId);
 
       for (var question in result.data!.questions) {
         final questionExam = QuestionExamModel(
           questionOrder: question.questionOrder,
-          text: question.text, 
+          text: question.text,
           imageUrl: question.imageUrl,
-          answers: []
+          answers: [],
         );
 
         for (var answer in question.answers) {
@@ -43,7 +44,7 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
         quiz: quiz,
         questionIndex: 0,
         questions: [...questionExams],
-      ); 
+      );
 
       state = state.copyWith(isLoading: false);
       return true;
@@ -62,9 +63,7 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
     if (state.questionIndex < state.questions.length - 1) {
       var index = state.questionIndex + 1;
 
-      state = state.copyWith(
-        questionIndex: index,
-      );
+      state = state.copyWith(questionIndex: index);
     }
   }
 
@@ -72,9 +71,7 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
     if (state.questionIndex > 0) {
       var index = state.questionIndex - 1;
 
-      state = state.copyWith(
-        questionIndex: index,
-      );
+      state = state.copyWith(questionIndex: index);
     }
   }
 
@@ -86,7 +83,9 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
         "quizVersion": state.quiz!.version,
         "questionCount": state.questions.length,
         "duration": duration,
-        "questions": state.questions.map((question) => question.toJson()).toList()
+        "questions": state.questions
+            .map((question) => question.toJson())
+            .toList(),
       };
 
       var result = await QuizService.checkQuiz(state.quiz!.quizId, quiz);
@@ -96,7 +95,7 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
 
       state = state.copyWith(isLoading: false);
       return true;
-    }  on ApiException catch (e) {
+    } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoading: false);
       return false;
@@ -112,4 +111,7 @@ class QuizExamNotifier extends StateNotifier<QuizExamState> {
   }
 }
 
-final quizExamProvider = StateNotifierProvider.autoDispose<QuizExamNotifier, QuizExamState>((ref) => QuizExamNotifier());
+final quizExamProvider =
+    StateNotifierProvider.autoDispose<TakeQuizNotifier, TakeQuizState>(
+      (ref) => TakeQuizNotifier(),
+    );

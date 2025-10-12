@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_navigation_button_component.dart';
-import 'package:quiz_app/notifiers/quiz/quiz_exam_notifier.dart';
+import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
 import 'package:quiz_app/pages/take_quiz/take_quiz_result_page.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
-class QuizExamPage extends ConsumerStatefulWidget {
-  const QuizExamPage({super.key});
+class TakeQuizPage extends ConsumerStatefulWidget {
+  const TakeQuizPage({super.key});
 
   @override
-  ConsumerState<QuizExamPage> createState() => _QuizExamPageState();
+  ConsumerState<TakeQuizPage> createState() => _TakeQuizPageState();
 }
 
-class _QuizExamPageState extends ConsumerState<QuizExamPage> {
+class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
   int seconds = 0;
   int duration = 0;
   Timer? timer;
@@ -36,7 +36,7 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
 
     super.dispose();
   }
-  
+
   void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (_) {
       if (seconds > 0) {
@@ -58,9 +58,7 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
           title: Text("Perhatian"),
           content: Text(
             "Apakah anda yakin ingin meninggalkan kuis ini?",
-            style: TextStyle(
-              fontSize: 16
-            )
+            style: TextStyle(fontSize: 16),
           ),
           actions: [
             TextButton(
@@ -68,25 +66,15 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
                 ref.read(quizExamProvider.notifier).confirmToLeave();
                 // close the dialog
                 Navigator.of(context).pop(true);
-              }, 
-              child: Text(
-                "Ya",
-                style: TextStyle(
-                  color: Colors.red
-                ),
-              )
+              },
+              child: Text("Ya", style: TextStyle(color: Colors.red)),
             ),
             TextButton(
               onPressed: () {
                 // close the dialog
                 Navigator.of(context).pop(false);
-              }, 
-              child: Text(
-                "Tidak",
-                style: TextStyle(
-                  color: Colors.blue
-                ),
-              )
+              },
+              child: Text("Tidak", style: TextStyle(color: Colors.blue)),
             ),
           ],
         );
@@ -124,10 +112,10 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
       },
       child: Scaffold(
         appBar: customAppbarComponent(
-          state.quiz?.title ?? "Kuis", 
+          state.quiz?.title ?? "Kuis",
           automaticallyImplyLeading: false,
           backgroundColor: colors.primary,
-          foregroundColor: colors.onPrimary
+          foregroundColor: colors.onPrimary,
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,12 +127,12 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
                   formatTime(seconds),
                   style: TextStyle(
                     color: seconds > 10
-                      ? colors.onSurface
-                      : seconds % 2 == 0
                         ? colors.onSurface
-                        : colors.error
+                        : seconds % 2 == 0
+                        ? colors.onSurface
+                        : colors.error,
                   ),
-                )
+                ),
               ),
             ),
             Expanded(
@@ -158,28 +146,26 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
                         "Pertanyaan ${(state.questionIndex + 1).toString()}/${state.questions.length.toString()}",
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 10),
                       Text(
                         currentQuestion.text,
-                        style: TextStyle(
-                          fontSize: 18
-                        ),
+                        style: TextStyle(fontSize: 18),
                       ),
                       currentQuestion.imageUrl != null
-                        ? Column(
-                            children: [
-                              SizedBox(height: 10),
-                              Image.network(
-                                currentQuestion.imageUrl!,
-                                width: double.infinity,  
-                              ),
-                              SizedBox(height: 10)
-                            ],
-                          )
-                        : SizedBox(height: 10),
+                          ? Column(
+                              children: [
+                                SizedBox(height: 10),
+                                Image.network(
+                                  currentQuestion.imageUrl!,
+                                  width: double.infinity,
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            )
+                          : SizedBox(height: 10),
                       RadioGroup(
                         groupValue: currentQuestion.selectedAnswerOrder,
                         onChanged: (int? value) {
@@ -190,22 +176,20 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
                             ...currentQuestion.answers.map((answer) {
                               return RadioListTile(
                                 value: answer.answerOrder,
-                                title: answer.text != null 
-                                  ? Text(
-                                      answer.text!,
-                                      style: TextStyle(
-                                        fontSize: 18
-                                      ),
-                                    ) 
-                                  : null,
-                                secondary: answer.imageUrl != null 
-                                  ? Image.network(
-                                      answer.imageUrl!,
-                                      width: 40,
-                                      height: 40,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : null,
+                                title: answer.text != null
+                                    ? Text(
+                                        answer.text!,
+                                        style: TextStyle(fontSize: 18),
+                                      )
+                                    : null,
+                                secondary: answer.imageUrl != null
+                                    ? Image.network(
+                                        answer.imageUrl!,
+                                        width: 40,
+                                        height: 40,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : null,
                               );
                             }),
                           ],
@@ -220,7 +204,7 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
               children: [
                 Expanded(
                   child: QuizNavigationButtonComponent(
-                    onTap: () => notifier.toPreviousQuestion(), 
+                    onTap: () => notifier.toPreviousQuestion(),
                     icon: Icons.arrow_back,
                     text: "Sebelumnya",
                   ),
@@ -235,17 +219,19 @@ class _QuizExamPageState extends ConsumerState<QuizExamPage> {
 
                         if (result == true && context.mounted) {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => TakeQuizResultPage())
+                            MaterialPageRoute(
+                              builder: (context) => TakeQuizResultPage(),
+                            ),
                           );
                         }
                       }
-                    }, 
+                    },
                     icon: state.questionIndex < state.questions.length - 1
-                      ? Icons.arrow_forward
-                      : Icons.check,
+                        ? Icons.arrow_forward
+                        : Icons.check,
                     text: state.questionIndex < state.questions.length - 1
-                      ? "Selanjutnya"
-                      : "Selesai",
+                        ? "Selanjutnya"
+                        : "Selesai",
                     textDirection: TextDirection.rtl,
                   ),
                 ),
