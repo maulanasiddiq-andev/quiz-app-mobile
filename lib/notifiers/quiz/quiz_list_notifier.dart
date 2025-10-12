@@ -8,7 +8,9 @@ import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/quiz_list_state.dart';
 
 class QuizListNotifier extends StateNotifier<QuizListState> {
-  QuizListNotifier() : super(QuizListState());
+  QuizListNotifier() : super(QuizListState()) {
+    getDatas();
+  }
 
   Future<void> getDatas() async {
     if (state.pageIndex == 0) {

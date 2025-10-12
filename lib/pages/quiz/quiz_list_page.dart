@@ -17,13 +17,6 @@ class QuizListPage extends ConsumerStatefulWidget {
 
 class _QuizListPageState extends ConsumerState<QuizListPage> {
   @override
-  void initState() {
-    super.initState();
-
-    Future.microtask(() => ref.read(quizListProvider.notifier).getDatas());
-  }
-
-  @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizListProvider);
     final colors = Theme.of(context).colorScheme;
