@@ -1,6 +1,4 @@
-import 'package:quiz_app/models/base_model.dart';
-
-class AnswerModel extends BaseModel {
+class AnswerModel {
   final String answerId;
   final String questionId;
   final int answerOrder;
@@ -9,13 +7,6 @@ class AnswerModel extends BaseModel {
   final bool isTrueAnswer;
 
   AnswerModel({
-    required super.version,
-    required super.recordStatus,
-    required super.description,
-    required super.createdBy,
-    required super.createdTime,
-    required super.modifiedBy,
-    required super.modifiedTime,
     required this.answerId,
     required this.questionId,
     required this.answerOrder,
@@ -30,6 +21,5 @@ class AnswerModel extends BaseModel {
     answerOrder = json['answerOrder'],
     text = json['text'],
     imageUrl = json['imageUrl'],
-    isTrueAnswer = json['isTrueAnswer'],
-    super.fromJson(json);
+    isTrueAnswer = json['isTrueAnswer'];
 }
