@@ -230,7 +230,7 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
         "title": state.title,
         "description": state.description,
         "time": state.time,
-        "imageUrl": await QuizService.uploadQuizImage("quiz", state.image!),
+        "imageUrl": state.image != null ? await QuizService.uploadQuizImage("quiz", state.image!) : null,
         "questions": await Future.wait(
           state.questions.map((question) => question.toJson()),
         ),
