@@ -19,6 +19,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizListProvider);
+    final notifier = ref.read(quizListProvider.notifier);
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -53,15 +54,28 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   spacing: 10,
                   children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: colors.onSurface
+                    GestureDetector(
+                      onTap: () => notifier.selectCategory(""),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: colors.onSurface
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: state.selectedCategoryId == ""
+                            ? colors.onSurface
+                            : colors.surface
                         ),
-                        borderRadius: BorderRadius.circular(10)
+                        child: Text(
+                          "Semua",
+                          style: TextStyle(
+                            color: state.selectedCategoryId == "" 
+                              ? colors.surface
+                              : colors.onSurface
+                          ),
+                        )
                       ),
-                      child: Text("Semua")
                     ),
                     if (state.isLoadingCategories)
                       SizedBox(
@@ -71,15 +85,28 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                       )
                     else
                       ...state.categories.map((category) {
-                        return Container(
-                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: colors.onSurface
+                        return GestureDetector(
+                          onTap: () => notifier.selectCategory(category.categoryId),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: colors.onSurface
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                              color: state.selectedCategoryId == category.categoryId
+                                ? colors.onSurface
+                                : colors.surface
                             ),
-                            borderRadius: BorderRadius.circular(10)
+                            child: Text(
+                              category.name,
+                              style: TextStyle(
+                                color: state.selectedCategoryId == category.categoryId 
+                                  ? colors.surface
+                                  : colors.onSurface
+                              ),
+                            )
                           ),
-                          child: Text(category.name)
                         );
                       })
                   ],

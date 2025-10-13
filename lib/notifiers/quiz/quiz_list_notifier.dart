@@ -27,7 +27,11 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
     }
 
     try {
-      final BaseResponse<SearchResponse<QuizModel>> result = await QuizService.getQuizzes(state.quizPageIndex, state.quizPageSize);
+      final BaseResponse<SearchResponse<QuizModel>> result = await QuizService.getQuizzes(
+        state.quizPageIndex, 
+        state.quizPageSize,
+        state.selectedCategoryId ?? ""
+      );
 
       if (result.data != null) {
         state = state.copyWith(
@@ -95,6 +99,10 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
   Future<void> refreshQuizzes() async {
     state = state.copyWith(quizPageIndex: 0, quizzes: []);
     await getQuizzes();
+  }
+
+  void selectCategory(String categoryId) {
+    state = state.copyWith(selectedCategoryId: categoryId);
   }
 }
 

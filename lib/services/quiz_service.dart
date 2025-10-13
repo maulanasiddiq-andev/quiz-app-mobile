@@ -17,12 +17,14 @@ class QuizService {
   static Future<BaseResponse<SearchResponse<QuizModel>>> getQuizzes(
     int page,
     int pageSize,
+    String categoryId
   ) async {
     final baseUri = Uri.parse(url);
     final uri = baseUri.replace(
       queryParameters: {
         'page': page.toString(),
         'pageSize': pageSize.toString(),
+        'categoryId': categoryId
       },
     );
 
