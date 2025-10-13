@@ -28,7 +28,7 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     state = state.copyWith(isLoadingCategories: true);
 
     try {
-      var result = await CategoryService.getQuizzes(0, 10);
+      var result = await CategoryService.getCategories(0, 10);
 
       if (result.data != null) {
         state = state.copyWith(
@@ -61,10 +61,7 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     );
   }
 
-  Future<File?> pickImage(
-    Color toolbarColor,
-    Color toolbarWidgetColor,
-  ) async {
+  Future<File?> pickImage(Color toolbarColor, Color toolbarWidgetColor) async {
     final picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -234,7 +231,9 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
         "description": state.description,
         "time": state.time,
         "imageUrl": await QuizService.uploadQuizImage("quiz", state.image!),
-        "questions": await Future.wait(state.questions.map((question) => question.toJson())),
+        "questions": await Future.wait(
+          state.questions.map((question) => question.toJson()),
+        ),
       };
 
       var result = await QuizService.createQuiz(quiz);

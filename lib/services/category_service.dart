@@ -11,7 +11,7 @@ class CategoryService {
   static const storage = FlutterSecureStorage();
   static String url = "${EnvironmentConstant.url}category/";
 
-  static Future<BaseResponse<SearchResponse<CategoryModel>>> getQuizzes(
+  static Future<BaseResponse<SearchResponse<CategoryModel>>> getCategories(
     int page,
     int pageSize,
   ) async {
@@ -30,13 +30,14 @@ class CategoryService {
     );
 
     final dynamic responseJson = jsonDecode(response.body);
-    final BaseResponse<SearchResponse<CategoryModel>> result = BaseResponse.fromJson(
-      responseJson,
-      fromJsonT: (data) => SearchResponse.fromJson(
-        data,
-        (item) => CategoryModel.fromJson(item),
-      ),
-    );
+    final BaseResponse<SearchResponse<CategoryModel>> result =
+        BaseResponse.fromJson(
+          responseJson,
+          fromJsonT: (data) => SearchResponse.fromJson(
+            data,
+            (item) => CategoryModel.fromJson(item),
+          ),
+        );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
 

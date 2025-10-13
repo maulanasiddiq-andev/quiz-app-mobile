@@ -23,60 +23,110 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
 
     return Scaffold(
       appBar: customAppbarComponent(
-        "Quiz List", 
+        "Quiz List",
         actions: [
           IconButton(
             onPressed: () {
               ref.read(authProvider.notifier).logout();
 
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const LoginPage()), 
-                (route) => false
+                MaterialPageRoute(builder: (_) => const LoginPage()),
+                (route) => false,
               );
-            }, 
-            icon: Icon(Icons.logout)
-          )
+            },
+            icon: Icon(Icons.logout),
+          ),
         ],
         backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
+        foregroundColor: colors.onPrimary,
       ),
       body: RefreshIndicator(
-        onRefresh: () => ref.read(quizListProvider.notifier).refreshDatas(),
-        child: state.isLoading
-            ? Center(child: CircularProgressIndicator(color: colors.primary))
-            : Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                        itemCount: state.quizzes.length,
-                        itemBuilder: (context, index) {
-                          final quiz = state.quizzes[index];
-                    
-                          return QuizContainerComponent(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => QuizDetailPage(quizId: quiz.quizId))
-                              );
-                            }, 
-                            quiz: quiz
+        onRefresh: () => ref.read(quizListProvider.notifier).refreshQuizzes(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  spacing: 10,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: colors.onSurface
+                        ),
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Text("Semua")
+                    ),
+                    if (state.isLoadingCategories)
+                      SizedBox(
+                        child: CircularProgressIndicator(
+                          color: colors.primary,
+                        )
+                      )
+                    else
+                      ...state.categories.map((category) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: colors.onSurface
+                            ),
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Text(category.name)
+                        );
+                      })
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: state.isLoadingQuizzes
+                ? Center(
+                    child: CircularProgressIndicator(color: colors.primary),
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 10,
+                    ),
+                    itemCount: state.quizzes.length,
+                    itemBuilder: (context, index) {
+                      final quiz = state.quizzes[index];
+
+                      return QuizContainerComponent(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  QuizDetailPage(quizId: quiz.quizId),
+                            ),
                           );
                         },
-                      ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context, 
-                        MaterialPageRoute(
-                          builder: (context) => QuizDetailCreatePage()
-                        )
+                        quiz: quiz,
                       );
-                    }, 
-                    child: Text("Buat Kuis")
-                  )
-                ],
-              ),
+                    },
+                  ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QuizDetailCreatePage(),
+                  ),
+                );
+              },
+              child: Text("Buat Kuis"),
+            ),
+          ],
+        ),
       ),
     );
   }
