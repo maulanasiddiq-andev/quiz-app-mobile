@@ -113,9 +113,69 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
       child: Scaffold(
         appBar: customAppbarComponent(
           state.quiz?.title ?? "Kuis",
-          automaticallyImplyLeading: false,
+          // automaticallyImplyLeading: false,
           backgroundColor: colors.primary,
           foregroundColor: colors.onPrimary,
+        ),
+        drawer: Drawer(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero
+          ),
+          child: ListView(
+            children: [
+              ...state.questions.asMap().entries.map((value) {
+                final question = value.value;
+                final key = value.key;
+
+                return GestureDetector(
+                  onTap: () {
+                    notifier.goToQuestion(key);
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                    color: state.questionIndex == key
+                      ? colors.onSurface
+                      : colors.surface,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            (key + 1).toString(),
+                            style: TextStyle(
+                              color: state.questionIndex == key
+                                ? colors.surface
+                                : colors.onSurface,
+                              fontSize: 16
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              question.selectedAnswerOrder != null
+                                ? question.answers[question.selectedAnswerOrder!].text!
+                                : "Belum dijawab",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: state.questionIndex == key
+                                  ? colors.surface
+                                  : colors.onSurface,
+                                fontSize: 16
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              })
+            ],
+          ),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

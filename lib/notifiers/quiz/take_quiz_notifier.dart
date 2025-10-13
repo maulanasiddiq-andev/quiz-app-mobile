@@ -75,6 +75,10 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
     }
   }
 
+  void goToQuestion(int index) {
+    state = state.copyWith(questionIndex: index);
+  }
+
   Future<bool> finishQuiz(int duration) async {
     state = state.copyWith(isLoading: true);
 
@@ -111,7 +115,4 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
   }
 }
 
-final takeQuizProvider =
-    StateNotifierProvider.autoDispose<TakeQuizNotifier, TakeQuizState>(
-      (ref) => TakeQuizNotifier(),
-    );
+final takeQuizProvider = StateNotifierProvider.autoDispose<TakeQuizNotifier, TakeQuizState>((ref) => TakeQuizNotifier());
