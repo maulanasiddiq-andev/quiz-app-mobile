@@ -14,9 +14,9 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
     getDatas();
   }
 
-  Future<void> getDatas() async {
-    await getCategories();
-    await getQuizzes();
+  void getDatas() {
+    getCategories();
+    getQuizzes();
   }
 
   Future<void> getQuizzes() async {
@@ -101,8 +101,11 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
     await getQuizzes();
   }
 
-  void selectCategory(String categoryId) {
+  Future<void> selectCategory(String categoryId) async {
+    if (categoryId == state.selectedCategoryId) return;
+
     state = state.copyWith(selectedCategoryId: categoryId);
+    await refreshQuizzes();
   }
 }
 
