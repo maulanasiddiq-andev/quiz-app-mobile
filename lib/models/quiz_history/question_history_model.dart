@@ -7,7 +7,7 @@ class QuestionHistoryModel {
   final int questionOrder;
   final String? imageUrl;
   final List<AnswerHistoryModel> answers;
-  final int selectedAnswerOrder;
+  final int? selectedAnswerOrder;
   final bool isAnswerTrue;
 
   QuestionHistoryModel({
