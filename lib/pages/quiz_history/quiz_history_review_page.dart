@@ -43,6 +43,58 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
         backgroundColor: colors.primary,
         foregroundColor: colors.onPrimary
       ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ...state.questions.asMap().entries.map((value) {
+              final question = value.value;
+              final key = value.key;
+
+              return GestureDetector(
+                onTap: () {
+                  notifier.goToQuestion(key);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  color: state.questionIndex == key
+                    ? colors.onSurface
+                    : colors.surface,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          (key + 1).toString(),
+                          style: TextStyle(
+                            color: state.questionIndex == key
+                              ? colors.surface
+                              : colors.onSurface,
+                            fontSize: 16
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(
+                            question.isAnswerTrue
+                              ? Icons.check
+                              : Icons.close,
+                            color: question.isAnswerTrue
+                              ? colors.primary
+                              : colors.error,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            })
+          ],
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

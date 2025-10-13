@@ -49,6 +49,10 @@ class QuizHistoryDetailNotifier extends StateNotifier<QuizHistoryDetailState> {
       );
     }
   }
+
+  void goToQuestion(int index) {
+    state = state.copyWith(questionIndex: index);
+  }
 }
 
 final quizHistoryDetailProvider = StateNotifierProvider.autoDispose<QuizHistoryDetailNotifier, QuizHistoryDetailState>((ref) => QuizHistoryDetailNotifier());
