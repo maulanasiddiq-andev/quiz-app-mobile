@@ -27,8 +27,7 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
     }
 
     try {
-      final BaseResponse<SearchResponse<QuizModel>> result =
-          await QuizService.getQuizzes(state.quizPageIndex, state.quizPageSize);
+      final BaseResponse<SearchResponse<QuizModel>> result = await QuizService.getQuizzes(state.quizPageIndex, state.quizPageSize);
 
       if (result.data != null) {
         state = state.copyWith(
@@ -60,7 +59,7 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
     }
 
     try {
-      final BaseResponse<SearchResponse<CategoryModel>> result = await CategoryService.getCategories(state.quizPageIndex, state.quizPageSize);
+      final BaseResponse<SearchResponse<CategoryModel>> result = await CategoryService.getCategories(state.categoryPageIndex, state.categoryPageSize);
 
       if (result.data != null) {
         state = state.copyWith(
