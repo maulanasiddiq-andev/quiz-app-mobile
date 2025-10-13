@@ -31,6 +31,10 @@ class QuizContainerComponent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(quiz.title, style: TextStyle(fontSize: 18)),
+            SizedBox(height: 5),
+            Text(
+              "Kategori: ${quiz.category!.name}"
+            ),
             quiz.imageUrl != null
               ? Column(
                   children: [
