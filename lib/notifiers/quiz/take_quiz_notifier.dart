@@ -79,6 +79,19 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
     state = state.copyWith(questionIndex: index);
   }
 
+  int countUnansweredQuestions() {
+    final questions = [...state.questions];
+    int unansweredQuestionCount = 0;
+
+    for (var question in questions) {
+      if (question.selectedAnswerOrder == null) {
+        unansweredQuestionCount += 1;
+      }
+    }
+
+    return unansweredQuestionCount;
+  }
+
   Future<bool> finishQuiz(int duration) async {
     state = state.copyWith(isLoading: true);
 

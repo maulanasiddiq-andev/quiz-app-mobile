@@ -46,6 +46,7 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
         });
       } else {
         timer?.cancel();
+        timeOverAlert();
       }
     });
   }
@@ -83,6 +84,77 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
 
     return result ?? false;
   }
+
+  Future<bool> confirmSubmittingQuiz(int unansweredQuestionCount) async {
+    final result = await showDialog<bool>(
+      context: context, 
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Perhatian"),
+          content: Text(
+            "Apakah anda yakin ingin menyelesaikan kuis ini?\nAnda masih punya waktu ${formatTime(seconds)}${unansweredQuestionCount > 0 ? ' dan $unansweredQuestionCount soal belum terjawab.' : '.'}",
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                ref.read(takeQuizProvider.notifier).confirmToLeave();
+                // close the dialog
+                Navigator.of(context).pop(true);
+              },
+              child: Text("Ya", style: TextStyle(color: Colors.red)),
+            ),
+            TextButton(
+              onPressed: () {
+                // close the dialog
+                Navigator.of(context).pop(false);
+              },
+              child: Text("Tidak", style: TextStyle(color: Colors.blue)),
+            ),
+          ],
+        );
+      }
+    );
+
+    return result ?? false;
+  } 
+
+  Future timeOverAlert() async {
+    await showDialog<bool>(
+      context: context, 
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Perhatian"),
+          content: Text(
+            "Waktu mengerjakan kuis sudah habis",
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                ref.read(takeQuizProvider.notifier).confirmToLeave();
+                // close the dialog
+                Navigator.of(context).pop(true);
+              },
+              child: Text("Ya", style: TextStyle(color: Colors.blue)),
+            ),
+          ],
+        );
+      }
+    );
+
+    final result = await ref.read(takeQuizProvider.notifier).finishQuiz(duration);
+
+    if (!mounted) return;
+
+    if (result == true) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => TakeQuizResultPage(),
+        ),
+      );
+    }    
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -275,14 +347,19 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
                       if (state.questionIndex < state.questions.length - 1) {
                         notifier.toNextQuestion();
                       } else {
-                        final result = await notifier.finishQuiz(duration);
+                        final unansweredQuestionCount = notifier.countUnansweredQuestions();
+                        final confirmResult = await confirmSubmittingQuiz(unansweredQuestionCount);
 
-                        if (result == true && context.mounted) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => TakeQuizResultPage(),
-                            ),
-                          );
+                        if (confirmResult) {
+                          final result = await notifier.finishQuiz(duration);
+
+                          if (result == true && context.mounted) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => TakeQuizResultPage(),
+                              ),
+                            );
+                          }
                         }
                       }
                     },
