@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/otp_input_component.dart';
+import 'package:quiz_app/notifiers/auth/register_notifier.dart';
+import 'package:quiz_app/pages/auth/login_page.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
-class OtpPage extends StatefulWidget {
+class OtpPage extends ConsumerStatefulWidget {
   const OtpPage({super.key});
 
   @override
-  State<OtpPage> createState() => _OtpPageState();
+  ConsumerState<OtpPage> createState() => _OtpPageState();
 }
 
-class _OtpPageState extends State<OtpPage> {
+class _OtpPageState extends ConsumerState<OtpPage> {
   static final maxSeconds = 15 * 60;
 
   final List<TextEditingController> controllers = List.generate(4, (_) => TextEditingController());
@@ -48,6 +51,16 @@ class _OtpPageState extends State<OtpPage> {
   void restartTimer() {
     resetTimer();
     startTimer();
+  }
+
+  Future<bool> onSubmitOtpCode() async {
+    var otpCode = '';
+
+    for (var controller in controllers) {
+      otpCode += controller.text;
+    }
+
+    return await ref.read(registerProvider.notifier).checkOtp(otpCode);
   }
 
   @override
@@ -117,13 +130,20 @@ class _OtpPageState extends State<OtpPage> {
                               controller: controller,
                               focusNode: focusNodes[index],
                               autoFocus: index < 1,
-                              onChange: (value) {
+                              onChange: (value) async {
                                 if (value.length == 1) {
                                   if (index < 3) {
                                     focusNodes[index + 1].requestFocus();
                                   } else {
                                     focusNodes[index].unfocus();
-                                    // onSubmitOtpCode();
+                                    
+                                    final result = await onSubmitOtpCode();
+
+                                    if (result == true && context.mounted) {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(builder: (context) => LoginPage())
+                                      );
+                                    }
                                   }
                                 }
                               },

@@ -55,4 +55,60 @@ class AuthService {
 
     return result;
   }
+
+  static Future<BaseResponse<TokenModel>> register(String email, String name, String username, String password) async {
+    final baseUri = Uri.parse('${url}register');
+    final body = jsonEncode({
+      "email": email,
+      "name": name,
+      "username": username,
+      "password": password
+    });
+
+    final response = await http.post(
+      baseUri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: body
+    );
+
+    final responseJson = jsonDecode(response.body);
+    final BaseResponse<TokenModel> result = BaseResponse.fromJson(
+      responseJson,
+      fromJsonT: (data) => TokenModel.fromJson(data)
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+  
+  static Future<BaseResponse<TokenModel>> checkOtp(String email, String otpCode) async {
+    final baseUri = Uri.parse('${url}otp');
+    final body = jsonEncode({
+      "email": email,
+      "otpCode": otpCode,
+    });
+
+    final response = await http.post(
+      baseUri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: body
+    );
+
+    final responseJson = jsonDecode(response.body);
+    final BaseResponse<TokenModel> result = BaseResponse.fromJson(
+      responseJson,
+      fromJsonT: (data) => TokenModel.fromJson(data)
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
 }

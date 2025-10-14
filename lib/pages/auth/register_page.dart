@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/auth_input_component.dart';
+import 'package:quiz_app/notifiers/auth/register_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
+import 'package:quiz_app/pages/auth/otp_page.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
@@ -18,10 +21,20 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool _obscureText = true;
 
+  Future<bool> onSubmitText() async {
+    final email = _emailController.text;
+    final name = _nameController.text;
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    return await ref.read(registerProvider.notifier).register(email, name, username, password);
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final screenHeight = MediaQuery.of(context).size.height;
+    final state = ref.watch(registerProvider);
 
     return Scaffold(
       backgroundColor: colors.primary,
@@ -144,8 +157,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         SizedBox(height: 50),
                         GestureDetector(
-                          onTap: () {
-                            // _onSubmitText();
+                          onTap: () async {
+                            final result = await onSubmitText();
+
+                            if (result == true && context.mounted) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => OtpPage())
+                              );
+                            }
                           },
                           child: Container(
                             height: 50,
@@ -154,14 +173,22 @@ class _RegisterPageState extends State<RegisterPage> {
                               borderRadius: BorderRadius.circular(25)
                             ),
                             child: Center(
-                              child: Text(
-                                'Register',
-                                style: TextStyle(
-                                  color: colors.onPrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
+                              child: state.isLoading 
+                                ? SizedBox(
+                                    height: 45,
+                                    width: 45,
+                                    child: Center(
+                                      child: CircularProgressIndicator(color: colors.onPrimary)
+                                    ),
+                                  )
+                                : Text(
+                                    'Register',
+                                    style: TextStyle(
+                                      color: colors.onPrimary,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
                             ),
                           ),
                         ),
