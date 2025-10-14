@@ -263,6 +263,8 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
                         : seconds % 2 == 0
                         ? colors.onSurface
                         : colors.error,
+                    fontFamily: "Orbitron",
+                    fontSize: 16
                   ),
                 ),
               ),
