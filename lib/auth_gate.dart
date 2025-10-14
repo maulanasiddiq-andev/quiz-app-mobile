@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
-import 'package:quiz_app/pages/quiz/quiz_list_page.dart';
+import 'package:quiz_app/pages/root_page.dart';
 
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
@@ -18,7 +18,7 @@ class AuthGate extends ConsumerWidget {
     }
     
     if (authState.isAuthenticated) {
-      return const QuizListPage();
+      return RootPage();
     } else {
       return LoginPage();
     }
