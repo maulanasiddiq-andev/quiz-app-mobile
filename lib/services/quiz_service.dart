@@ -22,7 +22,7 @@ class QuizService {
     final baseUri = Uri.parse(url);
     final uri = baseUri.replace(
       queryParameters: {
-        'page': page.toString(),
+        'currentPage': page.toString(),
         'pageSize': pageSize.toString(),
         'categoryId': categoryId
       },
@@ -167,7 +167,7 @@ class QuizService {
     final baseUri = Uri.parse('$url$quizId/history');
     final uri = baseUri.replace(
       queryParameters: {
-        'page': page.toString(),
+        'currentPage': page.toString(),
         'pageSize': pageSize.toString(),
       },
     );

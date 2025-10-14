@@ -27,17 +27,40 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
   }
 
   Future<void> getHistoriesByQuizId(String id) async {
-    state = state.copyWith(isLoadingHistories: true);
-    try {
-      final BaseResponse<SearchResponse<QuizHistoryModel>> result = await QuizService.getHistoriesByQuizId(id, 0, 10);
+    if (state.historyPageIndex == 0) {
+      state = state.copyWith(isLoadingHistories: true);
+    } else {
+      state = state.copyWith(isLoadingMoreHistories: true);
+    }
 
-      state = state.copyWith(isLoadingHistories: false, histories: [...state.histories, ...result.data!.items]);
+    try {
+      final BaseResponse<SearchResponse<QuizHistoryModel>> result = await QuizService.getHistoriesByQuizId(
+        id, 
+        state.historyPageIndex, 
+        state.historyPageSize
+      );
+
+      state = state.copyWith(
+        isLoadingHistories: false, 
+        isLoadingMoreHistories: false,
+        histories: [...state.histories, ...result.data!.items],
+        historyHasNextPage: result.data!.hasNextPage
+      );
     }  on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingHistories: false);
+      state = state.copyWith(isLoadingHistories: false, isLoadingMoreHistories: false);
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingHistories: false);
+      state = state.copyWith(isLoadingHistories: false, isLoadingMoreHistories: false);
+    }
+  }
+
+  Future<void> loadMoreHistories(String quizId) async {
+    if (state.historyHasNextPage) {
+      if (state.isLoadingHistories || state.isLoadingMoreHistories) return;
+
+      state = state.copyWith(historyPageIndex: state.historyPageIndex + 1);
+      await getHistoriesByQuizId(quizId);
     }
   }
 }

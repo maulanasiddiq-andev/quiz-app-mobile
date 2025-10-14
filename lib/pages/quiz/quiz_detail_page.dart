@@ -18,13 +18,22 @@ class QuizDetailPage extends ConsumerStatefulWidget {
 }
 
 class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
+  final ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
 
     Future.microtask(() {
-      ref.read(quizDetailProvider.notifier).getQuizById(widget.quizId);
-      ref.read(quizDetailProvider.notifier).getHistoriesByQuizId(widget.quizId);
+      final notifier = ref.read(quizDetailProvider.notifier);
+      notifier.getQuizById(widget.quizId);
+      notifier.getHistoriesByQuizId(widget.quizId);
+
+      scrollController.addListener(() {
+        if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
+          notifier.loadMoreHistories(widget.quizId);
+        }
+      });
     });
   }
 
@@ -40,148 +49,150 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
         foregroundColor: colors.onPrimary,
       ),
       body: state.isLoading && state.quiz == null
-          ? Center(child: CircularProgressIndicator(color: Colors.blue))
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            state.quiz?.title ?? "Judul Kuis",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          state.quiz?.imageUrl != null
-                              ? Column(
-                                  children: [
-                                    SizedBox(height: 10),
-                                    ClipRRect(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(10),
-                                      child: Image.network(
-                                        state.quiz!.imageUrl!,
-                                        width: double.infinity,
+        ? Center(child: CircularProgressIndicator(color: Colors.blue))
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 10,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          state.quiz?.title ?? "Judul Kuis",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        state.quiz?.imageUrl != null
+                            ? Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  ClipRRect(
+                                    borderRadius:
+                                        BorderRadiusGeometry.circular(10),
+                                    child: Image.network(
+                                      state.quiz!.imageUrl!,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              )
+                            : SizedBox(height: 10),
+                        Text(
+                          state.quiz?.description ?? "Deskripsi Kuis",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Jumlah Pertanyaan: ${state.quiz?.questionCount ?? 0}",
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Waktu pengerjaan: ${formatTime(state.quiz?.time == null ? 0 : state.quiz!.time * 60)}",
+                        ),
+                        SizedBox(height: 10),
+                        state.isLoadingHistories
+                          ? CircularProgressIndicator(color: colors.primary)
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 10,
+                              children: [
+                                state.histories.isNotEmpty
+                                  ? Text("Peserta Kuis")
+                                  : SizedBox(),
+                                ...state.histories.map((history) {
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 10,
+                                    ),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: colors.onSurface,
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                        5,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
-                                  ],
-                                )
-                              : SizedBox(height: 10),
-                          Text(
-                            state.quiz?.description ?? "Deskripsi Kuis",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "Jumlah Pertanyaan: ${state.quiz?.questionCount ?? 0}",
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "Waktu pengerjaan: ${formatTime(state.quiz?.time == null ? 0 : state.quiz!.time * 60)}",
-                          ),
-                          SizedBox(height: 10),
-                          state.isLoadingHistories
-                              ? CircularProgressIndicator(color: colors.primary)
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  spacing: 10,
-                                  children: [
-                                    state.histories.isNotEmpty
-                                        ? Text("Peserta Kuis")
-                                        : SizedBox(),
-                                    ...state.histories.map((history) {
-                                      return Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 10,
-                                        ),
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: colors.onSurface,
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => QuizHistoryDetailPage(quizHistory: history),
                                           ),
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                        ),
-                                        child: GestureDetector(
-                                          behavior: HitTestBehavior.opaque,
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    QuizHistoryDetailPage(
-                                                      quizHistory: history,
-                                                    ),
-                                              ),
-                                            );
-                                          },
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                        );
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        spacing: 5,
+                                        children: [
+                                          Row(
                                             spacing: 5,
                                             children: [
-                                              Row(
-                                                spacing: 5,
-                                                children: [
-                                                  ProfileImageComponent(
-                                                    radius: 10,
-                                                  ),
-                                                  Text(
-                                                    history.user?.name ??
-                                                        "user",
-                                                  ),
-                                                ],
+                                              ProfileImageComponent(
+                                                radius: 10,
                                               ),
                                               Text(
-                                                "Nilai: ${history.score.toString()}",
-                                              ),
-                                              Text(
-                                                "Durasi: ${formatTime(history.duration)}",
+                                                history.user?.name ??
+                                                    "user",
                                               ),
                                             ],
                                           ),
-                                        ),
-                                      );
-                                    }),
-                                  ],
-                                ),
-                        ],
-                      ),
+                                          Text(
+                                            "Nilai: ${history.score.toString()}",
+                                          ),
+                                          Text(
+                                            "Durasi: ${formatTime(history.duration)}",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
+                                if (state.isLoadingMoreHistories)
+                                  Center(
+                                    child: CircularProgressIndicator(color: colors.primary),
+                                  )
+                              ],
+                            ),
+                      ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: CustomButtonComponent(
-                    isLoading: ref.watch(takeQuizProvider).isLoading,
-                    onTap: () async {
-                      var result = await ref
-                          .read(takeQuizProvider.notifier)
-                          .getQuizWithQuestions(state.quiz!);
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                child: CustomButtonComponent(
+                  isLoading: ref.watch(takeQuizProvider).isLoading,
+                  onTap: () async {
+                    var result = await ref
+                        .read(takeQuizProvider.notifier)
+                        .getQuizWithQuestions(state.quiz!);
 
-                      if (result == true && context.mounted) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TakeQuizPage(),
-                          ),
-                        );
-                      }
-                    },
-                    text: "Mulai",
-                  ),
+                    if (result == true && context.mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TakeQuizPage(),
+                        ),
+                      );
+                    }
+                  },
+                  text: "Mulai",
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
     );
   }
 }

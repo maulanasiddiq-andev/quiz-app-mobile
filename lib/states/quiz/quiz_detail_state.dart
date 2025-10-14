@@ -4,27 +4,43 @@ import 'package:quiz_app/models/quiz_history/quiz_history_model.dart';
 class QuizDetailState {
   final bool isLoading;
   final bool isLoadingHistories;
+  final bool isLoadingMoreHistories;
+  final int historyPageIndex;
+  final int historyPageSize;
+  final bool historyHasNextPage;
   final List<QuizHistoryModel> histories;
   final QuizModel? quiz;
 
   QuizDetailState({
     this.isLoading = false,
     this.isLoadingHistories = false,
+    this.isLoadingMoreHistories = false,
     this.histories = const [],
-    this.quiz
+    this.quiz,
+    this.historyHasNextPage = false,
+    this.historyPageIndex = 0,
+    this.historyPageSize = 10
   });
 
   QuizDetailState copyWith({
     bool? isLoading,
     bool? isLoadingHistories,
+    bool? isLoadingMoreHistories,
     QuizModel? quiz,
-    List<QuizHistoryModel>? histories
+    List<QuizHistoryModel>? histories,
+    bool? historyHasNextPage,
+    int? historyPageIndex,
+    int? historyPageSize
   }) {
     return QuizDetailState(
       isLoading: isLoading ?? this.isLoading, 
       isLoadingHistories: isLoadingHistories ?? this.isLoadingHistories,
+      isLoadingMoreHistories: isLoadingMoreHistories ?? this.isLoadingMoreHistories,
       quiz: quiz ?? this.quiz,
-      histories: histories ?? this.histories
+      histories: histories ?? this.histories,
+      historyHasNextPage: historyHasNextPage ?? this.historyHasNextPage,
+      historyPageIndex: historyPageIndex ?? this.historyPageIndex,
+      historyPageSize: historyPageSize ?? this.historyPageSize
     );
   }
 }
