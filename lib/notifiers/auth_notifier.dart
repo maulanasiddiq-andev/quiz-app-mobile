@@ -29,7 +29,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoading: false);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false);
     }
   }

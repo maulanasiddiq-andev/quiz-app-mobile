@@ -50,7 +50,7 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoadingQuizzes: false);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoadingQuizzes: false);
     }
   }
@@ -82,7 +82,7 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoadingCategories: false);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoadingCategories: false);
     }
   }

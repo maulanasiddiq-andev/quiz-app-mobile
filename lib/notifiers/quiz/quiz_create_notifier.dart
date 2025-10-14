@@ -42,7 +42,7 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoadingCategories: false);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoadingCategories: false);
     }
   }
@@ -248,7 +248,7 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
 
       return false;
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoadingCreate: false);
 
       return false;

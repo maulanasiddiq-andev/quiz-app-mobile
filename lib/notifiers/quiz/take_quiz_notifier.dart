@@ -53,7 +53,7 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
       state = state.copyWith(isLoading: false);
       return false;
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false);
       return false;
     }
@@ -117,7 +117,7 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
       state = state.copyWith(isLoading: false);
       return false;
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false);
       return false;
     }
