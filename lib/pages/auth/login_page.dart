@@ -65,7 +65,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
-                  'MS Developer video app',
+                  'Everyday Quiz',
                   style: TextStyle(
                     color: colors.onPrimary,
                     fontSize: 20

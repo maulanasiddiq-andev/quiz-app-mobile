@@ -46,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
-                  'MS Developer video app',
+                  'Everyday Quiz',
                   style: TextStyle(
                     color: colors.onPrimary,
                     fontSize: 20
