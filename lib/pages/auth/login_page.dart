@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
+import 'package:quiz_app/pages/auth/register_page.dart';
 import 'package:quiz_app/pages/quiz/quiz_list_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -246,7 +247,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (context) => RegisterPage())
+                                );
                               },
                               child: Text(
                                 'Daftar',
