@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/auth/token_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/services/auth_service.dart';
+import 'package:quiz_app/services/google_auth_service.dart';
 import 'package:quiz_app/states/auth_state.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
@@ -50,6 +52,32 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } on ApiException catch (_) {
       await deleteCredential();
       state = state.copyWith(isLoading: false, isAuthenticated: false);
+    }
+  }
+
+  Future<void> loginWithGoogle() async {
+    try {
+      final googleAuth = GoogleAuthService();
+      await googleAuth.initialize(
+        serverClientId: "1065568145771-ok1ilooqacp3ls0phli5bhdnu4pem614.apps.googleusercontent.com",
+        clientId: "1065568145771-k3psvrln98sprpvfh1mu10cnt06ibran.apps.googleusercontent.com"  
+      );
+
+      final account = await googleAuth.signIn();
+      final auth = account.authentication;
+      
+      state = state.copyWith(isLoading: true);
+
+      final BaseResponse<TokenModel> result = await AuthService.loginWithGoogle(auth.idToken!);
+      await storage.write(key: 'token', value: result.data?.token);
+
+      state = state.copyWith(isLoading: false, isAuthenticated: true);
+    } on GoogleSignInException catch (_) {
+      Fluttertoast.showToast(msg: "Proses dibatalkan");
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+      state = state.copyWith(isLoading: false);
     }
   }
 

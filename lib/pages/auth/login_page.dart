@@ -260,8 +260,34 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             )
                           ],
                         ),
-                        Expanded(child: SizedBox()),
                         SizedBox(height: 25),
+                        GestureDetector(
+                          onTap: () async {
+                            ref.read(authProvider.notifier).loginWithGoogle();
+                          },
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(color: colors.primary),
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Login With Google',
+                                    style: TextStyle(
+                                      color: colors.onSurface,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
