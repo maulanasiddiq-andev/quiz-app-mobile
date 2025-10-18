@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/pages/auth/register_page.dart';
-import 'package:quiz_app/pages/quiz/quiz_list_page.dart';
+import 'package:quiz_app/pages/root_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -32,7 +32,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ref.listen(authProvider, (previous, next) {
       if (next.isAuthenticated) {
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const QuizListPage()), 
+          MaterialPageRoute(builder: (_) => const RootPage()), 
           (route) => false
         );
       }
