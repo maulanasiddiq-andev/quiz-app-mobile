@@ -43,4 +43,29 @@ class CategoryService {
 
     return result;
   }
+
+  static Future<BaseResponse<CategoryModel>> addCategory(String name, String description) async {
+    final uri = Uri.parse(url);
+    var token = await storage.read(key: 'token');
+    final body = {
+      "name": name,
+      "description": description
+    };
+
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'},
+      body: jsonEncode(body)
+    );
+
+    final dynamic responseJson = jsonDecode(response.body);
+    final BaseResponse<CategoryModel> result = BaseResponse.fromJson(
+      responseJson,
+      fromJsonT: (item) => CategoryModel.fromJson(item),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
 }
