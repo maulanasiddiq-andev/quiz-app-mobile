@@ -17,7 +17,7 @@ class UserListNotifier extends StateNotifier<UserListState> {
 
     try {
       final BaseResponse<SearchResponse<UserModel>> result =
-          await UserService.getCategories(state.pageIndex, state.pageSize);
+          await UserService.getUsers(state.pageIndex, state.pageSize);
 
       state = state.copyWith(
         isLoading: false,
