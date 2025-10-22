@@ -53,13 +53,21 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                                 )
                               )
                             ),
-                            child: Text(
-                              role.name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 20
-                              ),  
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  role.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 20
+                                  ),  
+                                ),
+                                role.isMain
+                                  ? Icon(Icons.check)
+                                  : SizedBox()
+                              ],
                             ),
                           ),
                         );
