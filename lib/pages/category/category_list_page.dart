@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/notifiers/category/category_list_notifier.dart';
 import 'package:quiz_app/pages/category/category_add_page.dart';
+import 'package:quiz_app/pages/category/category_detail_page.dart';
 
 class CategoryListPage extends ConsumerStatefulWidget {
   const CategoryListPage({super.key});
@@ -51,21 +52,28 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                   child: Column(
                     children: [
                       ...state.categories.map((category) {
-                        return Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: colors.onSurface
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => CategoryDetailPage(categoryId: category.categoryId))
+                            );
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: colors.onSurface
+                                )
                               )
-                            )
-                          ),
-                          child: Text(
-                            category.name,
-                            style: TextStyle(
-                              fontSize: 16
-                            ),  
+                            ),
+                            child: Text(
+                              category.name,
+                              style: TextStyle(
+                                fontSize: 16
+                              ),  
+                            ),
                           ),
                         );
                       })

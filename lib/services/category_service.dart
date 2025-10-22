@@ -44,6 +44,24 @@ class CategoryService {
     return result;
   }
 
+  static Future<BaseResponse<CategoryModel>> getCategoryById(String id) async {
+    final token = await storage.read(key: 'token');
+    final response = await http.get(
+      Uri.parse('$url$id'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    final dynamic responseJson = jsonDecode(response.body);
+    final BaseResponse<CategoryModel> result = BaseResponse.fromJson(
+      responseJson,
+      fromJsonT: (data) => CategoryModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
   static Future<BaseResponse<CategoryModel>> addCategory(String name, String description) async {
     final uri = Uri.parse(url);
     var token = await storage.read(key: 'token');
@@ -62,6 +80,31 @@ class CategoryService {
     final BaseResponse<CategoryModel> result = BaseResponse.fromJson(
       responseJson,
       fromJsonT: (item) => CategoryModel.fromJson(item),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<CategoryModel>> editCategoryById(
+    String id,
+    String name,
+    String description,
+    int version
+  ) async {
+    final token = await storage.read(key: 'token');
+    final body = jsonEncode({"name": name, "description": description, "version": version});
+    final response = await http.put(
+      Uri.parse('$url$id'),
+      headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'},
+      body: body
+    );
+
+    final dynamic responseJson = jsonDecode(response.body);
+    final BaseResponse<CategoryModel> result = BaseResponse.fromJson(
+      responseJson,
+      fromJsonT: (data) => CategoryModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
