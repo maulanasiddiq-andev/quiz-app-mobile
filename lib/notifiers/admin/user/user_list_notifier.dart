@@ -42,7 +42,4 @@ class UserListNotifier extends StateNotifier<UserListState> {
   }
 }
 
-final userListProvider =
-    StateNotifierProvider.autoDispose<UserListNotifier, UserListState>(
-      (ref) => UserListNotifier(),
-    );
+final userListProvider = StateNotifierProvider.autoDispose<UserListNotifier, UserListState>((ref) => UserListNotifier());
