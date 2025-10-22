@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/notifiers/admin/role/role_list_notifier.dart';
+import 'package:quiz_app/pages/admin/role/role_detail_page.dart';
 
 class RoleListPage extends ConsumerStatefulWidget {
   const RoleListPage({super.key});
@@ -38,9 +39,9 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                       ...state.roles.map((role) {
                         return GestureDetector(
                           onTap: () {
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(builder: (context) => UserDetailPage(userId: user.userId))
-                            // );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => RoleDetailPage(roleId: role.roleId))
+                            );
                           },
                           child: Container(
                             width: double.infinity,
