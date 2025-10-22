@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
+import 'package:quiz_app/pages/admin/role/role_list_page.dart';
 import 'package:quiz_app/pages/admin/user/user_list_page.dart';
 
 class AdminPage extends StatefulWidget {
@@ -17,7 +18,7 @@ class _AdminPageState extends State<AdminPage> {
       title: "User"
     ),
     AdminPanelMenu(
-      page: UserListPage(), 
+      page: RoleListPage(), 
       icon: Icons.badge, 
       title: "Role"
     )

@@ -1,0 +1,41 @@
+import 'package:quiz_app/models/identity/role_model.dart';
+
+class RoleListState {
+  final bool isLoading;
+  final bool isLoadingMore;
+  final int pageIndex;
+  final int pageSize;
+  final bool hasNextPage;
+  final bool hasPreviousPage;
+  final List<RoleModel> roles;
+
+  RoleListState({
+    this.isLoading = false,
+    this.isLoadingMore = false,
+    this.pageIndex = 0,
+    this.pageSize = 10,
+    this.hasNextPage = false,
+    this.hasPreviousPage = false,
+    this.roles = const [],
+  });
+
+  RoleListState copyWith({
+    bool? isLoading,
+    bool? isLoadingMore,
+    int? pageIndex,
+    int? pageSize,
+    bool? hasNextPage,
+    bool? hasPreviousPage,
+    List<RoleModel>? roles,
+  }) {
+    return RoleListState(
+      isLoading: isLoading ?? this.isLoading,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      pageIndex: pageIndex ?? this.pageIndex,
+      pageSize: pageSize ?? this.pageSize,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
+      hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
+      roles: roles ?? this.roles,
+    );
+  }
+}
