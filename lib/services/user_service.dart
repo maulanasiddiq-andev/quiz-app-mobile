@@ -11,7 +11,7 @@ class UserService {
   static const storage = FlutterSecureStorage();
   static String url = "${EnvironmentConstant.url}user/";
 
-  static Future<BaseResponse<SearchResponse<UserModel>>> getCategories(
+  static Future<BaseResponse<SearchResponse<UserModel>>> getUsers(
     int page,
     int pageSize,
   ) async {
@@ -33,11 +33,27 @@ class UserService {
     final BaseResponse<SearchResponse<UserModel>> result =
         BaseResponse.fromJson(
           responseJson,
-          fromJsonT: (data) => SearchResponse.fromJson(
-            data,
-            (item) => UserModel.fromJson(item),
-          ),
+          fromJsonT: (data) =>
+              SearchResponse.fromJson(data, (item) => UserModel.fromJson(item)),
         );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<UserModel>> getUserById(String id) async {
+    final token = await storage.read(key: 'token');
+    final response = await http.get(
+      Uri.parse('$url$id'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    final dynamic responseJson = jsonDecode(response.body);
+    final BaseResponse<UserModel> result = BaseResponse.fromJson(
+      responseJson,
+      fromJsonT: (data) => UserModel.fromJson(data),
+    );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
