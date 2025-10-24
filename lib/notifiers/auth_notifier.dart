@@ -26,7 +26,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await storage.write(key: 'token', value: result.data?.token);
       saveSubmittedEmail(email);
 
-      state = state.copyWith(isLoading: false, isAuthenticated: true);
+      state = state.copyWith(
+        isLoading: false, 
+        isAuthenticated: true,
+        token: result.data
+      );
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoading: false);
