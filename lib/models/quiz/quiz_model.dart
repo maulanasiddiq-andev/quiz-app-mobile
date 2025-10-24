@@ -1,11 +1,11 @@
-import 'package:quiz_app/models/identity/user_model.dart';
+import 'package:quiz_app/models/identity/simple_user_model.dart';
 import 'package:quiz_app/models/quiz/category_model.dart';
 import 'package:quiz_app/models/quiz/questions_model.dart';
 
 class QuizModel {
   final String quizId;
   final String? userId;
-  final UserModel? user;
+  final SimpleUserModel? user;
   final String? categoryId;
   final CategoryModel? category;
   final String title;
@@ -30,15 +30,19 @@ class QuizModel {
     required this.questionCount,
     this.questions = const [],
     this.description,
-    required this.version
+    required this.version,
   });
 
   QuizModel.fromJson(Map<String, dynamic> json)
     : quizId = json['quizId'],
       userId = json['userId'],
-      user = json['user'] != null ? UserModel.fromJson(json['user']) : null,
+      user = json['user'] != null
+          ? SimpleUserModel.fromJson(json['user'])
+          : null,
       categoryId = json['categoryId'],
-      category = json['category'] != null ? CategoryModel.fromJson(json['category']) : null,
+      category = json['category'] != null
+          ? CategoryModel.fromJson(json['category'])
+          : null,
       title = json['title'],
       imageUrl = json['imageUrl'],
       time = json['time'],

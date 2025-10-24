@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
-import 'package:quiz_app/models/identity/user_model.dart';
+import 'package:quiz_app/models/identity/simple_user_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/responses/search_responses.dart';
 import 'package:quiz_app/services/user_service.dart';
@@ -16,7 +16,7 @@ class UserListNotifier extends StateNotifier<UserListState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final BaseResponse<SearchResponse<UserModel>> result =
+      final BaseResponse<SearchResponse<SimpleUserModel>> result =
           await UserService.getUsers(state.pageIndex, state.pageSize);
 
       state = state.copyWith(
@@ -42,4 +42,7 @@ class UserListNotifier extends StateNotifier<UserListState> {
   }
 }
 
-final userListProvider = StateNotifierProvider.autoDispose<UserListNotifier, UserListState>((ref) => UserListNotifier());
+final userListProvider =
+    StateNotifierProvider.autoDispose<UserListNotifier, UserListState>(
+      (ref) => UserListNotifier(),
+    );
