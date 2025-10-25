@@ -46,7 +46,7 @@ class UserModel extends BaseModel {
     lastLoginTime = json['lastLoginTime'] != null ? DateTime.parse(json['lastLoginTime']) : null,
     failedLoginAttempts = json['failedLoginAttempts'],
     roleId = json['roleId'],
-    role = RoleModel.fromJson(json['role']),
+    role = json['role'] != null ? RoleModel.fromJson(json['role']) : null,
     super.fromJson(json);
 
   @override
