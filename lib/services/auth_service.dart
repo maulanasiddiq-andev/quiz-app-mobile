@@ -1,35 +1,26 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:quiz_app/constants/environment_contant.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
+import 'package:quiz_app/interceptor/client_settings.dart';
 import 'package:quiz_app/models/auth/token_model.dart';
 import 'package:quiz_app/models/identity/simple_user_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 
 class AuthService {
-  static const storage = FlutterSecureStorage();
-  static String url = "${EnvironmentConstant.url}auth/";
+  static ClientSettings client = ClientSettings();
+  static String url = "auth/";
 
   static Future<BaseResponse<TokenModel>> login(
     String email,
     String password,
   ) async {
-    final baseUri = Uri.parse('${url}login');
     final body = jsonEncode({"email": email, "password": password});
-
-    final response = await http.post(
-      baseUri,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: body,
+    final response = await client.dio.post(
+      '${url}login',
+      data: body
     );
 
-    final responseJson = jsonDecode(response.body);
     final BaseResponse<TokenModel> result = BaseResponse.fromJson(
-      responseJson,
+      response.data,
       fromJsonT: (data) => TokenModel.fromJson(data),
     );
 
@@ -39,18 +30,15 @@ class AuthService {
   }
 
   static Future<BaseResponse<SimpleUserModel>> checkAuth(String token) async {
-    final response = await http.get(
-      Uri.parse('${url}check-auth'),
-      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    final response = await client.dio.get(
+      '${url}check-auth',
     );
-
     if (response.statusCode == 401) {
       throw ApiException("Unauthorized");
     }
 
-    final responseJson = jsonDecode(response.body);
     final BaseResponse<SimpleUserModel> result = BaseResponse.fromJson(
-      responseJson,
+      response.data,
       fromJsonT: (data) => SimpleUserModel.fromJson(data),
     );
 
@@ -65,7 +53,6 @@ class AuthService {
     String username,
     String password,
   ) async {
-    final baseUri = Uri.parse('${url}register');
     final body = jsonEncode({
       "email": email,
       "name": name,
@@ -73,18 +60,13 @@ class AuthService {
       "password": password,
     });
 
-    final response = await http.post(
-      baseUri,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: body,
+    final response = await client.dio.post(
+      '${url}register',
+      data: body
     );
 
-    final responseJson = jsonDecode(response.body);
     final BaseResponse<TokenModel> result = BaseResponse.fromJson(
-      responseJson,
+      response.data,
       fromJsonT: (data) => TokenModel.fromJson(data),
     );
 
@@ -97,21 +79,14 @@ class AuthService {
     String email,
     String otpCode,
   ) async {
-    final baseUri = Uri.parse('${url}otp');
     final body = jsonEncode({"email": email, "otpCode": otpCode});
-
-    final response = await http.post(
-      baseUri,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: body,
+    final response = await client.dio.post(
+      '${url}otp',
+      data: body
     );
 
-    final responseJson = jsonDecode(response.body);
     final BaseResponse<TokenModel> result = BaseResponse.fromJson(
-      responseJson,
+      response.data,
       fromJsonT: (data) => TokenModel.fromJson(data),
     );
 
@@ -123,21 +98,14 @@ class AuthService {
   static Future<BaseResponse<TokenModel>> loginWithGoogle(
     String idToken,
   ) async {
-    final baseUri = Uri.parse('${url}login-with-google');
     final body = jsonEncode({"idToken": idToken});
-
-    final response = await http.post(
-      baseUri,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: body,
+    final response = await client.dio.post(
+      '${url}login-with-google',
+      data: body
     );
 
-    final responseJson = jsonDecode(response.body);
     final BaseResponse<TokenModel> result = BaseResponse.fromJson(
-      responseJson,
+      response.data,
       fromJsonT: (data) => TokenModel.fromJson(data),
     );
 

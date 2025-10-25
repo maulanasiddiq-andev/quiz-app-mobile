@@ -1,38 +1,29 @@
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:quiz_app/constants/environment_contant.dart';
-import 'package:http/http.dart' as http;
 import 'package:quiz_app/exceptions/api_exception.dart';
+import 'package:quiz_app/interceptor/client_settings.dart';
 import 'package:quiz_app/models/quiz/category_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/responses/search_responses.dart';
 
 class CategoryService {
-  static const storage = FlutterSecureStorage();
-  static String url = "${EnvironmentConstant.url}category/";
+  static ClientSettings client = ClientSettings();
+  static String url = "category/";
 
   static Future<BaseResponse<SearchResponse<CategoryModel>>> getCategories(
     int page,
     int pageSize,
   ) async {
-    final baseUri = Uri.parse(url);
-    final uri = baseUri.replace(
+    final response = await client.dio.get(
+      url,
       queryParameters: {
         'page': page.toString(),
         'pageSize': pageSize.toString(),
       },
     );
 
-    var token = await storage.read(key: 'token');
-    final response = await http.get(
-      uri,
-      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
-    );
-
-    final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<SearchResponse<CategoryModel>> result =
         BaseResponse.fromJson(
-          responseJson,
+          response.data,
           fromJsonT: (data) => SearchResponse.fromJson(
             data,
             (item) => CategoryModel.fromJson(item),
@@ -45,15 +36,12 @@ class CategoryService {
   }
 
   static Future<BaseResponse<CategoryModel>> getCategoryById(String id) async {
-    final token = await storage.read(key: 'token');
-    final response = await http.get(
-      Uri.parse('$url$id'),
-      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    final response = await client.dio.get(
+      '$url$id',
     );
 
-    final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<CategoryModel> result = BaseResponse.fromJson(
-      responseJson,
+      response.data,
       fromJsonT: (data) => CategoryModel.fromJson(data),
     );
 
@@ -63,22 +51,18 @@ class CategoryService {
   }
 
   static Future<BaseResponse<CategoryModel>> addCategory(String name, String description) async {
-    final uri = Uri.parse(url);
-    var token = await storage.read(key: 'token');
     final body = {
       "name": name,
       "description": description
     };
 
-    final response = await http.post(
-      uri,
-      headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'},
-      body: jsonEncode(body)
+    final response = await client.dio.post(
+      url,
+      data: jsonEncode(body)
     );
 
-    final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<CategoryModel> result = BaseResponse.fromJson(
-      responseJson,
+      response.data,
       fromJsonT: (item) => CategoryModel.fromJson(item),
     );
 
@@ -93,17 +77,14 @@ class CategoryService {
     String description,
     int version
   ) async {
-    final token = await storage.read(key: 'token');
     final body = jsonEncode({"name": name, "description": description, "version": version});
-    final response = await http.put(
-      Uri.parse('$url$id'),
-      headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'},
-      body: body
+    final response = await client.dio.put(
+      '$url$id',
+      data: body
     );
 
-    final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<CategoryModel> result = BaseResponse.fromJson(
-      responseJson,
+      response.data,
       fromJsonT: (data) => CategoryModel.fromJson(data),
     );
 
