@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/constants/module_constant.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/pages/admin/admin_page.dart';
 import 'package:quiz_app/pages/category/category_list_page.dart';
@@ -22,20 +23,24 @@ class _RootPageState extends ConsumerState<RootPage> {
       page: QuizListPage(),
       title: 'Beranda',
       icon: Icons.home,
+      moduleNames: [ModuleConstant.searchQuiz]
     ),
     BottomMenuModel(
       page: CategoryListPage(),
       title: 'Kategori',
       icon: Icons.category,
+      moduleNames: [ModuleConstant.searchCategory, ModuleConstant.detailCategory]
     ),
     BottomMenuModel(
       page: AdminPage(),
       title: 'Admin',
       icon: Icons.admin_panel_settings,
+      moduleNames: [ModuleConstant.searchUser, ModuleConstant.searchRole]
     ),
     BottomMenuModel(
       page: ProfilePage(),
       title: 'Profile',
+      moduleNames: []
     )
   ];
 
@@ -53,6 +58,7 @@ class _RootPageState extends ConsumerState<RootPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(authProvider);
+    final modules = state.token?.user?.role?.roleModules;
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -64,22 +70,24 @@ class _RootPageState extends ConsumerState<RootPage> {
         backgroundColor: colors.primary,
         selectedItemColor: colors.onPrimary,
         unselectedItemColor: Colors.white,
-        items: menus.map((menu) {
-          if (menu.icon != null) {
-            return BottomNavigationBarItem(
-              icon: Icon(menu.icon),
-              label: menu.title
-            );            
-          }
+        items: menus
+          .where((menu) => modules != null && menu.moduleNames.every((moduleName) => modules.any((module) => module.roleModuleName == moduleName)))
+          .map((menu) {
+            if (menu.icon != null) {
+              return BottomNavigationBarItem(
+                icon: Icon(menu.icon),
+                label: menu.title
+              );            
+            }
 
-          return BottomNavigationBarItem(
-            icon: ProfileImageComponent(
-              profileImage: state.token?.user?.profileImage,
-              radius: 11,
-            ),
-            label: menu.title
-          );
-        }).toList()
+            return BottomNavigationBarItem(
+              icon: ProfileImageComponent(
+                profileImage: state.token?.user?.profileImage,
+                radius: 11,
+              ),
+              label: menu.title
+            );
+          }).toList()
       ),
     );
   }
@@ -88,11 +96,13 @@ class _RootPageState extends ConsumerState<RootPage> {
 class BottomMenuModel {
   Widget page;
   String title;
+  List<String> moduleNames;
   IconData? icon;
 
   BottomMenuModel({
     required this.page,
     required this.title,
+    required this.moduleNames,
     this.icon,
   });
 }
