@@ -81,9 +81,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(isLoading: true);
 
       final BaseResponse<TokenModel> result = await AuthService.loginWithGoogle(auth.idToken!);
-      await storage.write(key: 'token', value: result.data?.token);
 
-      state = state.copyWith(isLoading: false, isAuthenticated: true);
+      final storedToken = jsonEncode(result.data?.toJson());
+      await storage.write(
+        key: 'token', 
+        value: storedToken
+      );
+
+      state = state.copyWith(
+        isLoading: false, 
+        isAuthenticated: true,
+        token: result.data
+      );
     } on GoogleSignInException catch (_) {
       Fluttertoast.showToast(msg: "Proses dibatalkan");
       state = state.copyWith(isLoading: false);
