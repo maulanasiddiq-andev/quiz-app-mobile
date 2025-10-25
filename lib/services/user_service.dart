@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/interceptor/client_settings.dart';
 import 'package:quiz_app/models/identity/user_model.dart';
@@ -36,6 +38,22 @@ class UserService {
   static Future<BaseResponse<UserModel>> getUserById(String id) async {
     final response = await client.dio.get(
       '$url$id'
+    );
+
+    final BaseResponse<UserModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => UserModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<UserModel>> updateUserById(String id, Map<String, dynamic>? data) async {
+    final response = await client.dio.put(
+      '$url$id',
+      data: jsonEncode(data)
     );
 
     final BaseResponse<UserModel> result = BaseResponse.fromJson(

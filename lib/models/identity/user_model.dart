@@ -67,4 +67,46 @@ class UserModel extends BaseModel {
     });
     return json;
   }
+
+  UserModel copyWith({
+    int? version,
+    String? description,
+    String? recordStatus,
+    DateTime? createdTime,
+    String? createdBy,
+    DateTime? modifiedTime,
+    String? modifiedBy,
+    String? userId,
+    String? email,
+    String? username,
+    String? name,
+    String? profileImage,
+    String? coverImage,
+    DateTime? emailVerifiedTime,
+    DateTime? lastLoginTime,
+    int? failedLoginAttempts,
+    String? roleId,
+    RoleModel? role,
+  }) {
+    return UserModel(
+      version: version ?? this.version,
+      description: description ?? this.description,
+      recordStatus: recordStatus ?? this.recordStatus,
+      createdTime: createdTime ?? this.createdTime,
+      createdBy: createdBy ?? this.createdBy,
+      modifiedTime: modifiedTime ?? this.modifiedTime,
+      modifiedBy: modifiedBy ?? this.modifiedBy,
+      userId: userId ?? this.userId,
+      email: email ?? this.email,
+      username: username ?? this.username,
+      name: name ?? this.name,
+      profileImage: profileImage ?? this.profileImage,
+      coverImage: coverImage ?? this.coverImage,
+      emailVerifiedTime: emailVerifiedTime ?? this.emailVerifiedTime,
+      lastLoginTime: lastLoginTime ?? this.lastLoginTime,
+      failedLoginAttempts: failedLoginAttempts ?? this.failedLoginAttempts,
+      roleId: roleId ?? this.roleId,
+      role: role ?? this.role,
+    );
+  }
 }

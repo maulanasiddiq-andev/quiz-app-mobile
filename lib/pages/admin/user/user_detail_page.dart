@@ -5,6 +5,7 @@ import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/detail_field_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/notifiers/admin/user/user_detail_notifier.dart';
+import 'package:quiz_app/pages/admin/user/user_edit_page.dart';
 import 'package:quiz_app/utils/format_date.dart';
 
 class UserDetailPage extends ConsumerStatefulWidget {
@@ -87,7 +88,15 @@ class _UserDetailPageState extends ConsumerState<UserDetailPage> {
                 children: [
                   Expanded(
                     child: CustomButtonComponent(
-                      onTap: () {}, 
+                      onTap: () async {
+                        final result = await Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => UserEditPage(userId: state.user!.userId))
+                        );
+
+                        if (result != null && result == true) {
+                          ref.read(userDetailProvider.notifier).getUserById(widget.userId);
+                        }
+                      }, 
                       text: "Edit",
                     ),
                   ),
