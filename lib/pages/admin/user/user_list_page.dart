@@ -46,7 +46,6 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                           },
                           child: Container(
                             width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
@@ -54,35 +53,18 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                                 )
                               )
                             ),
-                            child: Row(
-                              spacing: 15,
-                              children: [
-                                ProfileImageComponent(
-                                  profileImage: user.profileImage,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${user.name} | ${user.username}",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 16
-                                        ),  
-                                      ),
-                                      Text(
-                                        user.email,
-                                        style: TextStyle(
-                                          color: colors.secondary
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                            child: ListTile(
+                              leading: ProfileImageComponent(
+                                profileImage: user.profileImage,
+                              ),
+                              title: Text(
+                                "${user.name} | ${user.username}",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Text(user.email),
+                              trailing: Icon(Icons.more_vert),
+                            )
                           ),
                         );
                       })
