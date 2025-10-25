@@ -29,4 +29,16 @@ class RoleModel extends BaseModel {
       .map((roleModule) => RoleModuleModel.fromJson(roleModule))
       .toList(),
     super.fromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json.addAll({
+      'roleId': roleId,
+      'name': name,
+      'isMain': isMain,
+      'roleModules': roleModules.map((e) => e.toJson()).toList(),
+    });
+    return json;
+  }
 }

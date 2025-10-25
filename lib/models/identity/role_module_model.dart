@@ -23,4 +23,15 @@ class RoleModuleModel extends BaseModel {
     roleModuleId = json['roleModuleId'],
     roleModuleName = json['roleModuleName'],
     super.fromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json.addAll({
+      'roleModuleId': roleModuleId,
+      'roleId': roleId,
+      'roleModuleName': roleModuleName,
+    });
+    return json;
+  }
 }

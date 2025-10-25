@@ -21,7 +21,6 @@ class CategoryAddNotifier extends StateNotifier<CategoryAddState> {
 
       return false;
     } catch (e) {
-      print(e.toString());
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false);
 
