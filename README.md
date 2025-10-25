@@ -40,19 +40,19 @@ Aplikasi ini dikembangkan menggunakan **Flutter** dengan **Riverpod** untuk stat
 
 ## 🧱 Struktur Proyek
 
-lib/
-│
-├── components/ # Widget reusable
-├── constants/ # Konstanta global
-├── exceptions/ # Exception handler
-├── interceptors/ # Base Dio settings + JWT interceptor
-├── models/ # Data models
-├── notifiers/ # Riverpod notifiers
-├── pages/ # UI pages
-├── services/ # API service layer
-├── states/ # State definitions
-├── themes/ # App themes
-└── utils/ # Utility functions
+- lib/
+- │
+- ├── components/ # Widget reusable
+- ├── constants/ # Konstanta global
+- ├── exceptions/ # Exception handler
+- ├── interceptors/ # Base Dio settings + JWT interceptor
+- ├── models/ # Data models
+- ├── notifiers/ # Riverpod notifiers
+- ├── pages/ # UI pages
+- ├── services/ # API service layer
+- ├── states/ # State definitions
+- ├── themes/ # App themes
+- └── utils/ # Utility functions
 
 
 ---
@@ -80,4 +80,4 @@ cd everyday-quiz-flutter
 
 flutter pub get
 
-flutter run```
+flutter run
