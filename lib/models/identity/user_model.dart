@@ -48,4 +48,23 @@ class UserModel extends BaseModel {
     roleId = json['roleId'],
     role = RoleModel.fromJson(json['role']),
     super.fromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json.addAll({
+      'userId': userId,
+      'email': email,
+      'username': username,
+      'name': name,
+      'profileImage': profileImage,
+      'coverImage': coverImage,
+      'emailVerifiedTime': emailVerifiedTime.toIso8601String(),
+      'lastLoginTime': lastLoginTime.toIso8601String(),
+      'failedLoginAttempts': failedLoginAttempts,
+      'roleId': roleId,
+      'role': role?.toJson(),
+    });
+    return json;
+  }
 }

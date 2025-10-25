@@ -22,4 +22,14 @@ class TokenModel {
     isValidLogin: json['isValidLogin'],
     user: UserModel.fromJson(json['user'])
   );
+
+  Map<String, dynamic> toJson() {
+    return {
+      "token": token,
+      "refreshToken": refreshToken,
+      "refreshTokenExpiredTime": refreshTokenExpiredTime.toIso8601String(),
+      "isValidLogin": isValidLogin,
+      "user": user?.toJson()
+    };
+  }
 }

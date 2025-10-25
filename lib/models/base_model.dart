@@ -25,4 +25,16 @@ class BaseModel {
     createdBy = json['createdBy'], 
     modifiedTime = DateTime.parse(json['modifiedTime']), 
     modifiedBy = json['modifiedBy'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'version': version,
+      'description': description,
+      'recordStatus': recordStatus,
+      'createdTime': createdTime.toIso8601String(),
+      'createdBy': createdBy,
+      'modifiedTime': modifiedTime.toIso8601String(),
+      'modifiedBy': modifiedBy,
+    };
+  }
 }
