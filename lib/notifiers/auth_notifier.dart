@@ -23,7 +23,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final BaseResponse<TokenModel> result = await AuthService.login(email, password);
 
-      await storage.write(key: 'token', value: result.data?.token);
+      final storedToken = jsonEncode(result.data?.toJson());
+      await storage.write(key: 'token', value: storedToken);
       saveSubmittedEmail(email);
 
       state = state.copyWith(
@@ -44,14 +45,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      var token = await storage.read(key: 'token');
+      var storedToken = await storage.read(key: 'token');
 
-      if (token == null) {
+      if (storedToken == null) {
         await deleteCredential();
         state = state.copyWith(isLoading: false, isAuthenticated: false);
       } else {
-        await AuthService.checkAuth(token);
-        state = state.copyWith(isLoading: false, isAuthenticated: true);
+        final jsonToken = jsonDecode(storedToken);
+        final token = TokenModel.fromJson(jsonToken);
+
+        await AuthService.checkAuth(token.token);
+        state = state.copyWith(
+          isLoading: false, 
+          isAuthenticated: true,
+          token: token
+        );
       }
     } on ApiException catch (_) {
       await deleteCredential();
