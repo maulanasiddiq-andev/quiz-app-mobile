@@ -5,7 +5,10 @@ import 'package:quiz_app/services/role_service.dart';
 import 'package:quiz_app/states/admin/role/role_detail_state.dart';
 
 class RoleDetailNotifier extends StateNotifier<RoleDetailState> {
-  RoleDetailNotifier(): super(RoleDetailState());
+  final String roleId;
+  RoleDetailNotifier(this.roleId): super(RoleDetailState()) {
+    getRoleById(roleId);
+  }
 
   Future<void> getRoleById(String id) async {
     state = state.copyWith(isLoading: true);
@@ -27,4 +30,4 @@ class RoleDetailNotifier extends StateNotifier<RoleDetailState> {
   }
 }
 
-final roleDetailProvider = StateNotifierProvider.autoDispose<RoleDetailNotifier, RoleDetailState>((ref) => RoleDetailNotifier());
+final roleDetailProvider = StateNotifierProvider.autoDispose.family<RoleDetailNotifier, RoleDetailState, String>((ref, roleId) => RoleDetailNotifier(roleId));
