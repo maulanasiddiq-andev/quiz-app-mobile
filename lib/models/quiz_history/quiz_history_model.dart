@@ -1,5 +1,5 @@
 import 'package:quiz_app/models/base_model.dart';
-import 'package:quiz_app/models/identity/user_model.dart';
+import 'package:quiz_app/models/identity/simple_user_model.dart';
 import 'package:quiz_app/models/quiz_history/question_history_model.dart';
 
 class QuizHistoryModel extends BaseModel {
@@ -7,12 +7,12 @@ class QuizHistoryModel extends BaseModel {
   final String quizId;
   final int quizVersion;
   final String userId;
-  final UserModel? user;
+  final SimpleUserModel? user;
   final List<QuestionHistoryModel> questions;
   final int questionCount;
-  final int duration; 
-  final int trueAnswers; 
-  final int wrongAnswers; 
+  final int duration;
+  final int trueAnswers;
+  final int wrongAnswers;
   final int score;
 
   QuizHistoryModel({
@@ -33,22 +33,24 @@ class QuizHistoryModel extends BaseModel {
     required this.duration,
     required this.trueAnswers,
     required this.wrongAnswers,
-    required this.score
-  }); 
+    required this.score,
+  });
 
-  QuizHistoryModel.fromJson(Map<String, dynamic> json) :
-    quizHistoryId = json['quizHistoryId'],
-    quizId = json['quizId'],
-    quizVersion = json['quizVersion'],
-    userId = json['userId'],
-    user = json['user'] != null ? UserModel.fromJson(json['user']) : null,
-    questions = (json['questions'] as List)
-      .map((question) => QuestionHistoryModel.fromJson(question))
-      .toList(),
-    questionCount = json['questionCount'],
-    duration = json['duration'],
-    trueAnswers = json['trueAnswers'],
-    wrongAnswers = json['wrongAnswers'],
-    score = json['score'],
-    super.fromJson(json);
+  QuizHistoryModel.fromJson(Map<String, dynamic> json)
+    : quizHistoryId = json['quizHistoryId'],
+      quizId = json['quizId'],
+      quizVersion = json['quizVersion'],
+      userId = json['userId'],
+      user = json['user'] != null
+          ? SimpleUserModel.fromJson(json['user'])
+          : null,
+      questions = (json['questions'] as List)
+          .map((question) => QuestionHistoryModel.fromJson(question))
+          .toList(),
+      questionCount = json['questionCount'],
+      duration = json['duration'],
+      trueAnswers = json['trueAnswers'],
+      wrongAnswers = json['wrongAnswers'],
+      score = json['score'],
+      super.fromJson(json);
 }

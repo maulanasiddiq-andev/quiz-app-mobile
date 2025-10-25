@@ -1,19 +1,25 @@
+import 'package:quiz_app/models/auth/token_model.dart';
+
 class AuthState {
   final bool isLoading;
   final bool isAuthenticated;
+  final TokenModel? token;
   
   AuthState({
     this.isLoading = false,
-    this.isAuthenticated = false
+    this.isAuthenticated = false,
+    this.token
   });
 
   AuthState copyWith({
     bool? isLoading,
-    bool? isAuthenticated
+    bool? isAuthenticated,
+    TokenModel? token
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
-      isAuthenticated: isAuthenticated ?? this.isAuthenticated
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      token: token ?? this.token
     );
   }
 }

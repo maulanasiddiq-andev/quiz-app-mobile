@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/pages/admin/admin_page.dart';
+import 'package:quiz_app/pages/category/category_list_page.dart';
 import 'package:quiz_app/pages/profile/profile_page.dart';
 import 'package:quiz_app/pages/quiz/quiz_list_page.dart';
 
@@ -13,13 +15,24 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [QuizListPage(), ProfilePage()];
   final List<BottomMenuModel> menus = [
     BottomMenuModel(
+      page: QuizListPage(),
       title: 'Beranda',
       icon: Icons.home,
     ),
     BottomMenuModel(
+      page: CategoryListPage(),
+      title: 'Kategori',
+      icon: Icons.category,
+    ),
+    BottomMenuModel(
+      page: AdminPage(),
+      title: 'Admin',
+      icon: Icons.admin_panel_settings,
+    ),
+    BottomMenuModel(
+      page: ProfilePage(),
       title: 'Profile',
     )
   ];
@@ -40,8 +53,9 @@ class _RootPageState extends State<RootPage> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: menus[_currentIndex].page,
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         onTap: _onTabTapped,
         currentIndex: _currentIndex,
         backgroundColor: colors.primary,
@@ -69,10 +83,12 @@ class _RootPageState extends State<RootPage> {
 }
 
 class BottomMenuModel {
+  Widget page;
   String title;
   IconData? icon;
 
   BottomMenuModel({
+    required this.page,
     required this.title,
     this.icon,
   });

@@ -35,17 +35,17 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^3.0.0
-  http: ^1.5.0
   flutter_secure_storage: ^9.2.4
   fluttertoast: ^9.0.0
   fl_chart: ^1.1.1
   carousel_slider: ^5.1.1
   image_picker: ^1.2.0
   image_cropper: ^11.0.0
-  http_parser: ^4.1.2
-  mime: ^2.0.0
+  http_parser: ^4.1.2   # for parsing media type
+  mime: ^2.0.0          # for getting file type
   connectivity_plus: ^7.0.0
   google_sign_in: ^7.2.0
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:
