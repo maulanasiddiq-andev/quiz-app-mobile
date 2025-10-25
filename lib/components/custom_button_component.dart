@@ -20,6 +20,7 @@ class CustomButtonComponent extends StatelessWidget {
     return InkWell(
       onTap: () => onTap(),
       splashColor: Colors.white.withAlpha(100),
+      borderRadius: BorderRadius.circular(10),
       child: Ink(
         height: 50,
         decoration: BoxDecoration(
