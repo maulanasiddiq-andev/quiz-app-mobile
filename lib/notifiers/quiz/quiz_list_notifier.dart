@@ -109,4 +109,4 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
   }
 }
 
-final quizListProvider = StateNotifierProvider.autoDispose<QuizListNotifier, QuizListState>((ref) => QuizListNotifier());
+final quizListProvider = StateNotifierProvider<QuizListNotifier, QuizListState>((ref) => QuizListNotifier());
