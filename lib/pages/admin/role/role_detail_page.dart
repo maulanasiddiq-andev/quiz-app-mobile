@@ -28,7 +28,7 @@ class _RoleDetailPageState extends ConsumerState<RoleDetailPage> {
 
     return Scaffold(
       appBar: customAppbarComponent(
-        "Detail User",
+        "Detail Role",
         backgroundColor: colors.primary,
         foregroundColor: colors.onPrimary
       ),
