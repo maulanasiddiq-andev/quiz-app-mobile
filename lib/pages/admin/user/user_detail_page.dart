@@ -60,6 +60,10 @@ class _UserDetailPageState extends ConsumerState<UserDetailPage> {
                         DetailFieldComponent(fieldName: "Email", content: state.user!.email),
                         DetailFieldComponent(fieldName: "Username", content: state.user!.username),
                         DetailFieldComponent(
+                          fieldName: "Email Diverifikasi pada", 
+                          content: state.user!.emailVerifiedTime != null ? formatDate(state.user!.emailVerifiedTime!) : "-"
+                        ),
+                        DetailFieldComponent(
                           fieldName: "Terakhir Login", 
                           content: state.user!.lastLoginTime != null ? formatDate(state.user!.lastLoginTime!) : "-"
                         ),

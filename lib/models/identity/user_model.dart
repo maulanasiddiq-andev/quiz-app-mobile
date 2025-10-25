@@ -8,7 +8,7 @@ class UserModel extends BaseModel {
   final String name;
   final String? profileImage;
   final String? coverImage; 
-  final DateTime emailVerifiedTime;
+  final DateTime? emailVerifiedTime;
   final DateTime? lastLoginTime;
   final int failedLoginAttempts;
   final String? roleId;
@@ -42,7 +42,7 @@ class UserModel extends BaseModel {
     userId = json['userId'],
     profileImage = json['profileImage'],
     coverImage = json['coverImage'],
-    emailVerifiedTime = DateTime.parse(json['emailVerifiedTime']),
+    emailVerifiedTime = json['emailVerifiedTime'] != null ? DateTime.parse(json['emailVerifiedTime']) : null,
     lastLoginTime = json['lastLoginTime'] != null ? DateTime.parse(json['lastLoginTime']) : null,
     failedLoginAttempts = json['failedLoginAttempts'],
     roleId = json['roleId'],
@@ -59,7 +59,7 @@ class UserModel extends BaseModel {
       'name': name,
       'profileImage': profileImage,
       'coverImage': coverImage,
-      'emailVerifiedTime': emailVerifiedTime.toIso8601String(),
+      'emailVerifiedTime': emailVerifiedTime?.toIso8601String(),
       'lastLoginTime': lastLoginTime?.toIso8601String(),
       'failedLoginAttempts': failedLoginAttempts,
       'roleId': roleId,
