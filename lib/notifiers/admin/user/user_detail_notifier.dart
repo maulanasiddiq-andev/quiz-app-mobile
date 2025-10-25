@@ -5,7 +5,10 @@ import 'package:quiz_app/services/user_service.dart';
 import 'package:quiz_app/states/admin/user/user_detail_state.dart';
 
 class UserDetailNotifier extends StateNotifier<UserDetailState> {
-  UserDetailNotifier() : super(UserDetailState());
+  final String userId;
+  UserDetailNotifier(this.userId) : super(UserDetailState()) {
+    getUserById(userId);
+  }
 
   Future<void> getUserById(String id) async {
     state = state.copyWith(isLoading: true);
@@ -27,4 +30,4 @@ class UserDetailNotifier extends StateNotifier<UserDetailState> {
   }
 }
 
-final userDetailProvider = StateNotifierProvider.autoDispose<UserDetailNotifier, UserDetailState>((ref) => UserDetailNotifier());
+final userDetailProvider = StateNotifierProvider.family.autoDispose<UserDetailNotifier, UserDetailState, String>((ref, userId) => UserDetailNotifier(userId));

@@ -20,16 +20,13 @@ class _UserDetailPageState extends ConsumerState<UserDetailPage> {
   @override
   void initState() {
     super.initState();
-
-    Future.microtask((){
-      ref.read(userDetailProvider.notifier).getUserById(widget.userId);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final state = ref.watch(userDetailProvider);
+    final state = ref.watch(userDetailProvider(widget.userId));
+    final notifier = ref.read(userDetailProvider(widget.userId).notifier);
 
     return Scaffold(
       appBar: customAppbarComponent(
@@ -94,7 +91,7 @@ class _UserDetailPageState extends ConsumerState<UserDetailPage> {
                         );
 
                         if (result != null && result == true) {
-                          ref.read(userDetailProvider.notifier).getUserById(widget.userId);
+                          notifier.getUserById(widget.userId);
                         }
                       }, 
                       text: "Edit",
