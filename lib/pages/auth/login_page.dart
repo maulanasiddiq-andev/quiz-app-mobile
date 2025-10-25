@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/components/auth_input_component.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/pages/auth/register_page.dart';
 import 'package:quiz_app/pages/root_page.dart';
@@ -152,48 +153,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   },
                                 ),
                               ),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        controller: _passwordController,
-                                        obscureText: _obscureText,
-                                        textInputAction: TextInputAction.done,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          hintText: 'Password',
-                                          hintStyle: TextStyle(
-                                            color: colors.secondary
-                                          ),
-                                          border: InputBorder.none,
-                                          contentPadding: EdgeInsets.all(0),
-                                        ),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "Masukkan password anda";
-                                          }
+                              AuthInputComponent(
+                                controller: _passwordController, 
+                                hinText: "Password",
+                                action: TextInputAction.done,
+                                isLast: true,
+                                isPassword: true,
+                                isTextObscure: _obscureText,
+                                onTap: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Masukkan password anda";
+                                  }
 
-                                          return null;
-                                        },
-                                        // onSubmitted: (_) {
-                                        //   FocusScope.of(context).unfocus();
-                                        //   _onSubmitText();
-                                        // },
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _obscureText = !_obscureText;
-                                        });
-                                      }, 
-                                      child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility)
-                                    )
-                                  ],
-                                ),
-                              ),
+                                  return null;
+                                },
+                              )
                             ],
                           ),
                         ),
