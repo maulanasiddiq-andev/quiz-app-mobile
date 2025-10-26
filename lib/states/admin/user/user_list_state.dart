@@ -1,4 +1,4 @@
-import 'package:quiz_app/models/identity/simple_user_model.dart';
+import 'package:quiz_app/models/identity/user_model.dart';
 
 class UserListState {
   final bool isLoading;
@@ -7,7 +7,7 @@ class UserListState {
   final int pageSize;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<SimpleUserModel> users;
+  final List<UserModel> users;
 
   UserListState({
     this.isLoading = false,
@@ -26,7 +26,7 @@ class UserListState {
     int? pageSize,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<SimpleUserModel>? users,
+    List<UserModel>? users,
   }) {
     return UserListState(
       isLoading: isLoading ?? this.isLoading,

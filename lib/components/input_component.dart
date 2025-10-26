@@ -9,6 +9,7 @@ class InputComponent extends StatelessWidget {
   final FocusNode? focusNode;
   final TextInputType textInputType;
   final String? Function(String? value)? validator;
+  final bool enabled;
 
   const InputComponent({
     super.key, 
@@ -19,7 +20,8 @@ class InputComponent extends StatelessWidget {
     this.onChanged,
     this.focusNode,
     this.validator,
-    this.textInputType = TextInputType.text
+    this.textInputType = TextInputType.text,
+    this.enabled = true
   });
 
   @override
@@ -29,6 +31,7 @@ class InputComponent extends StatelessWidget {
     return TextFormField(
       controller: controller,
       focusNode: focusNode,
+      enabled: enabled,
       cursorColor: colors.primary,
       maxLines: null,
       maxLength: maxLength,
