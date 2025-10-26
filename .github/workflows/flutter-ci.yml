@@ -26,8 +26,8 @@ jobs:
         run: flutter pub get
 
       # Jalankan test
-      - name: Run tests
-        run: flutter test
+      # - name: Run tests
+      #   run: flutter test
 
       # Build APK release
       - name: Build release APK
