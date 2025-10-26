@@ -42,3 +42,8 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    implementation("com.squareup.okhttp3:okhttp:3.12.12")
+    implementation("com.squareup.okio:okio:1.17.5")
+}
