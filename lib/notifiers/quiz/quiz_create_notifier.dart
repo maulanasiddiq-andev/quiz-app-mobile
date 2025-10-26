@@ -9,6 +9,7 @@ import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz_create/answer_create_model.dart';
 import 'package:quiz_app/models/quiz_create/question_create_model.dart';
 import 'package:quiz_app/services/category_service.dart';
+import 'package:quiz_app/services/file_service.dart';
 import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/quiz_create_state.dart';
 
@@ -230,7 +231,9 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
         "title": state.title,
         "description": state.description,
         "time": state.time,
-        "imageUrl": state.image != null ? await QuizService.uploadQuizImage("quiz", state.image!) : null,
+        "imageUrl": state.image != null
+            ? await FileService.uploadImage("quiz", state.image!)
+            : null,
         "questions": await Future.wait(
           state.questions.map((question) => question.toJson()),
         ),

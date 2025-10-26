@@ -1,13 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/interceptor/client_settings.dart';
 import 'package:quiz_app/models/quiz_history/quiz_history_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/responses/search_responses.dart';
-import 'package:quiz_app/utils/convert_media_type.dart';
 
 class QuizService {
   static ClientSettings client = ClientSettings();
@@ -89,27 +86,6 @@ class QuizService {
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
     return result;
-  }
-
-  static Future<String> uploadQuizImage(String directory, File image) async {
-    final formData = FormData.fromMap({
-      'image': await MultipartFile.fromFile(
-        image.path,
-        contentType: convertPathToMediaType(image.path)
-      ),
-      'directory': directory,
-    });
-
-    final response = await client.dio.post(
-      '${url}upload-image',
-      data: formData
-    );
-
-    var result = BaseResponse<String>.fromJson(response.data);
-
-    if (result.succeed == false) throw ApiException(result.messages[0]);
-
-    return result.data!;
   }
 
   static Future<BaseResponse<SearchResponse<QuizHistoryModel>>> getHistoriesByQuizId(
