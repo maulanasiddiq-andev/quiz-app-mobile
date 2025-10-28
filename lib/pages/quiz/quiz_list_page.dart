@@ -8,6 +8,7 @@ import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
 import 'package:quiz_app/pages/quiz/quiz_detail_page.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_detail_create_page.dart';
+import 'package:shimmer/shimmer.dart';
 
 class QuizListPage extends ConsumerStatefulWidget {
   const QuizListPage({super.key});
@@ -80,11 +81,19 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                         ),
                       ),
                       if (state.isLoadingCategories)
-                        SizedBox(
-                          child: CircularProgressIndicator(
-                            color: colors.primary,
+                        for (var i = 0; i < 3; i++)
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300, 
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              height: 33,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey,
+                              ),
+                            ), 
                           )
-                        )
                       else
                         ...state.categories.map((category) {
                           return GestureDetector(
