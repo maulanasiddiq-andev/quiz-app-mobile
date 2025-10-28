@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -62,6 +63,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         );
       }
     } on ApiException catch (_) {
+      await deleteCredential();
+      state = state.copyWith(isLoading: false, isAuthenticated: false);
+    } on DioException catch (_) {
       await deleteCredential();
       state = state.copyWith(isLoading: false, isAuthenticated: false);
     }
