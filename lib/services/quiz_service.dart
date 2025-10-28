@@ -10,18 +10,10 @@ class QuizService {
   static ClientSettings client = ClientSettings();
   static String url = "quiz/";
 
-  static Future<BaseResponse<SearchResponse<QuizModel>>> getQuizzes(
-    int page,
-    int pageSize,
-    String categoryId
-  ) async {
+  static Future<BaseResponse<SearchResponse<QuizModel>>> getQuizzes(Map<String, dynamic> queryParameters) async {
     final response = await client.dio.get(
       url,
-      queryParameters: {
-        "pageSize": pageSize.toString(),
-        "currentPage": page.toString(),
-        "categoryId": categoryId
-      }
+      queryParameters: queryParameters
     );
 
     final BaseResponse<SearchResponse<QuizModel>> result = BaseResponse.fromJson(
