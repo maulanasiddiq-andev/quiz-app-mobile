@@ -31,7 +31,8 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
         "pageSize": state.quizPageSize.toString(),
         "currentPage": state.quizPageIndex.toString(),
         "categoryId": state.selectedCategoryId,
-        "search": state.search
+        "search": state.search,
+        "orderDir": state.sortDir
       };
 
       final BaseResponse<SearchResponse<QuizModel>> result = await QuizService.getQuizzes(queryParameters);
@@ -113,6 +114,11 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
 
   Future<void> searchQuizzes(String value) async {
     state = state.copyWith(search: value);
+    await refreshQuizzes();
+  }
+
+  Future<void> changeSortDir(String value) async {
+    state = state.copyWith(sortDir: value);
     await refreshQuizzes();
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_container_component.dart';
+import 'package:quiz_app/constants/sort_dir_constant.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
@@ -88,6 +89,16 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                           ),
                         ),
                       ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        if (state.sortDir == SortDirConstant.asc) {
+                          notifier.changeSortDir(SortDirConstant.desc);
+                        } else {
+                          notifier.changeSortDir(SortDirConstant.asc);
+                        }
+                      }, 
+                      icon: Icon(Icons.sort)
                     )
                   ],
                 ),
