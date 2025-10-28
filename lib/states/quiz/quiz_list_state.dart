@@ -9,6 +9,7 @@ class QuizListState {
   final int quizPageSize;
   final bool quizHasNextPage;
   final List<QuizModel> quizzes;
+  final String search;
 
   final bool isLoadingCategories;
   final bool isLoadingMoreCategories;
@@ -35,7 +36,8 @@ class QuizListState {
     this.categoryPageSize = 10,
     this.categoryHasNextPage = false,
     this.categories = const [],
-    this.selectedCategoryId = ""
+    this.selectedCategoryId = "",
+    this.search = ""
   });
 
   QuizListState copyWith({
@@ -53,7 +55,8 @@ class QuizListState {
     int? categoryPageSize,
     bool? categoryHasNextPage,
     List<CategoryModel>? categories,
-    String? selectedCategoryId
+    String? selectedCategoryId,
+    String? search
   }) {
     return QuizListState(
       isLoadingQuizzes: isLoadingQuizzes ?? this.isLoadingQuizzes,
@@ -70,7 +73,8 @@ class QuizListState {
       categoryPageSize: categoryPageSize ?? this.categoryPageSize,
       categoryHasNextPage: categoryHasNextPage ?? this.categoryHasNextPage,
       categories: categories ?? this.categories,
-      selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId
+      selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
+      search: search ?? this.search
     );
   }
 }

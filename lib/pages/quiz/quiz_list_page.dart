@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
@@ -18,6 +19,15 @@ class QuizListPage extends ConsumerStatefulWidget {
 }
 
 class _QuizListPageState extends ConsumerState<QuizListPage> {
+  // for searching quiz
+  Timer? debounce;
+
+  @override
+  void dispose() {
+    debounce?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizListProvider);
@@ -48,11 +58,44 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
           onRefresh: () => ref.read(quizListProvider.notifier).refreshQuizzes(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
             children: [
+              SizedBox(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: colors.onSurface),
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: TextField(
+                          onChanged: (value) {
+                            if (debounce?.isActive ?? false) debounce!.cancel();
+
+                            // Start a new 1-second timer
+                            debounce = Timer(const Duration(seconds: 1), () async {
+                              notifier.searchQuizzes(value);
+                            });
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                            hintText: "Cari judul kuis"
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     spacing: 10,
@@ -131,8 +174,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                     )
                   : ListView.builder(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
+                        horizontal: 10,
                       ),
                       itemCount: state.quizzes.length,
                       itemBuilder: (context, index) {
