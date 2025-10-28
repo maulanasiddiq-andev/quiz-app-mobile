@@ -1,10 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_container_component.dart';
-import 'package:quiz_app/constants/sort_dir_constant.dart';
+import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
@@ -20,15 +19,6 @@ class QuizListPage extends ConsumerStatefulWidget {
 }
 
 class _QuizListPageState extends ConsumerState<QuizListPage> {
-  // for searching quiz
-  Timer? debounce;
-
-  @override
-  void dispose() {
-    debounce?.cancel();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizListProvider);
@@ -62,46 +52,15 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
             spacing: 10,
             children: [
               SizedBox(),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: colors.onSurface),
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            if (debounce?.isActive ?? false) debounce!.cancel();
-
-                            // Start a new 1-second timer
-                            debounce = Timer(const Duration(seconds: 1), () async {
-                              notifier.searchQuizzes(value);
-                            });
-                          },
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                            hintText: "Cari judul kuis"
-                          ),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        if (state.sortDir == SortDirConstant.asc) {
-                          notifier.changeSortDir(SortDirConstant.desc);
-                        } else {
-                          notifier.changeSortDir(SortDirConstant.asc);
-                        }
-                      }, 
-                      icon: Icon(Icons.sort)
-                    )
-                  ],
-                ),
+              SearchSortComponent(
+                search: state.search, 
+                sortDir: state.sortDir, 
+                onSearchChanged: (value) {
+                  notifier.searchQuizzes(value);
+                },
+                onSortDirChanged: (value) {
+                  notifier.changeSortDir(value);
+                },
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
