@@ -15,7 +15,14 @@ class QuizService {
     int pageSize,
     String categoryId
   ) async {
-    final response = await client.dio.get(url);
+    final response = await client.dio.get(
+      url,
+      queryParameters: {
+        "pageSize": pageSize.toString(),
+        "currentPage": page.toString(),
+        "categoryId": categoryId
+      }
+    );
 
     final BaseResponse<SearchResponse<QuizModel>> result = BaseResponse.fromJson(
       response.data,
