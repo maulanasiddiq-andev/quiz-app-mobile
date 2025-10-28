@@ -1,3 +1,4 @@
+import 'package:quiz_app/constants/sort_dir_constant.dart';
 import 'package:quiz_app/models/quiz/category_model.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 
@@ -9,6 +10,8 @@ class QuizListState {
   final int quizPageSize;
   final bool quizHasNextPage;
   final List<QuizModel> quizzes;
+  final String search;
+  final String sortDir;
 
   final bool isLoadingCategories;
   final bool isLoadingMoreCategories;
@@ -35,7 +38,9 @@ class QuizListState {
     this.categoryPageSize = 10,
     this.categoryHasNextPage = false,
     this.categories = const [],
-    this.selectedCategoryId = ""
+    this.selectedCategoryId = "",
+    this.search = "",
+    this.sortDir = SortDirConstant.desc
   });
 
   QuizListState copyWith({
@@ -53,7 +58,9 @@ class QuizListState {
     int? categoryPageSize,
     bool? categoryHasNextPage,
     List<CategoryModel>? categories,
-    String? selectedCategoryId
+    String? selectedCategoryId,
+    String? search,
+    String? sortDir,
   }) {
     return QuizListState(
       isLoadingQuizzes: isLoadingQuizzes ?? this.isLoadingQuizzes,
@@ -70,7 +77,9 @@ class QuizListState {
       categoryPageSize: categoryPageSize ?? this.categoryPageSize,
       categoryHasNextPage: categoryHasNextPage ?? this.categoryHasNextPage,
       categories: categories ?? this.categories,
-      selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId
+      selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
+      search: search ?? this.search,
+      sortDir: sortDir ?? this.sortDir
     );
   }
 }

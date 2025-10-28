@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -42,28 +43,31 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future checkAuth() async {
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isCheckAuthLoading: true);
 
     try {
       var storedToken = await storage.read(key: 'token');
 
       if (storedToken == null) {
         await deleteCredential();
-        state = state.copyWith(isLoading: false, isAuthenticated: false);
+        state = state.copyWith(isCheckAuthLoading: false, isAuthenticated: false);
       } else {
         final jsonToken = jsonDecode(storedToken);
         final token = TokenModel.fromJson(jsonToken);
 
         await AuthService.checkAuth(token.token);
         state = state.copyWith(
-          isLoading: false, 
+          isCheckAuthLoading: false, 
           isAuthenticated: true,
           token: token
         );
       }
     } on ApiException catch (_) {
       await deleteCredential();
-      state = state.copyWith(isLoading: false, isAuthenticated: false);
+      state = state.copyWith(isCheckAuthLoading: false, isAuthenticated: false);
+    } on DioException catch (_) {
+      await deleteCredential();
+      state = state.copyWith(isCheckAuthLoading: false, isAuthenticated: false);
     }
   }
 

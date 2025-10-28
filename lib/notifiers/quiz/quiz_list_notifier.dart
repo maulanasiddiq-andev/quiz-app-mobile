@@ -27,11 +27,15 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
     }
 
     try {
-      final BaseResponse<SearchResponse<QuizModel>> result = await QuizService.getQuizzes(
-        state.quizPageIndex, 
-        state.quizPageSize,
-        state.selectedCategoryId ?? ""
-      );
+      Map<String, dynamic> queryParameters = {
+        "pageSize": state.quizPageSize.toString(),
+        "currentPage": state.quizPageIndex.toString(),
+        "categoryId": state.selectedCategoryId,
+        "search": state.search,
+        "orderDir": state.sortDir
+      };
+
+      final BaseResponse<SearchResponse<QuizModel>> result = await QuizService.getQuizzes(queryParameters);
 
       if (result.data != null) {
         state = state.copyWith(
@@ -105,6 +109,16 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
     if (categoryId == state.selectedCategoryId) return;
 
     state = state.copyWith(selectedCategoryId: categoryId);
+    await refreshQuizzes();
+  }
+
+  Future<void> searchQuizzes(String value) async {
+    state = state.copyWith(search: value);
+    await refreshQuizzes();
+  }
+
+  Future<void> changeSortDir(String value) async {
+    state = state.copyWith(sortDir: value);
     await refreshQuizzes();
   }
 }

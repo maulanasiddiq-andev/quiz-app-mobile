@@ -33,9 +33,6 @@ class AuthService {
     final response = await client.dio.get(
       '${url}check-auth',
     );
-    if (response.statusCode == 401) {
-      throw ApiException("Unauthorized");
-    }
 
     final BaseResponse<SimpleUserModel> result = BaseResponse.fromJson(
       response.data,

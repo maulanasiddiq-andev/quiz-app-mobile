@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_container_component.dart';
+import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
 import 'package:quiz_app/pages/quiz/quiz_detail_page.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_detail_create_page.dart';
+import 'package:shimmer/shimmer.dart';
 
 class QuizListPage extends ConsumerStatefulWidget {
   const QuizListPage({super.key});
@@ -47,11 +49,23 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
           onRefresh: () => ref.read(quizListProvider.notifier).refreshQuizzes(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
             children: [
+              SizedBox(),
+              SearchSortComponent(
+                search: state.search, 
+                sortDir: state.sortDir, 
+                onSearchChanged: (value) {
+                  notifier.searchQuizzes(value);
+                },
+                onSortDirChanged: (value) {
+                  notifier.changeSortDir(value);
+                },
+              ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     spacing: 10,
@@ -80,11 +94,19 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                         ),
                       ),
                       if (state.isLoadingCategories)
-                        SizedBox(
-                          child: CircularProgressIndicator(
-                            color: colors.primary,
+                        for (var i = 0; i < 3; i++)
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300, 
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              height: 33,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey,
+                              ),
+                            ), 
                           )
-                        )
                       else
                         ...state.categories.map((category) {
                           return GestureDetector(
@@ -122,8 +144,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                     )
                   : ListView.builder(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
+                        horizontal: 10,
                       ),
                       itemCount: state.quizzes.length,
                       itemBuilder: (context, index) {
