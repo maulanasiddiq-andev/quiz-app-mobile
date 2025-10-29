@@ -5,6 +5,8 @@ import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/input_component.dart';
 import 'package:quiz_app/components/pick_image_component.dart';
+import 'package:quiz_app/components/select_data_component.dart';
+import 'package:quiz_app/constants/select_data_constant.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_question_create_page.dart';
 
@@ -56,11 +58,12 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                                 title: "Judul Kuis",
                                 controller: titleController,
                                 action: TextInputAction.next,
+                                onChanged: (value) => notifier.updateTitle(value),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "Judul kuis harus diisi";
                                   }
-        
+
                                   return null;
                                 },
                               ),
@@ -68,11 +71,12 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                                 title: "Deskripsi Kuis",
                                 controller: descriptionController,
                                 action: TextInputAction.next,
+                                onChanged: (value) => notifier.updateDescription(value),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "Deskripsi kuis harus diisi";
                                   }
-        
+
                                   return null;
                                 },
                               ),
@@ -81,32 +85,28 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                                 controller: timeController,
                                 textInputType: TextInputType.number,
                                 action: TextInputAction.next,
+                                onChanged: (value) => notifier.updateTime(int.parse(value)),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "Waktu pengerjaan kuis harus diisi";
                                   }
-        
+
                                   return null;
                                 },
                               ),
-                              state.categories.isNotEmpty
-                                  ? DropdownButton<String>(
-                                      value: selectedCategoryId,
-                                      items: state.categories.map((category) {
-                                        return DropdownMenuItem<String>(
-                                          value: category.categoryId,
-                                          child: Text(category.name),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedCategoryId = value ?? "";
-                                        });
-                                      },
-                                    )
-                                  : SizedBox(),
+                              SelectDataComponent(
+                                title: "Kategori",
+                                data: SelectDataConstant.category,
+                                selectedData: state.category,
+                                onSelected: (value) {
+                                  notifier.selectCategory(value);
+                                },
+                              ),
                               PickImageComponent(
-                                pickImage: () => notifier.pickDescriptionImage(colors.primary, colors.onPrimary),
+                                pickImage: () => notifier.pickDescriptionImage(
+                                  colors.primary,
+                                  colors.onPrimary,
+                                ),
                                 image: state.image,
                               ),
                               SizedBox(height: 30),
@@ -121,13 +121,6 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                     child: CustomButtonComponent(
                       onTap: () {
                         if (formKey.currentState!.validate()) {
-                          notifier.createDescription(
-                            selectedCategoryId!,
-                            titleController.text,
-                            descriptionController.text,
-                            int.parse(timeController.text),
-                          );
-        
                           Navigator.push(
                             context,
                             MaterialPageRoute(
