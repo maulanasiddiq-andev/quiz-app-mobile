@@ -48,37 +48,35 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
               ? Center(
                   child: CircularProgressIndicator(color: colors.primary),
                 )
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ...state.categories.map((category) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => CategoryDetailPage(categoryId: category.categoryId))
-                            );
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: colors.onSurface
-                                )
+              : ListView(
+                  children: [
+                    ...state.categories.map((category) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => CategoryDetailPage(categoryId: category.categoryId))
+                          );
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: colors.onSurface
                               )
-                            ),
-                            child: Text(
-                              category.name,
-                              style: TextStyle(
-                                fontSize: 16
-                              ),  
-                            ),
+                            )
                           ),
-                        );
-                      })
-                    ],
-                  ),
+                          child: Text(
+                            category.name,
+                            style: TextStyle(
+                              fontSize: 16
+                            ),  
+                          ),
+                        ),
+                      );
+                    })
+                  ],
                 )
             ),
           ],
