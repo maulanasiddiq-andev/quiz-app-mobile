@@ -33,34 +33,32 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
               ? Center(
                   child: CircularProgressIndicator(color: colors.primary),
                 )
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ...state.roles.map((role) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => RoleDetailPage(roleId: role.roleId))
-                            );
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: colors.onSurface
-                                )
+              : ListView(
+                  children: [
+                    ...state.roles.map((role) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => RoleDetailPage(roleId: role.roleId))
+                          );
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: colors.onSurface
                               )
-                            ),
-                            child: ListTile(
-                              title: Text(role.name),
-                              trailing: Icon(Icons.more_vert),
-                            ),
+                            )
                           ),
-                        );
-                      })
-                    ],
-                  ),
+                          child: ListTile(
+                            title: Text(role.name),
+                            trailing: Icon(Icons.more_vert),
+                          ),
+                        ),
+                      );
+                    })
+                  ],
                 )
             ),
           ],

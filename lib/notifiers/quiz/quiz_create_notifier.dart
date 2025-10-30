@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz_create/answer_create_model.dart';
 import 'package:quiz_app/models/quiz_create/question_create_model.dart';
-import 'package:quiz_app/services/category_service.dart';
+import 'package:quiz_app/models/select_data_model.dart';
 import 'package:quiz_app/services/file_service.dart';
 import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/quiz_create_state.dart';
@@ -21,45 +20,22 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     );
 
     state = state.copyWith(questions: [...state.questions, question]);
-
-    getCategories();
   }
 
-  Future<void> getCategories() async {
-    state = state.copyWith(isLoadingCategories: true);
-
-    try {
-      var result = await CategoryService.getCategories(0, 10);
-
-      if (result.data != null) {
-        state = state.copyWith(
-          isLoadingCategories: false,
-          categories: result.data!.items,
-        );
-      }
-
-      state = state.copyWith(isLoadingCategories: false);
-    } on ApiException catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingCategories: false);
-    } catch (e) {
-      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingCategories: false);
-    }
+  void selectCategory(SelectDataModel category) {
+    state = state.copyWith(category: category);
   }
 
-  void createDescription(
-    String categoryId,
-    String title,
-    String description,
-    int time,
-  ) {
-    state = state.copyWith(
-      categoryId: categoryId,
-      title: title,
-      description: description,
-      time: time,
-    );
+  void updateDescription(String value) {
+    state = state.copyWith(description: value);
+  }
+  
+  void updateTitle(String value) {
+    state = state.copyWith(title: value);
+  }
+
+  void updateTime(int value) {
+    state = state.copyWith(time: value);
   }
 
   Future<File?> pickImage(Color toolbarColor, Color toolbarWidgetColor) async {
@@ -227,7 +203,7 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
 
     try {
       Map<String, dynamic> quiz = {
-        "categoryId": state.categoryId,
+        "categoryId": state.category?.id,
         "title": state.title,
         "description": state.description,
         "time": state.time,

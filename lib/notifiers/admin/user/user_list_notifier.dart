@@ -29,7 +29,6 @@ class UserListNotifier extends StateNotifier<UserListState> {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoading: false, isLoadingMore: false);
     } catch (e) {
-      print(e.toString());
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false, isLoadingMore: false);
     }

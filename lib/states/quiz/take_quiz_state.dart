@@ -1,5 +1,5 @@
 import 'package:quiz_app/models/quiz/quiz_model.dart';
-import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
+import 'package:quiz_app/models/take_quiz/take_question_model.dart';
 import 'package:quiz_app/models/quiz_history/quiz_history_model.dart';
 
 class TakeQuizState {
@@ -8,7 +8,7 @@ class TakeQuizState {
   final bool isDone;
   final bool isConfirmedToLeave;
   final int questionIndex;
-  final List<QuestionExamModel> questions;
+  final List<TakeQuestionModel> questions;
   final QuizHistoryModel? quizHistory;
 
   TakeQuizState({
@@ -27,7 +27,7 @@ class TakeQuizState {
     bool? isDone,
     bool? isConfirmedToLeave,
     int? questionIndex,
-    List<QuestionExamModel>? questions,
+    List<TakeQuestionModel>? questions,
     QuizHistoryModel? quizHistory,
   }) {
     return TakeQuizState(

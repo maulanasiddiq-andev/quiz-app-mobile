@@ -19,6 +19,20 @@ class QuizListPage extends ConsumerStatefulWidget {
 }
 
 class _QuizListPageState extends ConsumerState<QuizListPage> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
+        final notifier = ref.read(quizListProvider.notifier);
+        notifier.loadMoreQuizzes();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizListProvider);
@@ -142,27 +156,30 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                   ? Center(
                       child: CircularProgressIndicator(color: colors.primary),
                     )
-                  : ListView.builder(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: ListView(
+                        controller: scrollController,
+                        children: [
+                          ...state.quizzes.map((quiz) {
+                            return QuizContainerComponent(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => QuizDetailPage(quizId: quiz.quizId),
+                                  ),
+                                );
+                              },
+                              quiz: quiz,
+                            ); 
+                          }),
+                          if (state.isLoadingMoreQuizzes)
+                            Center(
+                              child: CircularProgressIndicator(color: colors.primary),
+                            )
+                        ]
                       ),
-                      itemCount: state.quizzes.length,
-                      itemBuilder: (context, index) {
-                        final quiz = state.quizzes[index];
-        
-                        return QuizContainerComponent(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    QuizDetailPage(quizId: quiz.quizId),
-                              ),
-                            );
-                          },
-                          quiz: quiz,
-                        );
-                      },
-                    ),
+                  ),
               ),
               TextButton(
                 onPressed: () {

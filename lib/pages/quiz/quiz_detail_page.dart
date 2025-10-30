@@ -25,22 +25,17 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
   void initState() {
     super.initState();
 
-    Future.microtask(() {
-      final notifier = ref.read(quizDetailProvider.notifier);
-      notifier.getQuizById(widget.quizId);
-      notifier.getHistoriesByQuizId(widget.quizId);
-
-      scrollController.addListener(() {
-        if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
-          notifier.loadMoreHistories(widget.quizId);
-        }
-      });
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
+        final notifier = ref.read(quizDetailProvider(widget.quizId).notifier);
+        notifier.loadMoreHistories();
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(quizDetailProvider);
+    final state = ref.watch(quizDetailProvider(widget.quizId));
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(

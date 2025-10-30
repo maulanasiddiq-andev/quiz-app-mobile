@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
-import 'package:quiz_app/models/quiz_exam/answer_exam_model.dart';
-import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
+import 'package:quiz_app/models/take_quiz/take_question_model.dart';
+import 'package:quiz_app/models/take_quiz/take_quiz_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/take_quiz_state.dart';
@@ -13,31 +13,14 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
 
   Future<bool> getQuizWithQuestions(QuizModel quiz) async {
     state = state.copyWith(isLoading: true);
-    List<QuestionExamModel> questionExams = [];
+    List<TakeQuestionModel> questionExams = [];
 
     try {
-      BaseResponse<QuizModel> result =
+      BaseResponse<TakeQuizModel> result =
           await QuizService.getQuizByIdWithQuestions(quiz.quizId);
 
       for (var question in result.data!.questions) {
-        final questionExam = QuestionExamModel(
-          questionOrder: question.questionOrder,
-          text: question.text,
-          imageUrl: question.imageUrl,
-          answers: [],
-        );
-
-        for (var answer in question.answers) {
-          final answerExam = AnswerExamModel(
-            answerOrder: answer.answerOrder,
-            text: answer.text,
-            imageUrl: answer.imageUrl,
-          );
-
-          questionExam.answers.add(answerExam);
-        }
-
-        questionExams.add(questionExam);
+        questionExams.add(question);
       }
 
       state = state.copyWith(
@@ -128,4 +111,7 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
   }
 }
 
-final takeQuizProvider = StateNotifierProvider.autoDispose<TakeQuizNotifier, TakeQuizState>((ref) => TakeQuizNotifier());
+final takeQuizProvider =
+    StateNotifierProvider.autoDispose<TakeQuizNotifier, TakeQuizState>(
+      (ref) => TakeQuizNotifier(),
+    );

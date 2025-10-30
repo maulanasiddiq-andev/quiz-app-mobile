@@ -9,12 +9,16 @@ import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/quiz_detail_state.dart';
 
 class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
-  QuizDetailNotifier() : super(QuizDetailState());
+  final String quizId;
+  QuizDetailNotifier(this.quizId) : super(QuizDetailState()) {
+    getQuizById();
+    getHistoriesByQuizId();
+  }
 
-  Future<void> getQuizById(String id) async {
+  Future<void> getQuizById() async {
     state = state.copyWith(isLoading: true);
     try {
-      final BaseResponse<QuizModel> result = await QuizService.getQuizById(id);
+      final BaseResponse<QuizModel> result = await QuizService.getQuizById(quizId);
 
       state = state.copyWith(isLoading: false, quiz: result.data);
     }  on ApiException catch (e) {
@@ -26,7 +30,7 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
     }
   }
 
-  Future<void> getHistoriesByQuizId(String id) async {
+  Future<void> getHistoriesByQuizId() async {
     if (state.historyPageIndex == 0) {
       state = state.copyWith(isLoadingHistories: true);
     } else {
@@ -35,7 +39,7 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
 
     try {
       final BaseResponse<SearchResponse<QuizHistoryModel>> result = await QuizService.getHistoriesByQuizId(
-        id, 
+        quizId, 
         state.historyPageIndex, 
         state.historyPageSize
       );
@@ -55,14 +59,14 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
     }
   }
 
-  Future<void> loadMoreHistories(String quizId) async {
+  Future<void> loadMoreHistories() async {
     if (state.historyHasNextPage) {
       if (state.isLoadingHistories || state.isLoadingMoreHistories) return;
 
       state = state.copyWith(historyPageIndex: state.historyPageIndex + 1);
-      await getHistoriesByQuizId(quizId);
+      await getHistoriesByQuizId();
     }
   }
 }
 
-final quizDetailProvider = StateNotifierProvider.autoDispose<QuizDetailNotifier, QuizDetailState>((ref) => QuizDetailNotifier());
+final quizDetailProvider = StateNotifierProvider.autoDispose.family<QuizDetailNotifier, QuizDetailState, String>((ref, quizId) => QuizDetailNotifier(quizId));
