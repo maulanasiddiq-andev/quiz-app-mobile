@@ -18,49 +18,63 @@ class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
   Widget build(BuildContext context) {
     final state = ref.watch(takeQuizProvider);
 
-    return Scaffold(
-      appBar: customAppbarComponent("Hasil Kuis"),
-      body: ConnectionCheckComponent(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text("Jawaban benar: "),
-                        Text(state.quizHistory!.trueAnswers.toString()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Nilai: "),
-                        Text(state.quizHistory!.score.toString()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Durasi Pengerjaan: "),
-                        Text(formatTime(state.quizHistory!.duration)),
-                      ],
-                    ),
-                  ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          // navigate back three times for reaching quiz list page
+          // navigate back to take quiz page
+          Navigator.of(context).pop();
+          // navigate back to quiz detail page
+          Navigator.of(context).pop();
+          // navigate back to quiz list page
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
+        appBar: customAppbarComponent("Hasil Kuis"),
+        body: ConnectionCheckComponent(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text("Jawaban benar: "),
+                          Text(state.quizHistory!.trueAnswers.toString()),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text("Nilai: "),
+                          Text(state.quizHistory!.score.toString()),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text("Durasi Pengerjaan: "),
+                          Text(formatTime(state.quizHistory!.duration)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: CustomButtonComponent(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
-                  text: "Kembali",
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  child: CustomButtonComponent(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    text: "Kembali",
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

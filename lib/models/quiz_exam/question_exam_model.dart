@@ -17,6 +17,13 @@ class QuestionExamModel {
     this.isAnswerTrue = true,
   });
 
+  factory QuestionExamModel.fromJson(Map<String, dynamic> json) => QuestionExamModel(
+    questionOrder: json['questionOrder'], 
+    text: json['text'], 
+    answers: (json['answers'] as List).map((answer) => AnswerExamModel.fromJson(answer)).toList(),
+    imageUrl: json['imageUrl'],
+  );  
+
   Map<String, dynamic> toJson() {
     return {
       'questionOrder': questionOrder,

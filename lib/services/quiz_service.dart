@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/interceptor/client_settings.dart';
+import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
 import 'package:quiz_app/models/quiz_history/quiz_history_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
@@ -42,12 +43,12 @@ class QuizService {
     return result;
   }
 
-  static Future<BaseResponse<QuizModel>> getQuizByIdWithQuestions(String id) async {
+  static Future<BaseResponse<QuizExamModel>> getQuizByIdWithQuestions(String id) async {
     final response = await client.dio.get('$url$id/take-quiz');
 
-    final BaseResponse<QuizModel> result = BaseResponse.fromJson(
+    final BaseResponse<QuizExamModel> result = BaseResponse.fromJson(
       response.data,
-      fromJsonT: (data) => QuizModel.fromJson(data),
+      fromJsonT: (data) => QuizExamModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);

@@ -9,6 +9,12 @@ class AnswerExamModel {
     this.imageUrl
   });
 
+  factory AnswerExamModel.fromJson(Map<String, dynamic> json) => AnswerExamModel(
+    answerOrder: json['answerOrder'],
+    text: json['text'],
+    imageUrl: json['imageUrl'],
+  );
+
   Map<String, dynamic> toJson() {
     return {
       'answerOrder': answerOrder,

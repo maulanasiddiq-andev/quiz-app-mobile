@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 
 class QuizContainerComponent extends StatelessWidget {
@@ -32,9 +31,7 @@ class QuizContainerComponent extends StatelessWidget {
           children: [
             Text(quiz.title, style: TextStyle(fontSize: 18)),
             SizedBox(height: 5),
-            Text(
-              "Kategori: ${quiz.category!.name}"
-            ),
+            Text(quiz.category!.name),
             quiz.imageUrl != null
               ? Column(
                   children: [
@@ -47,19 +44,7 @@ class QuizContainerComponent extends StatelessWidget {
                   ],
                 )
               : SizedBox(height: 10),
-            Text("Dikerjakan: ${quiz.historiesCount} kali"),
-            SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: 5,
-              children: [
-                Text("Oleh:"),
-                ProfileImageComponent(
-                  radius: 10,
-                ),
-                Text(quiz.user?.name ?? "Penyusun")
-              ],
-            )
+            Text("${quiz.historiesCount} kali dikerjakan"),
           ],
         ),
       ),
