@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
-import 'package:quiz_app/models/quiz_exam/question_exam_model.dart';
-import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
+import 'package:quiz_app/models/take_quiz/take_question_model.dart';
+import 'package:quiz_app/models/take_quiz/take_quiz_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/take_quiz_state.dart';
@@ -13,10 +13,11 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
 
   Future<bool> getQuizWithQuestions(QuizModel quiz) async {
     state = state.copyWith(isLoading: true);
-    List<QuestionExamModel> questionExams = [];
+    List<TakeQuestionModel> questionExams = [];
 
     try {
-      BaseResponse<QuizExamModel> result = await QuizService.getQuizByIdWithQuestions(quiz.quizId);
+      BaseResponse<TakeQuizModel> result =
+          await QuizService.getQuizByIdWithQuestions(quiz.quizId);
 
       for (var question in result.data!.questions) {
         questionExams.add(question);
@@ -111,4 +112,7 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
   }
 }
 
-final takeQuizProvider = StateNotifierProvider.autoDispose<TakeQuizNotifier, TakeQuizState>((ref) => TakeQuizNotifier());
+final takeQuizProvider =
+    StateNotifierProvider.autoDispose<TakeQuizNotifier, TakeQuizState>(
+      (ref) => TakeQuizNotifier(),
+    );

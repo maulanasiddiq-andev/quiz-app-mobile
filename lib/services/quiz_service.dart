@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/interceptor/client_settings.dart';
-import 'package:quiz_app/models/quiz_exam/quiz_exam_model.dart';
+import 'package:quiz_app/models/take_quiz/take_quiz_model.dart';
 import 'package:quiz_app/models/quiz_history/quiz_history_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
@@ -11,19 +11,20 @@ class QuizService {
   static ClientSettings client = ClientSettings();
   static String url = "quiz/";
 
-  static Future<BaseResponse<SearchResponse<QuizModel>>> getQuizzes(Map<String, dynamic> queryParameters) async {
+  static Future<BaseResponse<SearchResponse<QuizModel>>> getQuizzes(
+    Map<String, dynamic> queryParameters,
+  ) async {
     final response = await client.dio.get(
       url,
-      queryParameters: queryParameters
+      queryParameters: queryParameters,
     );
 
-    final BaseResponse<SearchResponse<QuizModel>> result = BaseResponse.fromJson(
-      response.data,
-      fromJsonT: (data) => SearchResponse.fromJson(
-        data,
-        (item) => QuizModel.fromJson(item),
-      ),
-    );
+    final BaseResponse<SearchResponse<QuizModel>> result =
+        BaseResponse.fromJson(
+          response.data,
+          fromJsonT: (data) =>
+              SearchResponse.fromJson(data, (item) => QuizModel.fromJson(item)),
+        );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
@@ -43,23 +44,28 @@ class QuizService {
     return result;
   }
 
-  static Future<BaseResponse<QuizExamModel>> getQuizByIdWithQuestions(String id) async {
+  static Future<BaseResponse<TakeQuizModel>> getQuizByIdWithQuestions(
+    String id,
+  ) async {
     final response = await client.dio.get('$url$id/take-quiz');
 
-    final BaseResponse<QuizExamModel> result = BaseResponse.fromJson(
+    final BaseResponse<TakeQuizModel> result = BaseResponse.fromJson(
       response.data,
-      fromJsonT: (data) => QuizExamModel.fromJson(data),
+      fromJsonT: (data) => TakeQuizModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
     return result;
   }
-  
-  static Future<BaseResponse<QuizHistoryModel>> checkQuiz(String id, Map<String, dynamic> quiz) async {
+
+  static Future<BaseResponse<QuizHistoryModel>> checkQuiz(
+    String id,
+    Map<String, dynamic> quiz,
+  ) async {
     final response = await client.dio.post(
       '$url$id/check-quiz',
-      data: jsonEncode(quiz)
+      data: jsonEncode(quiz),
     );
 
     final BaseResponse<QuizHistoryModel> result = BaseResponse.fromJson(
@@ -72,11 +78,10 @@ class QuizService {
     return result;
   }
 
-  static Future<BaseResponse<QuizModel>> createQuiz(Map<String, dynamic> quiz) async {
-    final response = await client.dio.post(
-      url,
-      data: jsonEncode(quiz)
-    );
+  static Future<BaseResponse<QuizModel>> createQuiz(
+    Map<String, dynamic> quiz,
+  ) async {
+    final response = await client.dio.post(url, data: jsonEncode(quiz));
 
     final BaseResponse<QuizModel> result = BaseResponse.fromJson(
       response.data,
@@ -88,26 +93,24 @@ class QuizService {
     return result;
   }
 
-  static Future<BaseResponse<SearchResponse<QuizHistoryModel>>> getHistoriesByQuizId(
-    String quizId,
-    int page,
-    int pageSize
-  ) async {
+  static Future<BaseResponse<SearchResponse<QuizHistoryModel>>>
+  getHistoriesByQuizId(String quizId, int page, int pageSize) async {
     final response = await client.dio.get(
       '$url$quizId/history',
       queryParameters: {
         'currentPage': page.toString(),
         'pageSize': pageSize.toString(),
-      }
+      },
     );
 
-    final BaseResponse<SearchResponse<QuizHistoryModel>> result = BaseResponse.fromJson(
-      response.data,
-      fromJsonT: (data) => SearchResponse.fromJson(
-        data,
-        (item) => QuizHistoryModel.fromJson(item),
-      ),
-    );
+    final BaseResponse<SearchResponse<QuizHistoryModel>> result =
+        BaseResponse.fromJson(
+          response.data,
+          fromJsonT: (data) => SearchResponse.fromJson(
+            data,
+            (item) => QuizHistoryModel.fromJson(item),
+          ),
+        );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
