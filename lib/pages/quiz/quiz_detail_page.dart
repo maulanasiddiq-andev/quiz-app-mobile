@@ -24,6 +24,13 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
   @override
   void initState() {
     super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
+        final notifier = ref.read(quizDetailProvider(widget.quizId).notifier);
+        notifier.loadMoreHistories();
+      }
+    });
   }
 
   @override
