@@ -36,7 +36,6 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
       state = state.copyWith(isLoading: false);
       return false;
     } catch (e) {
-      print(e.toString());
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false);
       return false;
