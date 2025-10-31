@@ -19,7 +19,6 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
     state = state.copyWith(isLoading: true);
     try {
       final BaseResponse<QuizModel> result = await QuizService.getQuizById(quizId);
-      print(result.data?.isTakenByUser);
 
       state = state.copyWith(isLoading: false, quiz: result.data);
     }  on ApiException catch (e) {
@@ -51,7 +50,7 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
         histories: [...state.histories, ...result.data!.items],
         historyHasNextPage: result.data!.hasNextPage
       );
-    }  on ApiException catch (e) {
+    } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoadingHistories: false, isLoadingMoreHistories: false);
     } catch (e) {
@@ -66,6 +65,28 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
 
       state = state.copyWith(historyPageIndex: state.historyPageIndex + 1);
       await getHistoriesByQuizId();
+    }
+  }
+
+  Future<bool> deleteQuiz(String quizId) async {
+    state = state.copyWith(isLoadingDelete: true);
+
+    try {
+      await QuizService.deleteQuiz(quizId);
+
+      state = state.copyWith(isLoadingDelete: false);
+
+      return true;
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      state = state.copyWith(isLoadingDelete: false, isLoadingMoreHistories: false);
+
+      return false;
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+      state = state.copyWith(isLoadingDelete: false, isLoadingMoreHistories: false);
+
+      return false;
     }
   }
 }

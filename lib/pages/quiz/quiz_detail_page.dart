@@ -37,6 +37,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizDetailProvider(widget.quizId));
+    final notifier = ref.read(quizDetailProvider(widget.quizId).notifier);
     final authState = ref.watch(authProvider);
     final colors = Theme.of(context).colorScheme;
 
@@ -170,35 +171,6 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                     ),
                   ),
                 ),
-                if (state.quiz!.isTakenByUser == false)
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    child: CustomButtonComponent(
-                      isLoading: ref.watch(takeQuizProvider).isLoading,
-                      onTap: () async {
-                        var result = await ref
-                            .read(takeQuizProvider.notifier)
-                            .getQuizWithQuestions(state.quiz!);
-          
-                        if (result == true && context.mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TakeQuizPage(),
-                            ),
-                          );
-                        }
-                      },
-                      text: "Mulai",
-                    ),
-                  )
-                else
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    child: Center(
-                      child: Text("Anda sudah mengerjakan kuis ini"),
-                    ),
-                  ),
                 if (state.quiz?.userId == authState.token?.user?.userId)
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -207,9 +179,13 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                       children: [
                         Expanded(
                           child: CustomButtonComponent(
-                            isLoading: ref.watch(takeQuizProvider).isLoading,
-                            onTap: () {
-                          
+                            isLoading: state.isLoadingDelete,
+                            onTap: () async {
+                              final result = await notifier.deleteQuiz(widget.quizId);
+
+                              if (result == true && context.mounted) {
+                                Navigator.of(context).pop(state.quiz);
+                              }
                             },
                             text: "Hapus",
                             isError: true,
@@ -227,6 +203,36 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                       ],
                     ),
                   )
+                else
+                  if (state.quiz!.isTakenByUser == false)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: CustomButtonComponent(
+                        isLoading: ref.watch(takeQuizProvider).isLoading,
+                        onTap: () async {
+                          var result = await ref
+                              .read(takeQuizProvider.notifier)
+                              .getQuizWithQuestions(state.quiz!);
+            
+                          if (result == true && context.mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TakeQuizPage(),
+                              ),
+                            );
+                          }
+                        },
+                        text: "Mulai",
+                      ),
+                    )
+                  else
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: Center(
+                        child: Text("Anda sudah mengerjakan kuis ini"),
+                      ),
+                    ),
               ],
             ),
       ),

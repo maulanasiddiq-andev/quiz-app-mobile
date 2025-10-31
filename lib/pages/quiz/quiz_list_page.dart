@@ -4,6 +4,7 @@ import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_container_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
+import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
@@ -163,12 +164,18 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                         children: [
                           ...state.quizzes.map((quiz) {
                             return QuizContainerComponent(
-                              onTap: () {
-                                Navigator.of(context).push(
+                              onTap: () async {
+                                final result = await Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => QuizDetailPage(quizId: quiz.quizId),
                                   ),
                                 );
+
+                                // if the delete succeed in detail page
+                                // remove the quiz from the list
+                                if (result != null && result is QuizModel) {
+                                  notifier.removeQuizByIdFromList(result);
+                                }
                               },
                               quiz: quiz,
                             ); 

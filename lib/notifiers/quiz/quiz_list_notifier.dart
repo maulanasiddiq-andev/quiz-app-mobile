@@ -121,6 +121,14 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
     state = state.copyWith(sortDir: value);
     await refreshQuizzes();
   }
+
+  void removeQuizByIdFromList(QuizModel quiz) {
+    final quizzes = [...state.quizzes];
+
+    quizzes.removeWhere((q) => q.quizId == quiz.quizId);
+
+    state = state.copyWith(quizzes: [...quizzes]);
+  }
 }
 
 final quizListProvider = StateNotifierProvider<QuizListNotifier, QuizListState>((ref) => QuizListNotifier());
