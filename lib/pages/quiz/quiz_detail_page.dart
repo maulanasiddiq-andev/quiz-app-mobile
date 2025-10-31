@@ -4,6 +4,7 @@ import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
 import 'package:quiz_app/pages/take_quiz/take_quiz_page.dart';
@@ -36,6 +37,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizDetailProvider(widget.quizId));
+    final authState = ref.watch(authProvider);
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -138,6 +140,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                                               children: [
                                                 ProfileImageComponent(
                                                   radius: 10,
+                                                  profileImage: history.user?.profileImage,
                                                 ),
                                                 Text(
                                                   history.user?.name ??
@@ -167,27 +170,63 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: CustomButtonComponent(
-                    isLoading: ref.watch(takeQuizProvider).isLoading,
-                    onTap: () async {
-                      var result = await ref
-                          .read(takeQuizProvider.notifier)
-                          .getQuizWithQuestions(state.quiz!);
-        
-                      if (result == true && context.mounted) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TakeQuizPage(),
-                          ),
-                        );
-                      }
-                    },
-                    text: "Mulai",
+                if (state.quiz!.isTakenByUser == false)
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: CustomButtonComponent(
+                      isLoading: ref.watch(takeQuizProvider).isLoading,
+                      onTap: () async {
+                        var result = await ref
+                            .read(takeQuizProvider.notifier)
+                            .getQuizWithQuestions(state.quiz!);
+          
+                        if (result == true && context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TakeQuizPage(),
+                            ),
+                          );
+                        }
+                      },
+                      text: "Mulai",
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: Center(
+                      child: Text("Anda sudah mengerjakan kuis ini"),
+                    ),
                   ),
-                ),
+                if (state.quiz?.userId == authState.token?.user?.userId)
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: Row(
+                      spacing: 10,
+                      children: [
+                        Expanded(
+                          child: CustomButtonComponent(
+                            isLoading: ref.watch(takeQuizProvider).isLoading,
+                            onTap: () {
+                          
+                            },
+                            text: "Hapus",
+                            isError: true,
+                          ),
+                        ),
+                        Expanded(
+                          child: CustomButtonComponent(
+                            isLoading: ref.watch(takeQuizProvider).isLoading,
+                            onTap: () {
+                          
+                            },
+                            text: "Edit",
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
               ],
             ),
       ),

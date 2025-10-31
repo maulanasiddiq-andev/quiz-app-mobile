@@ -19,6 +19,7 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
     state = state.copyWith(isLoading: true);
     try {
       final BaseResponse<QuizModel> result = await QuizService.getQuizById(quizId);
+      print(result.data?.isTakenByUser);
 
       state = state.copyWith(isLoading: false, quiz: result.data);
     }  on ApiException catch (e) {
