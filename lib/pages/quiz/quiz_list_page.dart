@@ -68,6 +68,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
             children: [
               SizedBox(),
               SearchSortComponent(
+                feature: "kuis",
                 search: state.search, 
                 sortDir: state.sortDir, 
                 onSearchChanged: (value) {

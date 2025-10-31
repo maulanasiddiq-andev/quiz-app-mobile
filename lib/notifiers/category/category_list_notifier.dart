@@ -16,7 +16,14 @@ class CategoryListNotifier extends StateNotifier<CategoryListState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final BaseResponse<SearchResponse<CategoryModel>> result = await CategoryService.getCategories(state.pageIndex, state.pageSize);
+      Map<String, dynamic> queryParameters = {
+        "pageSize": state.pageSize.toString(),
+        "currentPage": state.pageIndex.toString(),
+        "search": state.search,
+        "orderDir": state.sortDir
+      };
+
+      final BaseResponse<SearchResponse<CategoryModel>> result = await CategoryService.getCategories(queryParameters);
 
       state = state.copyWith(
         isLoading: false,
@@ -38,6 +45,35 @@ class CategoryListNotifier extends StateNotifier<CategoryListState> {
     state = state.copyWith(pageIndex: 0, categories: []);
 
     await getCategories();
+  }
+
+  Future<void> searchCategories(String value) async {
+    state = state.copyWith(search: value);
+    await refreshCategories();
+  }
+
+  Future<void> changeSortDir(String value) async {
+    state = state.copyWith(sortDir: value);
+    await refreshCategories();
+  }
+
+  Future<void> deleteCategory(String id) async {
+    state = state.copyWith(deletedCategoryId: id);
+
+    try {
+      final result = await CategoryService.deleteCategory(id);
+
+      final categories = [...state.categories];
+
+      categories.removeWhere((c) => c.categoryId == id);
+      state = state.copyWith(categories: [...categories]);
+
+      Fluttertoast.showToast(msg: result.messages[0]);
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    }
   }
 }
 
