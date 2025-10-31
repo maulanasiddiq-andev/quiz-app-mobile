@@ -21,18 +21,19 @@ class SelectDataNotifier extends StateNotifier<SelectDataState> {
     try {
       dynamic result;
 
+      Map<String, dynamic> queryParameters = {
+        "pageSize": state.pageSize.toString(),
+        "currentPage": state.pageIndex.toString(),
+        "search": state.search,
+        // "orderDir": state.sortDir
+      };
+
       switch (data) {
         case SelectDataConstant.category:
-          result = await CategoryService.getCategories(
-            state.pageIndex, 
-            state.pageSize
-          );
+          result = await CategoryService.getCategories(queryParameters);
           break;
         default:
-          result = await CategoryService.getCategories(
-            state.pageIndex, 
-            state.pageSize
-          );
+          result = await CategoryService.getCategories(queryParameters);
           break;
       }
 
