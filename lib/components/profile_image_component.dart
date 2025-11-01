@@ -14,7 +14,7 @@ class ProfileImageComponent extends StatelessWidget {
     return CircleAvatar(
       radius: radius,
       backgroundImage: profileImage == null
-        ? AssetImage('assets/images/profile.png')
+        ? AssetImage('assets/images/profile.jpg')
         : NetworkImage(profileImage!),
     );
   }
