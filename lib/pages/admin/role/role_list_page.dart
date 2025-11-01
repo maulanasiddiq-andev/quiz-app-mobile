@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
+import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/notifiers/admin/role/role_list_notifier.dart';
 import 'package:quiz_app/pages/admin/role/role_detail_page.dart';
 import 'package:quiz_app/pages/admin/role/role_edit_page.dart';
@@ -25,6 +26,25 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
         onRefresh: () => notifier.refreshRoles(),
         child: Column(
           children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: colors.onSurface)
+                )
+              ),
+              child: SearchSortComponent(
+                feature: "Role", 
+                search: state.search, 
+                sortDir: state.sortDir, 
+                onSearchChanged: (value) {
+                  notifier.searchRoles(value);
+                },
+                onSortDirChanged: (value) {
+                  notifier.changeSortDir(value);
+                },
+              ),
+            ),
             Expanded(
               child: state.isLoading
               ? Center(
