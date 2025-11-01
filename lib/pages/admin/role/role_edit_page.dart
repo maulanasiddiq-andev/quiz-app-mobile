@@ -83,6 +83,18 @@ class _RoleEditPageState extends ConsumerState<RoleEditPage> {
                               notifier.updateDescription(value);
                             },
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Atur sebagai roledefault"),
+                              Switch(
+                                value: state.role!.isMain, 
+                                onChanged: (value) {
+                                  notifier.updateIsMain(value);
+                                }
+                              ),
+                            ],
+                          ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             spacing: 5,
