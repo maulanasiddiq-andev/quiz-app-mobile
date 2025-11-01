@@ -11,7 +11,7 @@ class SelectDataState {
   const SelectDataState({
     this.isLoading = false,
     this.isLoadingMore = false,
-    this.pageIndex = 1,
+    this.pageIndex = 0,
     this.pageSize = 20,
     this.datas = const [],
     this.search = ""
