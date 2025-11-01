@@ -72,6 +72,23 @@ class AuthService {
     return result;
   }
 
+  static Future<BaseResponse<TokenModel>> refreshToken(TokenModel token) async {
+    final body = jsonEncode(token.toJson());
+    final response = await client.dio.post(
+      '${url}refresh-token',
+      data: body
+    );
+
+    final BaseResponse<TokenModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => TokenModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
   static Future<BaseResponse<TokenModel>> checkOtp(
     String email,
     String otpCode,
