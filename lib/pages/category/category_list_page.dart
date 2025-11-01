@@ -105,6 +105,9 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                                   )
                               ],
                             ),
+                            subtitle: category.isMain
+                              ? Text("default")
+                              : null,
                             trailing: PopupMenuButton<String>(
                               padding: EdgeInsets.zero,
                               icon: const Icon(Icons.more_vert),
@@ -117,7 +120,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                                     break;
                                   case 'edit':
                                     final result = await Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => CategoryEditPage(category: category))
+                                      MaterialPageRoute(builder: (context) => CategoryEditPage(categoryId: category.categoryId))
                                     );
                   
                                     if (result != null && result == true) {

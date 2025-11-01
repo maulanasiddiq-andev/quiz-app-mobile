@@ -69,7 +69,7 @@ class _CategoryDetailPageState extends ConsumerState<CategoryDetailPage> {
               child: CustomButtonComponent(
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => CategoryEditPage(category: state.category!))
+                    MaterialPageRoute(builder: (context) => CategoryEditPage(categoryId: widget.categoryId))
                   );
                 }, 
                 text: "Edit"

@@ -65,13 +65,8 @@ class CategoryService {
     return result;
   }
 
-  static Future<BaseResponse<CategoryModel>> editCategoryById(
-    String id,
-    String name,
-    String description,
-    int version
-  ) async {
-    final body = jsonEncode({"name": name, "description": description, "version": version});
+  static Future<BaseResponse<CategoryModel>> editCategoryById(String id, Map<String, dynamic>? data) async {
+    final body = jsonEncode(data);
     final response = await client.dio.put(
       '$url$id',
       data: body
