@@ -46,13 +46,11 @@ class _RoleDetailPageState extends ConsumerState<RoleDetailPage> {
                           children: [
                             DetailFieldComponent(
                               fieldName: "Nama",
-                              content: state.role!.name,
+                              content: state.role?.name,
                             ),
                             DetailFieldComponent(
                               fieldName: "Deskripsi",
-                              content: state.role!.description.isNotEmpty
-                                  ? state.role!.description
-                                  : "-",
+                              content: state.role?.description,
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

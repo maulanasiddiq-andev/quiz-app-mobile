@@ -54,43 +54,35 @@ class _UserDetailPageState extends ConsumerState<UserDetailPage> {
                             ),
                             DetailFieldComponent(
                               fieldName: "Nama",
-                              content: state.user!.name,
+                              content: state.user?.name,
                             ),
                             DetailFieldComponent(
                               fieldName: "Email",
-                              content: state.user!.email,
+                              content: state.user?.email,
                             ),
                             DetailFieldComponent(
                               fieldName: "Username",
-                              content: state.user!.username,
-                            ),
-                            DetailFieldComponent(
-                              fieldName: "Email Diverifikasi pada",
-                              content: state.user!.emailVerifiedTime != null
-                                  ? formatDate(state.user!.emailVerifiedTime!)
-                                  : "-",
-                            ),
-                            DetailFieldComponent(
-                              fieldName: "Terakhir Login",
-                              content: state.user!.lastLoginTime != null
-                                  ? formatDate(state.user!.lastLoginTime!)
-                                  : "-",
+                              content: state.user?.username,
                             ),
                             DetailFieldComponent(
                               fieldName: "Role",
-                              content: state.user!.role != null
-                                  ? state.user!.role!.name
-                                  : "-",
+                              content: state.user?.role?.name,
+                            ),
+                            DetailFieldComponent(
+                              fieldName: "Email Diverifikasi pada",
+                              content: formatDate(state.user?.emailVerifiedTime),
+                            ),
+                            DetailFieldComponent(
+                              fieldName: "Terakhir Login",
+                              content: formatDate(state.user?.lastLoginTime),
                             ),
                             DetailFieldComponent(
                               fieldName: "Deskripsi",
-                              content: state.user!.description.isEmpty
-                                  ? "-"
-                                  : state.user!.description,
+                              content: state.user?.description,
                             ),
                             DetailFieldComponent(
                               fieldName: "Status",
-                              content: state.user!.recordStatus,
+                              content: state.user?.recordStatus,
                             ),
                           ],
                         ),
