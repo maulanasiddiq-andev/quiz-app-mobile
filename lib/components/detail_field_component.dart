@@ -21,7 +21,7 @@ class DetailFieldComponent extends StatelessWidget {
           ),
         ),
         Text(
-          content ?? "-",
+          content == null || content!.isEmpty ? "-" : content!,
           style: TextStyle(
             fontSize: 20
           ),
