@@ -16,7 +16,14 @@ class RoleListNotifier extends StateNotifier<RoleListState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final BaseResponse<SearchResponse<RoleModel>> result = await RoleService.getRoles(state.pageIndex, state.pageSize);
+      final queryParameters = {
+        "pageSize": state.pageSize.toString(),
+        "currentPage": state.pageIndex.toString(),
+        // "search": state.search,
+        // "orderDir": state.sortDir
+      };
+
+      final BaseResponse<SearchResponse<RoleModel>> result = await RoleService.getRoles(queryParameters);
 
       state = state.copyWith(
         isLoading: false,
