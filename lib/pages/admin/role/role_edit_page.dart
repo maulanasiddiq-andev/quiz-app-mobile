@@ -86,7 +86,7 @@ class _RoleEditPageState extends ConsumerState<RoleEditPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Atur sebagai roledefault"),
+                              Text("Atur sebagai role default"),
                               Switch(
                                 value: state.role!.isMain, 
                                 onChanged: (value) {
