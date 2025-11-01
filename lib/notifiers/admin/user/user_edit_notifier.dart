@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/identity/user_model.dart';
+import 'package:quiz_app/models/select_data_model.dart';
 import 'package:quiz_app/services/user_service.dart';
 import 'package:quiz_app/states/admin/user/user_edit_state.dart';
 
@@ -18,7 +19,21 @@ class UserEditNotifier extends StateNotifier<UserEditState> {
     try {
       final result = await UserService.getUserById(userId);
 
-      state = state.copyWith(isLoading: false, user: result.data);
+      // assigning selected role
+      SelectDataModel? role;
+
+      if (result.data?.role != null) {
+        role = SelectDataModel(
+          id: result.data!.role!.roleId, 
+          name: result.data!.role!.name
+        );
+      }
+
+      state = state.copyWith(
+        isLoading: false, 
+        user: result.data,
+        role: role
+      );
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       state = state.copyWith(isLoading: false);
@@ -40,11 +55,18 @@ class UserEditNotifier extends StateNotifier<UserEditState> {
     state = state.copyWith(user: user);
   }
 
+  void updateRole(SelectDataModel value) {
+    state = state.copyWith(role: value);
+  }
+
   Future<bool> updateUserById() async {
     state = state.copyWith(isLoadingUpdate: true);
 
     try {
-      final result = await UserService.updateUserById(userId, state.user?.toJson());
+      var user = state.user;
+      var userWithUpdatedRole = user?.copyWith(roleId: state.role?.id);
+
+      final result = await UserService.updateUserById(userId, userWithUpdatedRole?.toJson());
       Fluttertoast.showToast(msg: result.messages[0]);
       
       return true;

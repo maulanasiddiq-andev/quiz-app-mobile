@@ -10,6 +10,7 @@ class QuizDetailState {
   final bool historyHasNextPage;
   final List<QuizHistoryModel> histories;
   final QuizModel? quiz;
+  final bool isLoadingDelete;
 
   QuizDetailState({
     this.isLoading = false,
@@ -19,7 +20,8 @@ class QuizDetailState {
     this.quiz,
     this.historyHasNextPage = false,
     this.historyPageIndex = 0,
-    this.historyPageSize = 10
+    this.historyPageSize = 10,
+    this.isLoadingDelete = false
   });
 
   QuizDetailState copyWith({
@@ -30,7 +32,8 @@ class QuizDetailState {
     List<QuizHistoryModel>? histories,
     bool? historyHasNextPage,
     int? historyPageIndex,
-    int? historyPageSize
+    int? historyPageSize,
+    bool? isLoadingDelete
   }) {
     return QuizDetailState(
       isLoading: isLoading ?? this.isLoading, 
@@ -40,7 +43,8 @@ class QuizDetailState {
       histories: histories ?? this.histories,
       historyHasNextPage: historyHasNextPage ?? this.historyHasNextPage,
       historyPageIndex: historyPageIndex ?? this.historyPageIndex,
-      historyPageSize: historyPageSize ?? this.historyPageSize
+      historyPageSize: historyPageSize ?? this.historyPageSize,
+      isLoadingDelete: isLoadingDelete ?? this.isLoadingDelete
     );
   }
 }

@@ -14,7 +14,7 @@ class ClientSettings {
   );
 
   ClientSettings() {
-    _dio.interceptors.add(JwtInterceptor());
+    _dio.interceptors.add(JwtInterceptor(_dio));
   }
 
   Dio get dio => _dio;

@@ -10,16 +10,10 @@ class UserService {
   static ClientSettings client = ClientSettings();
   static String url = "user/";
 
-  static Future<BaseResponse<SearchResponse<UserModel>>> getUsers(
-    int page,
-    int pageSize,
-  ) async {
+  static Future<BaseResponse<SearchResponse<UserModel>>> getUsers(Map<String, dynamic> queryParameters) async {
     final response = await client.dio.get(
       url,
-      queryParameters: {
-        'page': page.toString(),
-        'pageSize': pageSize.toString(),
-      },
+      queryParameters: queryParameters,
     );
 
     final BaseResponse<SearchResponse<UserModel>> result = BaseResponse.fromJson(

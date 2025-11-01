@@ -4,6 +4,7 @@ import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
 import 'package:quiz_app/pages/take_quiz/take_quiz_page.dart';
@@ -36,14 +37,12 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizDetailProvider(widget.quizId));
+    final notifier = ref.read(quizDetailProvider(widget.quizId).notifier);
+    final authState = ref.watch(authProvider);
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Quiz Detail",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary,
-      ),
+      appBar: CustomAppbarComponent(title: "Detail Kuis"),
       body: ConnectionCheckComponent(
         child: state.isLoading && state.quiz == null
           ? Center(child: CircularProgressIndicator(color: Colors.blue))
@@ -138,6 +137,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                                               children: [
                                                 ProfileImageComponent(
                                                   radius: 10,
+                                                  profileImage: history.user?.profileImage,
                                                 ),
                                                 Text(
                                                   history.user?.name ??
@@ -167,27 +167,68 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: CustomButtonComponent(
-                    isLoading: ref.watch(takeQuizProvider).isLoading,
-                    onTap: () async {
-                      var result = await ref
-                          .read(takeQuizProvider.notifier)
-                          .getQuizWithQuestions(state.quiz!);
-        
-                      if (result == true && context.mounted) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TakeQuizPage(),
+                if (state.quiz?.userId == authState.token?.user?.userId)
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: Row(
+                      spacing: 10,
+                      children: [
+                        Expanded(
+                          child: CustomButtonComponent(
+                            isLoading: state.isLoadingDelete,
+                            onTap: () async {
+                              final result = await notifier.deleteQuiz(widget.quizId);
+
+                              if (result == true && context.mounted) {
+                                Navigator.of(context).pop(state.quiz);
+                              }
+                            },
+                            text: "Hapus",
+                            isError: true,
                           ),
-                        );
-                      }
-                    },
-                    text: "Mulai",
-                  ),
-                ),
+                        ),
+                        Expanded(
+                          child: CustomButtonComponent(
+                            isLoading: ref.watch(takeQuizProvider).isLoading,
+                            onTap: () {
+                          
+                            },
+                            text: "Edit",
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  if (state.quiz!.isTakenByUser == false)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: CustomButtonComponent(
+                        isLoading: ref.watch(takeQuizProvider).isLoading,
+                        onTap: () async {
+                          var result = await ref
+                              .read(takeQuizProvider.notifier)
+                              .getQuizWithQuestions(state.quiz!);
+            
+                          if (result == true && context.mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TakeQuizPage(),
+                              ),
+                            );
+                          }
+                        },
+                        text: "Mulai",
+                      ),
+                    )
+                  else
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: Center(
+                        child: Text("Anda sudah mengerjakan kuis ini"),
+                      ),
+                    ),
               ],
             ),
       ),

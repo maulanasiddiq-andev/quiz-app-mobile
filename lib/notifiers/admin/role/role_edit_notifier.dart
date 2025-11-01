@@ -40,6 +40,14 @@ class RoleEditNotifier extends StateNotifier<RoleEditState> {
     state = state.copyWith(role: role);
   }
 
+  void updateIsMain(bool value) {
+    var role = state.role;
+
+    role = role?.copyWith(isMain: value);
+
+    state = state.copyWith(role: role);
+  }
+
   void updateRoleModule(int index, bool value) {
     RoleWithSelectModulesModel? role = state.role;
     List<SelectModuleModel> modules = role?.roleModules ?? [];
@@ -78,7 +86,4 @@ class RoleEditNotifier extends StateNotifier<RoleEditState> {
   }
 }
 
-final roleEditProvider = StateNotifierProvider.autoDispose
-    .family<RoleEditNotifier, RoleEditState, String>(
-      (ref, roleId) => RoleEditNotifier(roleId),
-    );
+final roleEditProvider = StateNotifierProvider.autoDispose.family<RoleEditNotifier, RoleEditState, String>((ref, roleId) => RoleEditNotifier(roleId));

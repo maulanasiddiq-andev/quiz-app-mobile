@@ -9,16 +9,10 @@ class CategoryService {
   static ClientSettings client = ClientSettings();
   static String url = "category/";
 
-  static Future<BaseResponse<SearchResponse<CategoryModel>>> getCategories(
-    int page,
-    int pageSize,
-  ) async {
+  static Future<BaseResponse<SearchResponse<CategoryModel>>> getCategories(Map<String, dynamic> queryParameters) async {
     final response = await client.dio.get(
       url,
-      queryParameters: {
-        'page': page.toString(),
-        'pageSize': pageSize.toString(),
-      },
+      queryParameters: queryParameters,
     );
 
     final BaseResponse<SearchResponse<CategoryModel>> result =
@@ -81,6 +75,21 @@ class CategoryService {
     final response = await client.dio.put(
       '$url$id',
       data: body
+    );
+
+    final BaseResponse<CategoryModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => CategoryModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<CategoryModel>> deleteCategory(String categoryId) async {
+    final response = await client.dio.delete(
+      '$url$categoryId',
     );
 
     final BaseResponse<CategoryModel> result = BaseResponse.fromJson(

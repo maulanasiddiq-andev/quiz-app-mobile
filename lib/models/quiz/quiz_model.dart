@@ -17,6 +17,7 @@ class QuizModel extends BaseModel {
   final int? historiesCount;
   final int questionCount;
   final List<QuestionModel> questions;
+  final bool isTakenByUser;
 
   QuizModel({
     required super.description,
@@ -37,6 +38,7 @@ class QuizModel extends BaseModel {
     required this.historiesCount,
     required this.questionCount,
     this.questions = const [],
+    required this.isTakenByUser
   });
 
   QuizModel.fromJson(Map<String, dynamic> json) : 
@@ -57,5 +59,6 @@ class QuizModel extends BaseModel {
         .toList(),
     historiesCount = json['historiesCount'],
     questionCount = json['questionCount'],
+    isTakenByUser = json['isTakenByUser'],
     super.fromJson(json);
 }

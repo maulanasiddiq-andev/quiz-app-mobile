@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/constants/sort_dir_constant.dart';
 
 class SearchSortComponent extends StatefulWidget {
+  final String feature;
   final String sortDir;
   final String search;
   final Function(String value) onSearchChanged;
   final Function(String value) onSortDirChanged;
   const SearchSortComponent({
     super.key,
+    required this.feature,
     required this.search,
     required this.sortDir,
     required this.onSearchChanged,
@@ -64,7 +66,7 @@ class _SearchSortComponentState extends State<SearchSortComponent> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
-                  hintText: "Cari judul kuis"
+                  hintText: "Cari ${widget.feature}"
                 ),
               ),
             ),

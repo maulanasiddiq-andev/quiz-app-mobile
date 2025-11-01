@@ -16,7 +16,14 @@ class RoleListNotifier extends StateNotifier<RoleListState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final BaseResponse<SearchResponse<RoleModel>> result = await RoleService.getRoles(state.pageIndex, state.pageSize);
+      final queryParameters = {
+        "pageSize": state.pageSize.toString(),
+        "currentPage": state.pageIndex.toString(),
+        "search": state.search,
+        "orderDir": state.sortDir
+      };
+
+      final BaseResponse<SearchResponse<RoleModel>> result = await RoleService.getRoles(queryParameters);
 
       state = state.copyWith(
         isLoading: false,
@@ -38,6 +45,16 @@ class RoleListNotifier extends StateNotifier<RoleListState> {
     state = state.copyWith(pageIndex: 0, roles: []);
 
     await getRoles();
+  }
+
+  Future<void> searchRoles(String value) async {
+    state = state.copyWith(search: value);
+    await refreshRoles();
+  }
+
+  Future<void> changeSortDir(String value) async {
+    state = state.copyWith(sortDir: value);
+    await refreshRoles();
   }
 }
 

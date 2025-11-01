@@ -53,11 +53,7 @@ class _RoleEditPageState extends ConsumerState<RoleEditPage> {
     });
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Edit Role",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Edit Role"),
       body: state.isLoading || state.role == null
         ? Center(
             child: CircularProgressIndicator(color: colors.primary),
@@ -86,6 +82,18 @@ class _RoleEditPageState extends ConsumerState<RoleEditPage> {
                             onChanged: (value) {
                               notifier.updateDescription(value);
                             },
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Atur sebagai roledefault"),
+                              Switch(
+                                value: state.role!.isMain, 
+                                onChanged: (value) {
+                                  notifier.updateIsMain(value);
+                                }
+                              ),
+                            ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -4,6 +4,8 @@ import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/input_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/components/select_data_component.dart';
+import 'package:quiz_app/constants/select_data_constant.dart';
 import 'package:quiz_app/notifiers/admin/user/user_edit_notifier.dart';
 import 'package:quiz_app/states/admin/user/user_edit_state.dart';
 
@@ -49,7 +51,6 @@ class _UserEditPageState extends ConsumerState<UserEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final state = ref.watch(userEditProvider(widget.userId));
     final notifier = ref.read(userEditProvider(widget.userId).notifier);
 
@@ -58,11 +59,7 @@ class _UserEditPageState extends ConsumerState<UserEditPage> {
     });
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Edit User",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Edit User"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -113,6 +110,14 @@ class _UserEditPageState extends ConsumerState<UserEditPage> {
                           notifier.updateDescription(value);
                         },
                       ),
+                      SelectDataComponent(
+                        title: "Role", 
+                        data: SelectDataConstant.role,
+                        selectedData: state.role,
+                        onSelected: (value) {
+                          notifier.updateRole(value);
+                        },
+                      )
                     ],
                   ),
                 ),

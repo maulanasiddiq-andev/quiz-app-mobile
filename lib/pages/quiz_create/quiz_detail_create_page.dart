@@ -32,11 +32,7 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Buat Detail Kuis",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary,
-      ),
+      appBar: CustomAppbarComponent(title: "Buat Kuis"),
       body: ConnectionCheckComponent(
         child: state.isLoadingCategories
             ? Center(child: CircularProgressIndicator(color: colors.primary))

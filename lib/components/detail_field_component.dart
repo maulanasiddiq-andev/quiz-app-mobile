@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DetailFieldComponent extends StatelessWidget {
   final String fieldName;
-  final String content;
+  final String? content;
   const DetailFieldComponent({
     super.key,
     required this.fieldName,
@@ -21,7 +21,7 @@ class DetailFieldComponent extends StatelessWidget {
           ),
         ),
         Text(
-          content,
+          content == null || content!.isEmpty ? "-" : content!,
           style: TextStyle(
             fontSize: 20
           ),

@@ -43,6 +43,19 @@ class QuizService {
 
     return result;
   }
+  
+  static Future<BaseResponse<QuizModel>> deleteQuiz(String id) async {
+    final response = await client.dio.delete('$url$id');
+
+    final BaseResponse<QuizModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => QuizModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
 
   static Future<BaseResponse<TakeQuizModel>> getQuizByIdWithQuestions(
     String id,

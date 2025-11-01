@@ -1,6 +1,9 @@
+import 'package:quiz_app/constants/sort_dir_constant.dart';
 import 'package:quiz_app/models/identity/role_model.dart';
 
 class RoleListState {
+  final String search;
+  final String sortDir;
   final bool isLoading;
   final bool isLoadingMore;
   final int pageIndex;
@@ -10,6 +13,8 @@ class RoleListState {
   final List<RoleModel> roles;
 
   RoleListState({
+    this.sortDir = SortDirConstant.desc,
+    this.search = "",
     this.isLoading = false,
     this.isLoadingMore = false,
     this.pageIndex = 0,
@@ -27,6 +32,8 @@ class RoleListState {
     bool? hasNextPage,
     bool? hasPreviousPage,
     List<RoleModel>? roles,
+    String? search,
+    String? sortDir
   }) {
     return RoleListState(
       isLoading: isLoading ?? this.isLoading,
@@ -36,6 +43,8 @@ class RoleListState {
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       roles: roles ?? this.roles,
+      search: search ?? this.search,
+      sortDir: sortDir ?? this.sortDir
     );
   }
 }

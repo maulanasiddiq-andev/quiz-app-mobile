@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
 
-AppBar customAppbarComponent(
-  String title,
-  {
-    List<Widget>? actions,
-    bool automaticallyImplyLeading = true,
-    Color backgroundColor = Colors.blue,
-    Color foregroundColor = Colors.white
-  }
-) {
+class CustomAppbarComponent extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  final List<Widget>? actions;
+  final bool automaticallyImplyLeading;
+  const CustomAppbarComponent({
+    super.key,
+    required this.title,
+    this.actions,
+    this.automaticallyImplyLeading = true
+  });
 
-  return AppBar(
-    title: Text(
-      title,
-      style: TextStyle(
-        color: foregroundColor
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return AppBar(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: colors.onPrimary
+        ),
       ),
-    ),
-    actions: actions,
-    backgroundColor: backgroundColor,
-    foregroundColor: foregroundColor,
-    automaticallyImplyLeading: automaticallyImplyLeading,
-  );
+      actions: actions,
+      backgroundColor: colors.primary,
+      foregroundColor: colors.onPrimary,
+      automaticallyImplyLeading: automaticallyImplyLeading,
+    );
+  }
 }

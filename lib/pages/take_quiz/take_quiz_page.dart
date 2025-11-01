@@ -184,12 +184,7 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
         }
       },
       child: Scaffold(
-        appBar: customAppbarComponent(
-          state.quiz?.title ?? "Kuis",
-          // automaticallyImplyLeading: false,
-          backgroundColor: colors.primary,
-          foregroundColor: colors.onPrimary,
-        ),
+        appBar: CustomAppbarComponent(title: state.quiz?.title ?? "Kuis"),
         drawer: Drawer(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.zero
