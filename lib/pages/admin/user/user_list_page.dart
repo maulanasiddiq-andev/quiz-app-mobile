@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/notifiers/admin/user/user_list_notifier.dart';
 import 'package:quiz_app/pages/admin/user/user_detail_page.dart';
 import 'package:quiz_app/pages/admin/user/user_edit_page.dart';
@@ -26,6 +27,25 @@ class _UserListPageState extends ConsumerState<UserListPage> {
         onRefresh: () => notifier.refreshUsers(),
         child: Column(
           children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: colors.onSurface)
+                )
+              ),
+              child: SearchSortComponent(
+                feature: "User", 
+                search: state.search, 
+                sortDir: state.sortDir, 
+                onSearchChanged: (value) {
+                  notifier.searchUsers(value);
+                },
+                onSortDirChanged: (value) {
+                  notifier.changeSortDir(value);
+                },
+              ),
+            ),
             Expanded(
               child: state.isLoading
               ? Center(

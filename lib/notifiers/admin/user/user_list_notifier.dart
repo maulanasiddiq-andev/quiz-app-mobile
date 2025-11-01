@@ -16,7 +16,14 @@ class UserListNotifier extends StateNotifier<UserListState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final BaseResponse<SearchResponse<UserModel>> result = await UserService.getUsers(state.pageIndex, state.pageSize);
+      final queryParameters = {
+        "pageSize": state.pageSize.toString(),
+        "currentPage": state.pageIndex.toString(),
+        "search": state.search,
+        "orderDir": state.sortDir
+      };
+
+      final BaseResponse<SearchResponse<UserModel>> result = await UserService.getUsers(queryParameters);
 
       state = state.copyWith(
         isLoading: false,
@@ -39,9 +46,16 @@ class UserListNotifier extends StateNotifier<UserListState> {
 
     await getUsers();
   }
+
+  Future<void> searchUsers(String value) async {
+    state = state.copyWith(search: value);
+    await refreshUsers();
+  }
+
+  Future<void> changeSortDir(String value) async {
+    state = state.copyWith(sortDir: value);
+    await refreshUsers();
+  }
 }
 
-final userListProvider =
-    StateNotifierProvider.autoDispose<UserListNotifier, UserListState>(
-      (ref) => UserListNotifier(),
-    );
+final userListProvider = StateNotifierProvider.autoDispose<UserListNotifier, UserListState>((ref) => UserListNotifier());

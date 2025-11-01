@@ -1,6 +1,9 @@
+import 'package:quiz_app/constants/sort_dir_constant.dart';
 import 'package:quiz_app/models/identity/user_model.dart';
 
 class UserListState {
+  final String search;
+  final String sortDir;
   final bool isLoading;
   final bool isLoadingMore;
   final int pageIndex;
@@ -10,6 +13,8 @@ class UserListState {
   final List<UserModel> users;
 
   UserListState({
+    this.sortDir = SortDirConstant.desc,
+    this.search = "",
     this.isLoading = false,
     this.isLoadingMore = false,
     this.pageIndex = 0,
@@ -27,6 +32,8 @@ class UserListState {
     bool? hasNextPage,
     bool? hasPreviousPage,
     List<UserModel>? users,
+    String? search,
+    String? sortDir
   }) {
     return UserListState(
       isLoading: isLoading ?? this.isLoading,
@@ -36,6 +43,8 @@ class UserListState {
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       users: users ?? this.users,
+      search: search ?? this.search,
+      sortDir: sortDir ?? this.sortDir
     );
   }
 }
