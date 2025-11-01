@@ -1,9 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz_create/answer_create_model.dart';
 import 'package:quiz_app/models/quiz_create/question_create_model.dart';
@@ -11,6 +8,7 @@ import 'package:quiz_app/models/select_data_model.dart';
 import 'package:quiz_app/services/file_service.dart';
 import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/quiz_create_state.dart';
+import 'package:quiz_app/utils/pick_image.dart';
 
 class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
   QuizCreateNotifier() : super(QuizCreateState()) {
@@ -36,42 +34,6 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
 
   void updateTime(int value) {
     state = state.copyWith(time: value);
-  }
-
-  Future<File?> pickImage(Color toolbarColor, Color toolbarWidgetColor) async {
-    final picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-    );
-
-    if (pickedFile != null) {
-      final croppedImage = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Atur Gambar',
-            toolbarColor: toolbarColor,
-            toolbarWidgetColor: toolbarWidgetColor,
-            initAspectRatio: CropAspectRatioPreset.ratio16x9,
-            lockAspectRatio: true,
-            aspectRatioPresets: [
-              CropAspectRatioPreset.ratio16x9,
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio4x3,
-            ],
-          ),
-        ],
-      );
-
-      if (croppedImage != null) {
-        return File(croppedImage.path);
-      }
-
-      return null;
-    }
-
-    return null;
   }
 
   Future<void> pickDescriptionImage(
