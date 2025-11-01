@@ -49,7 +49,6 @@ class _UserEditPageState extends ConsumerState<UserEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final state = ref.watch(userEditProvider(widget.userId));
     final notifier = ref.read(userEditProvider(widget.userId).notifier);
 
@@ -58,11 +57,7 @@ class _UserEditPageState extends ConsumerState<UserEditPage> {
     });
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Edit User",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Edit User"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

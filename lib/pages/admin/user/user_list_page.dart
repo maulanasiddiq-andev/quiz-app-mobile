@@ -21,11 +21,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
 
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Daftar User",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Daftar User"),
       body: RefreshIndicator(
         onRefresh: () => notifier.refreshUsers(),
         child: Column(

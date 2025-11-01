@@ -30,11 +30,7 @@ class _QuizHistoryDetailPageState extends ConsumerState<QuizHistoryDetailPage> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Riwayat",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Riwayat Kuis"),
       body: ConnectionCheckComponent(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -30,14 +30,8 @@ class _CategoryAddPageState extends ConsumerState<CategoryAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Tambah Kategori",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Tambah Kategori"),
       body: Column(
         children: [
           Expanded(

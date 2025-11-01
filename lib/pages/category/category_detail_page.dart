@@ -29,11 +29,7 @@ class _CategoryDetailPageState extends ConsumerState<CategoryDetailPage> {
     final state = ref.watch(categoryDetailProvider);
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Detail User",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Detail Kategori"),
       body: state.isLoading || state.category == null
       ? Center(
           child: CircularProgressIndicator(color: colors.primary),

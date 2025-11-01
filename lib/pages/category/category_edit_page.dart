@@ -41,14 +41,8 @@ class _CategoryEditPageState extends ConsumerState<CategoryEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Tambah Kategori",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Edit Kategori"),
       body: Column(
         children: [
           Expanded(

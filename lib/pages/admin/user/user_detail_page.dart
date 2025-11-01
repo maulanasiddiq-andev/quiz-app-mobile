@@ -31,11 +31,7 @@ class _UserDetailPageState extends ConsumerState<UserDetailPage> {
     final notifier = ref.read(userDetailProvider(widget.userId).notifier);
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Detail User",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary,
-      ),
+      appBar: CustomAppbarComponent(title: "Detail User"),
       body: state.isLoading || state.user == null
           ? Center(child: CircularProgressIndicator(color: colors.primary))
           : Column(

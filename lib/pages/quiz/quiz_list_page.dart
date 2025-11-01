@@ -41,23 +41,21 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Quiz List",
+      appBar: CustomAppbarComponent(
+        title: "Daftar Kuis",
         actions: [
           IconButton(
             onPressed: () {
               ref.read(authProvider.notifier).logout();
 
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-                (route) => false,
+                MaterialPageRoute(builder: (_) => LoginPage()), 
+                (route) => false
               );
-            },
-            icon: Icon(Icons.logout),
-          ),
-        ],
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary,
+            }, 
+            icon: Icon(Icons.logout)
+          )
+        ],  
       ),
       body: ConnectionCheckComponent(
         child: RefreshIndicator(

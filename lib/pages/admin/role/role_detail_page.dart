@@ -29,11 +29,7 @@ class _RoleDetailPageState extends ConsumerState<RoleDetailPage> {
     final notifier = ref.read(roleDetailProvider(widget.roleId).notifier);
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Detail Role",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary,
-      ),
+      appBar: CustomAppbarComponent(title: "Detail Role"),
       body: state.isLoading || state.role == null
           ? Center(child: CircularProgressIndicator(color: colors.primary))
           : Column(

@@ -39,11 +39,7 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
     }
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Review Quiz",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Review Kuis"),
       drawer: Drawer(
         child: ListView(
           children: [

@@ -29,11 +29,7 @@ class _AdminPageState extends State<AdminPage> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Panel Admin",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Panel Admin"),
       body: SingleChildScrollView(
         child: Column(
           children: [

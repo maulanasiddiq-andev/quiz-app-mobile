@@ -53,11 +53,7 @@ class _RoleEditPageState extends ConsumerState<RoleEditPage> {
     });
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Edit Role",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Edit Role"),
       body: state.isLoading || state.role == null
         ? Center(
             child: CircularProgressIndicator(color: colors.primary),

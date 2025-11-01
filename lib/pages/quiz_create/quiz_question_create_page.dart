@@ -21,16 +21,11 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final state = ref.watch(quizCreateProvider);
     final notifier = ref.read(quizCreateProvider.notifier);
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Buat pertanyaan",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Buat Kuis"),
       body: ConnectionCheckComponent(
         child: Form(
           key: formKey,

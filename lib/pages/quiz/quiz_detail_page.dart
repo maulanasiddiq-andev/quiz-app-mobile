@@ -42,11 +42,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Quiz Detail",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary,
-      ),
+      appBar: CustomAppbarComponent(title: "Detail Kuis"),
       body: ConnectionCheckComponent(
         child: state.isLoading && state.quiz == null
           ? Center(child: CircularProgressIndicator(color: Colors.blue))

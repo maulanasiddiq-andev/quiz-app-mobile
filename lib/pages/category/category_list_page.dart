@@ -22,10 +22,8 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Kategori",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary,
+      appBar: CustomAppbarComponent(
+        title: "Daftar Kategori",
         actions: [
           IconButton(
             onPressed: () async {
@@ -39,7 +37,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
             }, 
             icon: Icon(Icons.add)
           )
-        ]
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () => notifier.refreshCategories(),

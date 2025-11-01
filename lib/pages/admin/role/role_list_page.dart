@@ -19,11 +19,7 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: customAppbarComponent(
-        "Daftar Role",
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary
-      ),
+      appBar: CustomAppbarComponent(title: "Daftar Role"),
       body: RefreshIndicator(
         onRefresh: () => notifier.refreshRoles(),
         child: Column(

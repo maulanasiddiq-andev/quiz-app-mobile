@@ -32,7 +32,7 @@ class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
         }
       },
       child: Scaffold(
-        appBar: customAppbarComponent("Hasil Kuis"),
+        appBar: CustomAppbarComponent(title: "Hasil Kuis"),
         body: ConnectionCheckComponent(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
