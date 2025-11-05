@@ -7,6 +7,7 @@ import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/question_create_component.dart';
 import 'package:quiz_app/components/quiz_navigation_button_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
+import 'package:quiz_app/pages/quiz_create/quiz_create_review_page.dart';
 
 class QuizQuestionCreatePage extends ConsumerStatefulWidget {
   const QuizQuestionCreatePage({super.key});
@@ -81,13 +82,11 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                   ),
                   Expanded(
                     child: QuizNavigationButtonComponent(
-                      onTap: () async {
-                        final result = await notifier.createQuiz();
-          
-                        if (result && context.mounted) {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        }
+                      onTap: () {
+                        // to review quiz page
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => QuizCreateReviewPage())
+                        );
                       }, 
                       icon: Icons.save
                     )
