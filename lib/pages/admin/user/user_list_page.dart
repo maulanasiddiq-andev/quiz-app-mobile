@@ -15,6 +15,20 @@ class UserListPage extends ConsumerStatefulWidget {
 }
 
 class _UserListPageState extends ConsumerState<UserListPage> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
+        final notifier = ref.read(userListProvider.notifier);
+        notifier.loadMoreDatas();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(userListProvider);
@@ -52,6 +66,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                  controller: scrollController,
                   children: [
                     ...state.users.map((user) {
                       return Container(
@@ -119,7 +134,13 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                           ),
                         )
                       );
-                    })
+                    }),
+                    if (state.isLoadingMore)
+                      Center(
+                        child: CircularProgressIndicator(
+                          color: colors.primary,
+                        ),
+                      )
                   ],
                 )
             ),

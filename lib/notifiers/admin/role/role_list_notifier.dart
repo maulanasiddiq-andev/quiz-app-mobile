@@ -13,7 +13,11 @@ class RoleListNotifier extends StateNotifier<RoleListState> {
   }
 
   Future<void> getRoles() async {
-    state = state.copyWith(isLoading: true);
+    if (state.pageIndex == 0) {
+      state = state.copyWith(isLoading: true);
+    } else {
+      state = state.copyWith(isLoadingMore: true);
+    }
 
     try {
       final queryParameters = {
@@ -45,6 +49,15 @@ class RoleListNotifier extends StateNotifier<RoleListState> {
     state = state.copyWith(pageIndex: 0, roles: []);
 
     await getRoles();
+  }
+
+  Future<void> loadMoreDatas() async {
+    if (state.hasNextPage) {
+      if (state.isLoading || state.isLoadingMore) return;
+
+      state = state.copyWith(pageIndex: state.pageIndex + 1);
+      await getRoles();
+    }
   }
 
   Future<void> searchRoles(String value) async {

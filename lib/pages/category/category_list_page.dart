@@ -15,6 +15,20 @@ class CategoryListPage extends ConsumerStatefulWidget {
 }
 
 class _CategoryListPageState extends ConsumerState<CategoryListPage> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
+        final notifier = ref.read(categoryListProvider.notifier);
+        notifier.loadMoreDatas();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(categoryListProvider);
@@ -71,6 +85,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                controller: scrollController,
                   children: [
                     ...state.categories.map((category) {
                       return GestureDetector(
@@ -93,6 +108,8 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                               spacing: 10,
                               children: [
                                 Text(category.name),
+                                if (category.isMain)
+                                  Icon(Icons.check, color: Colors.green),
                                 if (state.deletedCategoryId == category.categoryId)
                                   SizedBox(
                                     height: 14,
@@ -105,9 +122,11 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                                   )
                               ],
                             ),
-                            subtitle: category.isMain
-                              ? Text("default")
-                              : null,
+                            subtitle: Text(
+                              category.description.isEmpty
+                                ? "-"
+                                : category.description
+                            ),
                             trailing: PopupMenuButton<String>(
                               padding: EdgeInsets.zero,
                               icon: const Icon(Icons.more_vert),
@@ -151,7 +170,13 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                           ),
                         ),
                       );
-                    })
+                    }),
+                    if (state.isLoadingMore)
+                      Center(
+                        child: CircularProgressIndicator(
+                          color: colors.primary,
+                        ),
+                      )
                   ],
                 )
             ),

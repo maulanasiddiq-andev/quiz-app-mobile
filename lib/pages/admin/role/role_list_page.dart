@@ -14,6 +14,20 @@ class RoleListPage extends ConsumerStatefulWidget {
 }
 
 class _RoleListPageState extends ConsumerState<RoleListPage> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
+        final notifier = ref.read(roleListProvider.notifier);
+        notifier.loadMoreDatas();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(roleListProvider);
@@ -51,6 +65,7 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                  controller: scrollController,
                   children: [
                     ...state.roles.map((role) {
                       return GestureDetector(
@@ -69,10 +84,18 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                             )
                           ),
                           child: ListTile(
-                            title: Text(role.name),
-                            subtitle: role.isMain
-                              ? Text("default")
-                              : null,
+                            title: Row(
+                              children: [
+                                Text(role.name),
+                                if (role.isMain)
+                                  Icon(Icons.check, color: Colors.green),
+                              ],
+                            ),
+                            subtitle: Text(
+                              role.description.isEmpty
+                                ? "-"
+                                : role.description
+                            ),
                             trailing: PopupMenuButton<String>(
                               padding: EdgeInsets.zero,
                               icon: const Icon(Icons.more_vert),
@@ -115,7 +138,13 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                           ),
                         ),
                       );
-                    })
+                    }),
+                    if (state.isLoadingMore)
+                      Center(
+                        child: CircularProgressIndicator(
+                          color: colors.primary,
+                        ),
+                      )
                   ],
                 )
             ),
