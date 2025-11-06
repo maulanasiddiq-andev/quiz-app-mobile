@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
@@ -8,7 +9,6 @@ import 'package:quiz_app/components/pick_image_component.dart';
 import 'package:quiz_app/components/select_data_component.dart';
 import 'package:quiz_app/constants/select_data_constant.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
-import 'package:quiz_app/pages/quiz_create/quiz_question_create_page.dart';
 
 class QuizDetailCreatePage extends ConsumerStatefulWidget {
   const QuizDetailCreatePage({super.key});
@@ -117,12 +117,7 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                     child: CustomButtonComponent(
                       onTap: () {
                         if (formKey.currentState!.validate()) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => QuizQuestionCreatePage(),
-                            ),
-                          );
+                          context.push("/create-quiz-questions");
                         }
                       },
                       text: "Buat pertanyaan",

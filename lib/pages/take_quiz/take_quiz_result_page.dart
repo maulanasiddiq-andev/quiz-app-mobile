@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
@@ -23,12 +24,7 @@ class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           // navigate back three times for reaching quiz list page
-          // navigate back to take quiz page
-          Navigator.of(context).pop();
-          // navigate back to quiz detail page
-          Navigator.of(context).pop();
-          // navigate back to quiz list page
-          Navigator.of(context).pop();
+          context.go("/");
         }
       },
       child: Scaffold(
@@ -66,9 +62,7 @@ class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
                   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: CustomButtonComponent(
                     onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                      context.go("/");
                     },
                     text: "Kembali",
                   ),

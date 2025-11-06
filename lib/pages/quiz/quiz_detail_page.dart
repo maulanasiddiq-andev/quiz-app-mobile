@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
-import 'package:quiz_app/pages/quiz/quiz_detail_leaderboard_page.dart';
-import 'package:quiz_app/pages/take_quiz/take_quiz_page.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
 class QuizDetailPage extends ConsumerStatefulWidget {
@@ -104,9 +103,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => QuizDetailLeaderboardPage(quizId: widget.quizId))
-                      );
+                      context.push("/detail-leaderboard/${widget.quizId}");
                     },
                     child: Container(
                       width: double.infinity,
@@ -137,7 +134,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                               final result = await notifier.deleteQuiz(widget.quizId);
 
                               if (result == true && context.mounted) {
-                                Navigator.of(context).pop(state.quiz);
+                                context.pop(state.quiz);
                               }
                             },
                             text: "Hapus",
@@ -168,12 +165,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                               .getQuizWithQuestions(state.quiz!);
             
                           if (result == true && context.mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TakeQuizPage(),
-                              ),
-                            );
+                            context.push("/take-quiz");
                           }
                         },
                         text: "Mulai",

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/detail_field_component.dart';
@@ -122,12 +123,8 @@ class _QuizCreateReviewPageState extends ConsumerState<QuizCreateReviewPage> {
                 final result = await notifier.createQuiz();
 
                 if (result == true && context.mounted) {
-                  // back to create questions page
-                  Navigator.of(context).pop();
-                  // back to create metadata page
-                  Navigator.of(context).pop();
-                  // back to quiz list page
-                  Navigator.of(context).pop();
+                  // back to list page
+                  context.go("/");
                 }
               },
               text: "Buat",

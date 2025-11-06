@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/notifiers/category/category_list_notifier.dart';
-import 'package:quiz_app/pages/category/category_add_page.dart';
-import 'package:quiz_app/pages/category/category_detail_page.dart';
-import 'package:quiz_app/pages/category/category_edit_page.dart';
 
 class CategoryListPage extends ConsumerStatefulWidget {
   const CategoryListPage({super.key});
@@ -41,9 +39,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
         actions: [
           IconButton(
             onPressed: () async {
-              final result = await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CategoryAddPage())
-              );
+              final result = await context.push("/category-add");
 
               if (result != null && result == true) {
                 notifier.refreshCategories();
@@ -90,9 +86,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                     ...state.categories.map((category) {
                       return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => CategoryDetailPage(categoryId: category.categoryId))
-                          );
+                          context.push("/category-detail/${category.categoryId}");
                         },
                         child: Container(
                           width: double.infinity,
@@ -133,14 +127,10 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                               onSelected: (value) async {
                                 switch (value) {
                                   case 'view':
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => CategoryDetailPage(categoryId: category.categoryId))
-                                    );
+                                    context.push("/category-detail/${category.categoryId}");
                                     break;
                                   case 'edit':
-                                    final result = await Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => CategoryEditPage(categoryId: category.categoryId))
-                                    );
+                                    final result = await context.push("/category-edit/${category.categoryId}");
                   
                                     if (result != null && result == true) {
                                       notifier.refreshCategories();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_container_component.dart';
@@ -7,9 +8,6 @@ import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
-import 'package:quiz_app/pages/auth/login_page.dart';
-import 'package:quiz_app/pages/quiz/quiz_detail_page.dart';
-import 'package:quiz_app/pages/quiz_create/quiz_detail_create_page.dart';
 import 'package:shimmer/shimmer.dart';
 
 class QuizListPage extends ConsumerStatefulWidget {
@@ -48,10 +46,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
             onPressed: () {
               ref.read(authProvider.notifier).logout();
 
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => LoginPage()), 
-                (route) => false
-              );
+              context.go("/login");
             }, 
             icon: Icon(Icons.logout)
           )
@@ -164,11 +159,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                           ...state.quizzes.map((quiz) {
                             return QuizContainerComponent(
                               onTap: () async {
-                                final result = await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => QuizDetailPage(quizId: quiz.quizId),
-                                  ),
-                                );
+                                final result = await context.push("/detail/${quiz.quizId}");
 
                                 // if the delete succeed in detail page
                                 // remove the quiz from the list
@@ -189,12 +180,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => QuizDetailCreatePage(),
-                    ),
-                  );
+                  context.push("/create-quiz");
                 },
                 child: Text("Buat Kuis"),
               ),

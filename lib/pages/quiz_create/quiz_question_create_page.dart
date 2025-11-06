@@ -1,13 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/question_create_component.dart';
 import 'package:quiz_app/components/quiz_navigation_button_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
-import 'package:quiz_app/pages/quiz_create/quiz_create_review_page.dart';
 
 class QuizQuestionCreatePage extends ConsumerStatefulWidget {
   const QuizQuestionCreatePage({super.key});
@@ -84,9 +84,7 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                     child: QuizNavigationButtonComponent(
                       onTap: () {
                         // to review quiz page
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => QuizCreateReviewPage())
-                        );
+                        context.push("/create-quiz-review");
                       }, 
                       icon: Icons.save
                     )

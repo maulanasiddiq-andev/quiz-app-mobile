@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_navigation_button_component.dart';
@@ -172,13 +173,13 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
           // or the user is sure to leave the page after confirming it on modal popup
           if (state.isDone || state.isConfirmedToLeave) {
             if (context.mounted) {
-              Navigator.of(context).pop();
+              context.pop();
             }
           } else {
             final bool shouldPop = await confirmLeaveDialog();
 
             if (shouldPop && context.mounted) {
-              Navigator.of(context).pop();
+              context.pop();
             }
           }
         }
@@ -198,6 +199,7 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
                 return GestureDetector(
                   onTap: () {
                     notifier.goToQuestion(key);
+                    // close drawer navigation
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -353,11 +355,7 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
                             final result = await notifier.finishQuiz(duration);
           
                             if (result == true && context.mounted) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => TakeQuizResultPage(),
-                                ),
-                              );
+                              context.push("/take-quiz-result");
                             }
                           }
                         }
