@@ -51,6 +51,7 @@ final GoRouter router = GoRouter(
       builder: (context, state) => OtpPage(),
     ),
     // authenticated pages
+    // quiz
     GoRoute(
       path: "/",
       builder: (context, state) => RootPage(),
@@ -69,7 +70,7 @@ final GoRouter router = GoRouter(
         return QuizDetailLeaderboardPage(quizId: quizId!);
       },
     ),
-    //  take quiz pages
+    // take quiz pages
     GoRoute(
       path: "/take-quiz",
       builder: (context, state) => TakeQuizPage(),
