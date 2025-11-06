@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/auth_input_component.dart';
 import 'package:quiz_app/notifiers/auth/register_notifier.dart';
-import 'package:quiz_app/pages/auth/login_page.dart';
-import 'package:quiz_app/pages/auth/otp_page.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
@@ -161,9 +160,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                             final result = await onSubmitText();
 
                             if (result == true && context.mounted) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => OtpPage())
-                              );
+                              context.push("/otp");
                             }
                           },
                           child: Container(
@@ -204,9 +201,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (context) => LoginPage())
-                                );
+                                context.go("/login");
                               },
                               child: Text(
                                 'Login',

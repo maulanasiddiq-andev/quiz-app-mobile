@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/auth_input_component.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
-import 'package:quiz_app/pages/auth/register_page.dart';
-import 'package:quiz_app/pages/root_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -32,10 +31,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     ref.listen(authProvider, (previous, next) {
       if (next.isAuthenticated) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const RootPage()), 
-          (route) => false
-        );
+        context.go("/");
       }
     });
 
@@ -226,9 +222,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (context) => RegisterPage())
-                                );
+                                context.go("/register");
                               },
                               child: Text(
                                 'Daftar',
