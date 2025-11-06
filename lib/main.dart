@@ -22,10 +22,14 @@ import 'package:quiz_app/pages/quiz_create/quiz_question_create_page.dart';
 import 'package:quiz_app/pages/root_page.dart';
 import 'package:quiz_app/pages/take_quiz/take_quiz_page.dart';
 import 'package:quiz_app/pages/take_quiz/take_quiz_result_page.dart';
+import 'package:quiz_app/services/firebase_messaging_service.dart';
 import 'package:quiz_app/splash_page.dart';
 import 'package:quiz_app/theme/app_theme.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FirebaseMessagingService.initNotifications();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
