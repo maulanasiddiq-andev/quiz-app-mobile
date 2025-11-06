@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/notifiers/admin/user/user_list_notifier.dart';
-import 'package:quiz_app/pages/admin/user/user_detail_page.dart';
-import 'package:quiz_app/pages/admin/user/user_edit_page.dart';
 
 class UserListPage extends ConsumerStatefulWidget {
   const UserListPage({super.key});
@@ -80,9 +79,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                         ),
                         child: ListTile(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => UserDetailPage(userId: user.userId))
-                            );
+                            context.push("/user-detail/${user.userId}");
                           },
                           leading: ProfileImageComponent(
                             profileImage: user.profileImage,
@@ -99,14 +96,10 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                             onSelected: (value) async {
                               switch (value) {
                                 case 'view':
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (context) => UserDetailPage(userId: user.userId))
-                                  );
+                                  context.push("/user-detail/${user.userId}");
                                   break;
                                 case 'edit':
-                                  final result = await Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (context) => UserEditPage(userId: user.userId))
-                                  );
+                                  final result = await context.push("/user-edit/${user.userId}");
                 
                                   if (result != null && result == true) {
                                     notifier.refreshUsers();

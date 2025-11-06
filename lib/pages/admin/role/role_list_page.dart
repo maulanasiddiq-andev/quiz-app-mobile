@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/notifiers/admin/role/role_list_notifier.dart';
-import 'package:quiz_app/pages/admin/role/role_detail_page.dart';
-import 'package:quiz_app/pages/admin/role/role_edit_page.dart';
 
 class RoleListPage extends ConsumerStatefulWidget {
   const RoleListPage({super.key});
@@ -70,9 +69,7 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                     ...state.roles.map((role) {
                       return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => RoleDetailPage(roleId: role.roleId))
-                          );
+                          context.push("/role-detail/${role.roleId}");
                         },
                         child: Container(
                           width: double.infinity,
@@ -102,14 +99,10 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                               onSelected: (value) async {
                                 switch (value) {
                                   case 'view':
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => RoleDetailPage(roleId: role.roleId))
-                                    );
+                                    context.push("/role-detail/${role.roleId}");
                                     break;
                                   case 'edit':
-                                    final result = await Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => RoleEditPage(roleId: role.roleId))
-                                    );
+                                    final result = await context.push("/role-edit/${role.roleId}");
                   
                                     if (result != null && result == true) {
                                       notifier.refreshRoles();
