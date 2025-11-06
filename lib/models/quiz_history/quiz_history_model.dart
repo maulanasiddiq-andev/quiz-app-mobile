@@ -10,7 +10,7 @@ class QuizHistoryModel extends BaseModel {
   final String userId;
   final SimpleUserModel? user;
   final List<QuestionHistoryModel> questions;
-  final QuizModel quiz;
+  final QuizModel? quiz;
   final int questionCount;
   final int duration;
   final int trueAnswers;
@@ -36,7 +36,7 @@ class QuizHistoryModel extends BaseModel {
     required this.trueAnswers,
     required this.wrongAnswers,
     required this.score,
-    required this.quiz
+    this.quiz
   });
 
   QuizHistoryModel.fromJson(Map<String, dynamic> json)

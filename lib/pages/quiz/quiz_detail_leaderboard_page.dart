@@ -77,7 +77,7 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
                         spacing: 5,
                         children: [
                           Text(
-                            history.quiz.title,
+                            history.quiz!.title, // quiz must be included from the backend
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold
