@@ -55,6 +55,6 @@ class QuizHistoryModel extends BaseModel {
       trueAnswers = json['trueAnswers'],
       wrongAnswers = json['wrongAnswers'],
       score = json['score'],
-      quiz = QuizModel.fromJson(json['quiz']),
+      quiz = json['quiz'] != null ? QuizModel.fromJson(json['quiz']) : null,
       super.fromJson(json);
 }
