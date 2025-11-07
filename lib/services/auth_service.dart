@@ -140,4 +140,25 @@ class AuthService {
 
     return result;
   }
+  
+  static Future<BaseResponse<TokenModel>> logout() async {
+    // send fcm token to backend for handling push notification
+    final fcmToken = await FirebaseMessagingService.getFcmToken();
+    final body = jsonEncode({
+      "fcmToken": fcmToken
+    });
+    final response = await client.dio.post(
+      '${url}logout',
+      data: body
+    );
+
+    final BaseResponse<TokenModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => TokenModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
 }

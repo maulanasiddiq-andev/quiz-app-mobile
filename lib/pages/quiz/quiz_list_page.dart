@@ -34,6 +34,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
     final state = ref.watch(quizListProvider);
     final notifier = ref.read(quizListProvider.notifier);
     final colors = Theme.of(context).colorScheme;
@@ -42,14 +43,31 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
       appBar: CustomAppbarComponent(
         title: "Daftar Kuis",
         actions: [
-          IconButton(
-            onPressed: () {
-              ref.read(authProvider.notifier).logout();
+          if (authState.isLoadingLogout)
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: SizedBox(
+                width: 16,
+                height: 16,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: colors.onPrimary,
+                    strokeWidth: 2,  
+                  ),
+                ),
+              ),
+            )
+          else
+            IconButton(
+              onPressed: () async {
+                final result = await ref.read(authProvider.notifier).logout();
 
-              context.go("/login");
-            }, 
-            icon: Icon(Icons.logout)
-          )
+                if (result == true && context.mounted) {
+                  context.go("/login");
+                }
+              }, 
+              icon: Icon(Icons.logout)
+            )
         ],  
       ),
       body: ConnectionCheckComponent(
