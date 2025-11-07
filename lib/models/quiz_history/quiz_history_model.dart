@@ -1,5 +1,6 @@
 import 'package:quiz_app/models/base_model.dart';
 import 'package:quiz_app/models/identity/simple_user_model.dart';
+import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/models/quiz_history/question_history_model.dart';
 
 class QuizHistoryModel extends BaseModel {
@@ -9,6 +10,7 @@ class QuizHistoryModel extends BaseModel {
   final String userId;
   final SimpleUserModel? user;
   final List<QuestionHistoryModel> questions;
+  final QuizModel? quiz;
   final int questionCount;
   final int duration;
   final int trueAnswers;
@@ -34,6 +36,7 @@ class QuizHistoryModel extends BaseModel {
     required this.trueAnswers,
     required this.wrongAnswers,
     required this.score,
+    this.quiz
   });
 
   QuizHistoryModel.fromJson(Map<String, dynamic> json)
@@ -52,5 +55,6 @@ class QuizHistoryModel extends BaseModel {
       trueAnswers = json['trueAnswers'],
       wrongAnswers = json['wrongAnswers'],
       score = json['score'],
+      quiz = json['quiz'] != null ? QuizModel.fromJson(json['quiz']) : null,
       super.fromJson(json);
 }

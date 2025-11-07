@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
@@ -81,13 +82,9 @@ class _QuizQuestionCreatePageState extends ConsumerState<QuizQuestionCreatePage>
                   ),
                   Expanded(
                     child: QuizNavigationButtonComponent(
-                      onTap: () async {
-                        final result = await notifier.createQuiz();
-          
-                        if (result && context.mounted) {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        }
+                      onTap: () {
+                        // to review quiz page
+                        context.push("/create-quiz-review");
                       }, 
                       icon: Icons.save
                     )

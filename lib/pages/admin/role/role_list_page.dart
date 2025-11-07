@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/notifiers/admin/role/role_list_notifier.dart';
-import 'package:quiz_app/pages/admin/role/role_detail_page.dart';
-import 'package:quiz_app/pages/admin/role/role_edit_page.dart';
 
 class RoleListPage extends ConsumerStatefulWidget {
   const RoleListPage({super.key});
@@ -14,6 +13,20 @@ class RoleListPage extends ConsumerStatefulWidget {
 }
 
 class _RoleListPageState extends ConsumerState<RoleListPage> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
+        final notifier = ref.read(roleListProvider.notifier);
+        notifier.loadMoreDatas();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(roleListProvider);
@@ -51,13 +64,12 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                  controller: scrollController,
                   children: [
                     ...state.roles.map((role) {
                       return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => RoleDetailPage(roleId: role.roleId))
-                          );
+                          context.push("/role-detail/${role.roleId}");
                         },
                         child: Container(
                           width: double.infinity,
@@ -69,24 +81,28 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                             )
                           ),
                           child: ListTile(
-                            title: Text(role.name),
-                            subtitle: role.isMain
-                              ? Text("default")
-                              : null,
+                            title: Row(
+                              children: [
+                                Text(role.name),
+                                if (role.isMain)
+                                  Icon(Icons.check, color: Colors.green),
+                              ],
+                            ),
+                            subtitle: Text(
+                              role.description.isEmpty
+                                ? "-"
+                                : role.description
+                            ),
                             trailing: PopupMenuButton<String>(
                               padding: EdgeInsets.zero,
                               icon: const Icon(Icons.more_vert),
                               onSelected: (value) async {
                                 switch (value) {
                                   case 'view':
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => RoleDetailPage(roleId: role.roleId))
-                                    );
+                                    context.push("/role-detail/${role.roleId}");
                                     break;
                                   case 'edit':
-                                    final result = await Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => RoleEditPage(roleId: role.roleId))
-                                    );
+                                    final result = await context.push("/role-edit/${role.roleId}");
                   
                                     if (result != null && result == true) {
                                       notifier.refreshRoles();
@@ -115,7 +131,13 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                           ),
                         ),
                       );
-                    })
+                    }),
+                    if (state.isLoadingMore)
+                      Center(
+                        child: CircularProgressIndicator(
+                          color: colors.primary,
+                        ),
+                      )
                   ],
                 )
             ),

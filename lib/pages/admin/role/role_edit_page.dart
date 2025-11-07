@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/input_component.dart';
@@ -86,7 +87,7 @@ class _RoleEditPageState extends ConsumerState<RoleEditPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Atur sebagai roledefault"),
+                              Text("Atur sebagai role default"),
                               Switch(
                                 value: state.role!.isMain, 
                                 onChanged: (value) {
@@ -150,7 +151,7 @@ class _RoleEditPageState extends ConsumerState<RoleEditPage> {
                     final result = await submitRole();
 
                     if (result == true && context.mounted) {
-                      Navigator.of(context).pop(true);
+                      context.pop(true);
                     }
                   }, 
                   text: "Submit",

@@ -13,7 +13,11 @@ class UserListNotifier extends StateNotifier<UserListState> {
   }
 
   Future<void> getUsers() async {
-    state = state.copyWith(isLoading: true);
+    if (state.pageIndex == 0) {
+      state = state.copyWith(isLoading: true);
+    } else {
+      state = state.copyWith(isLoadingMore: true);
+    }
 
     try {
       final queryParameters = {
@@ -38,6 +42,15 @@ class UserListNotifier extends StateNotifier<UserListState> {
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false, isLoadingMore: false);
+    }
+  }
+
+  Future<void> loadMoreDatas() async {
+    if (state.hasNextPage) {
+      if (state.isLoading || state.isLoadingMore) return;
+
+      state = state.copyWith(pageIndex: state.pageIndex + 1);
+      await getUsers();
     }
   }
 

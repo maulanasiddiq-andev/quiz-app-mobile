@@ -13,7 +13,11 @@ class CategoryListNotifier extends StateNotifier<CategoryListState> {
   }
 
   Future<void> getCategories() async {
-    state = state.copyWith(isLoading: true);
+    if (state.pageIndex == 0) {
+      state = state.copyWith(isLoading: true);
+    } else {
+      state = state.copyWith(isLoadingMore: true);
+    }
 
     try {
       Map<String, dynamic> queryParameters = {
@@ -38,6 +42,15 @@ class CategoryListNotifier extends StateNotifier<CategoryListState> {
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false, isLoadingMore: false);
+    }
+  }
+
+  Future<void> loadMoreDatas() async {
+    if (state.hasNextPage) {
+      if (state.isLoading || state.isLoadingMore) return;
+
+      state = state.copyWith(pageIndex: state.pageIndex + 1);
+      await getCategories();
     }
   }
 

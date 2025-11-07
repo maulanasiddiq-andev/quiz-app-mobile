@@ -18,7 +18,11 @@ class SelectDataNotifier extends StateNotifier<SelectDataState> {
   }
 
   Future<void> getDatas() async {
-    state = state.copyWith(isLoading: true);
+    if (state.pageIndex == 0) {
+      state = state.copyWith(isLoading: true);
+    } else {
+      state = state.copyWith(isLoadingMore: true);
+    }
 
     try {
       dynamic result;
@@ -51,6 +55,7 @@ class SelectDataNotifier extends StateNotifier<SelectDataState> {
 
           datas.add(selectData);
         }
+        state = state.copyWith(hasNextPage: result.data!.hasNextPage);
       }
       
       if (result is BaseResponse<SearchResponse<RoleModel>>) {
@@ -62,19 +67,46 @@ class SelectDataNotifier extends StateNotifier<SelectDataState> {
 
           datas.add(selectData);
         }
+        state = state.copyWith(hasNextPage: result.data!.hasNextPage);
       }
 
       state = state.copyWith(
-        datas: datas,
-        isLoading: false
+        datas: [...state.datas, ...datas],
+        isLoading: false,
+        isLoadingMore: false,
       );
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false, isLoadingMore: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false, isLoadingMore: false);
     }
+  }
+
+  Future<void> loadMoreDatas() async {
+    if (state.hasNextPage) {
+      if (state.isLoading || state.isLoadingMore) return;
+
+      state = state.copyWith(pageIndex: state.pageIndex + 1);
+      await getDatas();
+    }
+  }
+
+  Future<void> refreshDatas() async {
+    state = state.copyWith(pageIndex: 0, datas: []);
+
+    await getDatas();
+  }
+
+  Future<void> searchDatas(String value) async {
+    state = state.copyWith(search: value);
+    await refreshDatas();
+  }
+
+  Future<void> changeSortDir(String value) async {
+    state = state.copyWith(sortDir: value);
+    await refreshDatas();
   }
 }
 

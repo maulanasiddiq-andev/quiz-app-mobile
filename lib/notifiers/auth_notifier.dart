@@ -130,14 +130,31 @@ class AuthNotifier extends StateNotifier<AuthState> {
     return emails;
   }
 
-  Future<void> logout() async {
-    await deleteCredential();
-    state = state.copyWith(isAuthenticated: false);
+  Future<bool> logout() async {
+    state = state.copyWith(isLoadingLogout: true);
+    try {
+      // delete the fcm token from the backend
+      await AuthService.logout();
+
+      await deleteCredential();
+      state = state.copyWith(isLoadingLogout: false); 
+
+      return true;
+    } on ApiException catch (_) {
+      await deleteCredential();
+      state = state.copyWith(isLoadingLogout: false);
+
+      return false;
+    } on DioException catch (_) {
+      await deleteCredential();
+      state = state.copyWith(isLoadingLogout: false);
+
+      return false;
+    }
   }
 
   Future<void> deleteCredential() async {
     await storage.delete(key: 'token');
-    await storage.delete(key: 'user');
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:quiz_app/interceptor/client_settings.dart';
 import 'package:quiz_app/models/auth/token_model.dart';
 import 'package:quiz_app/models/identity/simple_user_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
+import 'package:quiz_app/services/firebase_messaging_service.dart';
 
 class AuthService {
   static ClientSettings client = ClientSettings();
@@ -13,7 +14,14 @@ class AuthService {
     String email,
     String password,
   ) async {
-    final body = jsonEncode({"email": email, "password": password});
+    // send fcm token to backend for handling push notification
+    final fcmToken = await FirebaseMessagingService.getFcmToken();
+    // String? device;
+    final body = jsonEncode({
+      "email": email, 
+      "password": password,
+      "fcmToken": fcmToken
+    });
     final response = await client.dio.post(
       '${url}login',
       data: body
@@ -112,9 +120,35 @@ class AuthService {
   static Future<BaseResponse<TokenModel>> loginWithGoogle(
     String idToken,
   ) async {
-    final body = jsonEncode({"idToken": idToken});
+    // send fcm token to backend for handling push notification
+    final fcmToken = await FirebaseMessagingService.getFcmToken();
+    final body = jsonEncode({
+      "idToken": idToken,
+      "fcmToken": fcmToken
+    });
     final response = await client.dio.post(
       '${url}login-with-google',
+      data: body
+    );
+
+    final BaseResponse<TokenModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => TokenModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+  
+  static Future<BaseResponse<TokenModel>> logout() async {
+    // send fcm token to backend for handling push notification
+    final fcmToken = await FirebaseMessagingService.getFcmToken();
+    final body = jsonEncode({
+      "fcmToken": fcmToken
+    });
+    final response = await client.dio.post(
+      '${url}logout',
       data: body
     );
 

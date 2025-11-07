@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/otp_input_component.dart';
 import 'package:quiz_app/notifiers/auth/register_notifier.dart';
-import 'package:quiz_app/pages/auth/login_page.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
 class OtpPage extends ConsumerStatefulWidget {
@@ -140,9 +140,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                                     final result = await onSubmitOtpCode();
 
                                     if (result == true && context.mounted) {
-                                      Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(builder: (context) => LoginPage())
-                                      );
+                                      context.go("/login");
                                     }
                                   }
                                 }

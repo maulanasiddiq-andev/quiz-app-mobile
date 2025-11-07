@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/notifiers/category/category_detail_notifier.dart';
-import 'package:quiz_app/pages/category/category_edit_page.dart';
 
 class CategoryDetailPage extends ConsumerStatefulWidget {
   final String categoryId;
@@ -68,9 +68,7 @@ class _CategoryDetailPageState extends ConsumerState<CategoryDetailPage> {
               padding: const EdgeInsets.all(10),
               child: CustomButtonComponent(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => CategoryEditPage(category: state.category!))
-                  );
+                  context.push("/category-edit/${widget.categoryId}");
                 }, 
                 text: "Edit"
               ),

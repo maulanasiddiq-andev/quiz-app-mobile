@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/notifiers/category/category_list_notifier.dart';
-import 'package:quiz_app/pages/category/category_add_page.dart';
-import 'package:quiz_app/pages/category/category_detail_page.dart';
-import 'package:quiz_app/pages/category/category_edit_page.dart';
 
 class CategoryListPage extends ConsumerStatefulWidget {
   const CategoryListPage({super.key});
@@ -15,6 +13,20 @@ class CategoryListPage extends ConsumerStatefulWidget {
 }
 
 class _CategoryListPageState extends ConsumerState<CategoryListPage> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
+        final notifier = ref.read(categoryListProvider.notifier);
+        notifier.loadMoreDatas();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(categoryListProvider);
@@ -27,9 +39,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
         actions: [
           IconButton(
             onPressed: () async {
-              final result = await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CategoryAddPage())
-              );
+              final result = await context.push("/category-add");
 
               if (result != null && result == true) {
                 notifier.refreshCategories();
@@ -71,13 +81,12 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                controller: scrollController,
                   children: [
                     ...state.categories.map((category) {
                       return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => CategoryDetailPage(categoryId: category.categoryId))
-                          );
+                          context.push("/category-detail/${category.categoryId}");
                         },
                         child: Container(
                           width: double.infinity,
@@ -93,6 +102,8 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                               spacing: 10,
                               children: [
                                 Text(category.name),
+                                if (category.isMain)
+                                  Icon(Icons.check, color: Colors.green),
                                 if (state.deletedCategoryId == category.categoryId)
                                   SizedBox(
                                     height: 14,
@@ -105,20 +116,21 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                                   )
                               ],
                             ),
+                            subtitle: Text(
+                              category.description.isEmpty
+                                ? "-"
+                                : category.description
+                            ),
                             trailing: PopupMenuButton<String>(
                               padding: EdgeInsets.zero,
                               icon: const Icon(Icons.more_vert),
                               onSelected: (value) async {
                                 switch (value) {
                                   case 'view':
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => CategoryDetailPage(categoryId: category.categoryId))
-                                    );
+                                    context.push("/category-detail/${category.categoryId}");
                                     break;
                                   case 'edit':
-                                    final result = await Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => CategoryEditPage(category: category))
-                                    );
+                                    final result = await context.push("/category-edit/${category.categoryId}");
                   
                                     if (result != null && result == true) {
                                       notifier.refreshCategories();
@@ -148,7 +160,13 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                           ),
                         ),
                       );
-                    })
+                    }),
+                    if (state.isLoadingMore)
+                      Center(
+                        child: CircularProgressIndicator(
+                          color: colors.primary,
+                        ),
+                      )
                   ],
                 )
             ),
