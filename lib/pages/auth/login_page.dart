@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/auth_input_component.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -31,7 +32,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     ref.listen(authProvider, (previous, next) {
       if (next.isAuthenticated) {
-        context.go("/");
+        context.go("/${ResourceConstant.quiz}");
       }
     });
 

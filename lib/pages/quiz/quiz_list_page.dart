@@ -5,6 +5,8 @@ import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_container_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
@@ -177,7 +179,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                           ...state.quizzes.map((quiz) {
                             return QuizContainerComponent(
                               onTap: () async {
-                                final result = await context.push("/detail/${quiz.quizId}");
+                                final result = await context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${quiz.quizId}");
 
                                 // if the delete succeed in detail page
                                 // remove the quiz from the list
@@ -198,7 +200,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
               ),
               TextButton(
                 onPressed: () {
-                  context.push("/create-quiz");
+                  context.push("/${ResourceConstant.quiz}/${ActionConstant.create}");
                 },
                 child: Text("Buat Kuis"),
               ),

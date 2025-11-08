@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_navigation_button_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
 import 'package:quiz_app/pages/take_quiz/take_quiz_result_page.dart';
 import 'package:quiz_app/utils/format_time.dart';
@@ -355,7 +357,7 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
                             final result = await notifier.finishQuiz(duration);
           
                             if (result == true && context.mounted) {
-                              context.push("/take-quiz-result");
+                              context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${state.quiz!.quizId}/${ActionConstant.take}/${ActionConstant.result}");
                             }
                           }
                         }

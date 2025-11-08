@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/admin/role/role_list_notifier.dart';
 
 class RoleListPage extends ConsumerStatefulWidget {
@@ -69,7 +71,7 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                     ...state.roles.map((role) {
                       return GestureDetector(
                         onTap: () {
-                          context.push("/role-detail/${role.roleId}");
+                          context.push("/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
                         },
                         child: Container(
                           width: double.infinity,
@@ -82,6 +84,7 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                           ),
                           child: ListTile(
                             title: Row(
+                              spacing: 10,
                               children: [
                                 Text(role.name),
                                 if (role.isMain)
@@ -99,10 +102,10 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                               onSelected: (value) async {
                                 switch (value) {
                                   case 'view':
-                                    context.push("/role-detail/${role.roleId}");
+                                    context.push("/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
                                     break;
                                   case 'edit':
-                                    final result = await context.push("/role-edit/${role.roleId}");
+                                    final result = await context.push("/${ResourceConstant.role}/${ActionConstant.edit}/${role.roleId}");
                   
                                     if (result != null && result == true) {
                                       notifier.refreshRoles();

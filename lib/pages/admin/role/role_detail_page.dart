@@ -5,7 +5,9 @@ import 'package:quiz_app/components/check_module_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/detail_field_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
 import 'package:quiz_app/constants/module_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/admin/role/role_detail_notifier.dart';
 
 class RoleDetailPage extends ConsumerStatefulWidget {
@@ -94,7 +96,7 @@ class _RoleDetailPageState extends ConsumerState<RoleDetailPage> {
                         child: Expanded(
                           child: CustomButtonComponent(
                             onTap: () async {
-                              final result = await context.push("/role-edit/${widget.roleId}");
+                              final result = await context.push("/${ResourceConstant.role}/${ActionConstant.edit}/${widget.roleId}");
 
                               if (result != null && result == true) {
                                 notifier.getRoleById(widget.roleId);

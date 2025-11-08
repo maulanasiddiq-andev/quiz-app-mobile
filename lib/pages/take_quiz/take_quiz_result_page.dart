@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
@@ -24,7 +25,7 @@ class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           // navigate back three times for reaching quiz list page
-          context.go("/");
+          context.go("/${ResourceConstant.quiz}");
         }
       },
       child: Scaffold(
@@ -62,7 +63,7 @@ class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
                   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: CustomButtonComponent(
                     onTap: () {
-                      context.go("/");
+                      context.go("/${ResourceConstant.quiz}");
                     },
                     text: "Kembali",
                   ),

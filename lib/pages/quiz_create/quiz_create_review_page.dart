@@ -5,6 +5,7 @@ import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/detail_field_component.dart';
 import 'package:quiz_app/components/pick_image_component.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
 import 'package:quiz_app/styles/text_style.dart';
 
@@ -124,7 +125,7 @@ class _QuizCreateReviewPageState extends ConsumerState<QuizCreateReviewPage> {
 
                 if (result == true && context.mounted) {
                   // back to list page
-                  context.go("/");
+                  context.go("/${ResourceConstant.quiz}");
                 }
               },
               text: "Buat",

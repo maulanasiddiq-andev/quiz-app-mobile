@@ -5,6 +5,8 @@ import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
@@ -105,7 +107,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   child: GestureDetector(
                     onTap: () {
-                      context.push("/detail-leaderboard/${widget.quizId}");
+                      context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${widget.quizId}/${ActionConstant.leaderboard}");
                     },
                     child: Container(
                       width: double.infinity,
@@ -165,7 +167,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                               .getQuizWithQuestions(state.quiz!);
             
                           if (result == true && context.mounted) {
-                            context.push("/take-quiz");
+                            context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${widget.quizId}/${ActionConstant.take}");
                           }
                         },
                         text: "Mulai",

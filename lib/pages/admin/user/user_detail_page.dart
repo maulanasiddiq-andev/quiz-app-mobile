@@ -6,7 +6,9 @@ import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/detail_field_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
 import 'package:quiz_app/constants/module_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/admin/user/user_detail_notifier.dart';
 import 'package:quiz_app/utils/format_date.dart';
 
@@ -100,7 +102,7 @@ class _UserDetailPageState extends ConsumerState<UserDetailPage> {
                         child: Expanded(
                           child: CustomButtonComponent(
                             onTap: () async {
-                              final result = await context.push("/user-edit/${widget.userId}");
+                              final result = await context.push("/${ResourceConstant.user}/${ActionConstant.edit}/${widget.userId}");
 
                               if (result != null && result == true) {
                                 notifier.getUserById(widget.userId);

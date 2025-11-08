@@ -7,6 +7,8 @@ import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/input_component.dart';
 import 'package:quiz_app/components/pick_image_component.dart';
 import 'package:quiz_app/components/select_data_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/constants/select_data_constant.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
 
@@ -117,7 +119,7 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
                     child: CustomButtonComponent(
                       onTap: () {
                         if (formKey.currentState!.validate()) {
-                          context.push("/create-quiz-questions");
+                          context.push("/${ResourceConstant.quiz}/${ActionConstant.create}/${ResourceConstant.question}");
                         }
                       },
                       text: "Buat pertanyaan",
