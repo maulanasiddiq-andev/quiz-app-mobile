@@ -75,7 +75,7 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => QuizHistoryDetailPage(quizHistory: history),
+                            builder: (context) => QuizHistoryDetailPage(quizHistoryId: history.quizHistoryId),
                           ),
                         );
                       },
@@ -86,10 +86,7 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
                         children: [
                           Text(
                             history.quiz!.title, // quiz must be included from the backend
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
-                            ),
+                            style: CustomTextStyle.defaultBoldTextStyle,
                           ),
                           Row(
                             spacing: 5,
@@ -99,16 +96,18 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
                                 profileImage: history.user?.profileImage,
                               ),
                               Text(
-                                history.user?.name ??
-                                    "user",
+                                history.user?.name ?? "user",
+                                style: CustomTextStyle.defaultTextStyle,
                               ),
                             ],
                           ),
                           Text(
                             "Nilai: ${history.score.toString()}",
+                              style: CustomTextStyle.defaultTextStyle,
                           ),
                           Text(
                             "Durasi: ${formatTime(history.duration)}",
+                              style: CustomTextStyle.defaultTextStyle,
                           ),
                         ],
                       ),
