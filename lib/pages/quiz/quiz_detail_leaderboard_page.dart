@@ -4,6 +4,7 @@ import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_leaderboard_notifier.dart';
 import 'package:quiz_app/pages/quiz_history/quiz_history_detail_page.dart';
+import 'package:quiz_app/styles/text_style.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
 class QuizDetailLeaderboardPage extends ConsumerStatefulWidget {
@@ -44,6 +45,13 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
             controller: scrollController,
             children: [
               SizedBox(height: 5),
+              if (state.histories.isEmpty)
+                Center(
+                  child: Text(
+                    "Kuis belum dikerjakan",
+                    style: CustomTextStyle.defaultTextStyle,
+                  ),
+                ),
               ...state.histories.map((history) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),

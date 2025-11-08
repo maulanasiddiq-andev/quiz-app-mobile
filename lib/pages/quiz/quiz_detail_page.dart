@@ -4,9 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
+import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
+import 'package:quiz_app/styles/text_style.dart';
+import 'package:quiz_app/utils/format_date.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
 class QuizDetailPage extends ConsumerStatefulWidget {
@@ -18,20 +21,6 @@ class QuizDetailPage extends ConsumerStatefulWidget {
 }
 
 class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
-  final ScrollController scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    scrollController.addListener(() {
-      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
-        final notifier = ref.read(quizDetailProvider(widget.quizId).notifier);
-        notifier.loadMoreHistories();
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizDetailProvider(widget.quizId));
@@ -49,7 +38,6 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    controller: scrollController,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 15,
@@ -57,42 +45,56 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 10,
                         children: [
                           Text(
                             state.quiz?.title ?? "Judul Kuis",
-                            style: TextStyle(fontSize: 20),
+                            style: CustomTextStyle.headerStyle,
                           ),
-                          state.quiz?.imageUrl != null
-                              ? Column(
-                                  children: [
-                                    SizedBox(height: 10),
-                                    ClipRRect(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(10),
-                                      child: Image.network(
-                                        state.quiz!.imageUrl!,
-                                        width: double.infinity,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                  ],
-                                )
-                              : SizedBox(height: 10),
+                          // user is always included while getting quiz detail
+                          if (state.quiz?.user != null)
+                            Row(
+                              spacing: 5,
+                              children: [
+                                Text(
+                                  "Oleh:",
+                                  style: CustomTextStyle.defaultTextStyle,
+                                ),
+                                ProfileImageComponent(profileImage: state.quiz?.user?.profileImage),
+                                Text(
+                                  state.quiz!.user!.name,
+                                  style: CustomTextStyle.defaultTextStyle,
+                                ),
+
+                              ],
+                            ),
+                          Text(
+                            "Dibuat pada ${formatDate(state.quiz?.modifiedTime)}",
+                            style: CustomTextStyle.defaultTextStyle,
+                          ),
+                          if (state.quiz?.imageUrl != null)
+                            ClipRRect(
+                              borderRadius: BorderRadiusGeometry.circular(10),
+                              child: Image.network(
+                                state.quiz!.imageUrl!,
+                                width: double.infinity,
+                              ),
+                            ),
                           Text(
                             state.quiz?.description ?? "Deskripsi Kuis",
-                            style: TextStyle(fontSize: 16),
+                            style: CustomTextStyle.defaultTextStyle,
                           ),
-                          SizedBox(height: 10),
                           Text(
                             "Jumlah Pertanyaan: ${state.quiz?.questionCount ?? 0}",
+                            style: CustomTextStyle.defaultTextStyle,
                           ),
-                          SizedBox(height: 10),
                           Text(
                             "Waktu pengerjaan: ${formatTime(state.quiz?.time == null ? 0 : state.quiz!.time * 60)}",
+                            style: CustomTextStyle.defaultTextStyle,
                           ),
-                          SizedBox(height: 10),
                           Text(
                             "Dikerjakan: ${state.quiz?.historiesCount ?? 0} kali",
+                            style: CustomTextStyle.defaultTextStyle,
                           ),
                         ],
                       ),
@@ -114,9 +116,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                       ),
                       child: Text(
                         "Leaderboard",
-                        style: TextStyle(
-                          fontSize: 16
-                        ),
+                        style: CustomTextStyle.defaultTextStyle,
                       ),
                     ),
                   ),
