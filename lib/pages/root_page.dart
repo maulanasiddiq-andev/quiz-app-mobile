@@ -23,24 +23,28 @@ class _RootPageState extends ConsumerState<RootPage> {
       page: QuizListPage(),
       title: 'Beranda',
       icon: Icons.home,
-      moduleNames: [ModuleConstant.searchQuiz]
+      moduleNames: [ModuleConstant.searchQuiz],
+      index: 0
     ),
     BottomMenuModel(
       page: CategoryListPage(),
       title: 'Kategori',
       icon: Icons.category,
-      moduleNames: [ModuleConstant.searchCategory, ModuleConstant.detailCategory]
+      moduleNames: [ModuleConstant.searchCategory, ModuleConstant.detailCategory],
+      index: 1
     ),
     BottomMenuModel(
       page: AdminPage(),
       title: 'Admin',
       icon: Icons.admin_panel_settings,
-      moduleNames: [ModuleConstant.searchUser, ModuleConstant.searchRole]
+      moduleNames: [ModuleConstant.searchUser, ModuleConstant.searchRole],
+      index: 2
     ),
     BottomMenuModel(
       page: ProfilePage(),
       title: 'Profile',
-      moduleNames: []
+      moduleNames: [],
+      index: 3
     )
   ];
 
@@ -61,8 +65,12 @@ class _RootPageState extends ConsumerState<RootPage> {
     final modules = state.token?.user?.role?.roleModules;
     final colors = Theme.of(context).colorScheme;
 
+    final shownMenus = menus
+      .where((menu) => modules != null && menu.moduleNames.every((moduleName) => modules.any((module) => module.roleModuleName == moduleName)))
+      .toList();
+
     return Scaffold(
-      body: menus[_currentIndex].page,
+      body: shownMenus[_currentIndex].page,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         onTap: _onTabTapped,
@@ -70,9 +78,7 @@ class _RootPageState extends ConsumerState<RootPage> {
         backgroundColor: colors.primary,
         selectedItemColor: colors.onPrimary,
         unselectedItemColor: Colors.white,
-        items: menus
-          .where((menu) => modules != null && menu.moduleNames.every((moduleName) => modules.any((module) => module.roleModuleName == moduleName)))
-          .map((menu) {
+        items: shownMenus.map((menu) {
             if (menu.icon != null) {
               return BottomNavigationBarItem(
                 icon: Icon(menu.icon),
@@ -97,12 +103,14 @@ class BottomMenuModel {
   Widget page;
   String title;
   List<String> moduleNames;
+  int index;
   IconData? icon;
 
   BottomMenuModel({
     required this.page,
     required this.title,
     required this.moduleNames,
+    required this.index,
     this.icon,
   });
 }
