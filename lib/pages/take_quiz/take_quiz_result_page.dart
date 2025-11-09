@@ -6,6 +6,7 @@ import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
+import 'package:quiz_app/styles/text_style.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
 class TakeQuizResultPage extends ConsumerStatefulWidget {
@@ -34,40 +35,37 @@ class _TakeQuizResultPageState extends ConsumerState<TakeQuizResultPage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
+              spacing: 10,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(),
                 Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 10,
                     children: [
-                      Row(
-                        children: [
-                          Text("Jawaban benar: "),
-                          Text(state.quizHistory!.trueAnswers.toString()),
-                        ],
+                      Text(
+                        "Jawaban benar: ${state.quizHistory!.trueAnswers}",
+                        style: CustomTextStyle.defaultTextStyle,
                       ),
-                      Row(
-                        children: [
-                          Text("Nilai: "),
-                          Text(state.quizHistory!.score.toString()),
-                        ],
+                      Text(
+                        "Nilai: ${state.quizHistory!.score}",
+                        style: CustomTextStyle.defaultTextStyle,
                       ),
-                      Row(
-                        children: [
-                          Text("Durasi Pengerjaan: "),
-                          Text(formatTime(state.quizHistory!.duration)),
-                        ],
+                      Text(
+                        "Durasi Pengerjaan: ${formatTime(state.quizHistory!.duration)}",
+                        style: CustomTextStyle.defaultTextStyle,
                       ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: CustomButtonComponent(
-                    onTap: () {
-                      context.go("/${ResourceConstant.quiz}");
-                    },
-                    text: "Kembali",
-                  ),
+                CustomButtonComponent(
+                  onTap: () {
+                    context.go("/${ResourceConstant.quiz}");
+                  },
+                  text: "Kembali",
                 ),
+                SizedBox(),
               ],
             ),
           ),

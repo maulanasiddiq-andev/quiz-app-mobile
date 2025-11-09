@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_navigation_button_component.dart';
@@ -56,71 +57,29 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
   }
 
   Future<bool> confirmLeaveDialog() async {
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Perhatian"),
-          content: Text(
-            "Apakah anda yakin ingin meninggalkan kuis ini?",
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                ref.read(takeQuizProvider.notifier).confirmToLeave();
-                // close the dialog
-                Navigator.of(context).pop(true);
-              },
-              child: Text("Ya", style: TextStyle(color: Colors.red)),
-            ),
-            TextButton(
-              onPressed: () {
-                // close the dialog
-                Navigator.of(context).pop(false);
-              },
-              child: Text("Tidak", style: TextStyle(color: Colors.blue)),
-            ),
-          ],
-        );
-      },
-    );
-
-    return result ?? false;
-  }
-
-  Future<bool> confirmSubmittingQuiz(int unansweredQuestionCount) async {
-    final result = await showDialog<bool>(
+    final result = confirmDialog(
       context: context, 
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Perhatian"),
-          content: Text(
-            "Apakah anda yakin ingin menyelesaikan kuis ini?\nAnda masih punya waktu ${formatTime(seconds)}${unansweredQuestionCount > 0 ? ' dan $unansweredQuestionCount soal belum terjawab.' : '.'}",
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                ref.read(takeQuizProvider.notifier).confirmToLeave();
-                // close the dialog
-                Navigator.of(context).pop(true);
-              },
-              child: Text("Ya", style: TextStyle(color: Colors.red)),
-            ),
-            TextButton(
-              onPressed: () {
-                // close the dialog
-                Navigator.of(context).pop(false);
-              },
-              child: Text("Tidak", style: TextStyle(color: Colors.blue)),
-            ),
-          ],
-        );
+      title: "Perhatian",
+      content: "Apakah anda yakin ingin meninggalkan kuis ini?", 
+      onConfirm: () {
+        ref.read(takeQuizProvider.notifier).confirmToLeave();
       }
     );
 
-    return result ?? false;
+    return result;
+  }
+
+  Future<bool> confirmSubmittingQuiz(int unansweredQuestionCount) async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian",
+      content: "Apakah anda yakin ingin menyelesaikan kuis ini?\nAnda masih punya waktu ${formatTime(seconds)}${unansweredQuestionCount > 0 ? ' dan $unansweredQuestionCount soal belum terjawab.' : '.'}", 
+      onConfirm: () {
+        ref.read(takeQuizProvider.notifier).confirmToLeave();
+      }
+    );
+
+    return result;
   } 
 
   Future timeOverAlert() async {
@@ -275,6 +234,7 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Column(
+                      spacing: 10,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -284,23 +244,19 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 10),
                         Text(
                           currentQuestion.text,
                           style: TextStyle(fontSize: 18),
                         ),
-                        currentQuestion.imageUrl != null
-                            ? Column(
-                                children: [
-                                  SizedBox(height: 10),
-                                  Image.network(
-                                    currentQuestion.imageUrl!,
-                                    width: double.infinity,
-                                  ),
-                                  SizedBox(height: 10),
-                                ],
-                              )
-                            : SizedBox(height: 10),
+                        if (currentQuestion.imageUrl != null)
+                          Column(
+                            children: [
+                              Image.network(
+                                currentQuestion.imageUrl!,
+                                width: double.infinity,
+                              ),
+                            ],
+                          ),
                         RadioGroup(
                           groupValue: currentQuestion.selectedAnswerOrder,
                           onChanged: (int? value) {
