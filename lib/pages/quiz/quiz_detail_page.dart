@@ -86,6 +86,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                             state.quiz?.description ?? "Deskripsi Kuis",
                             style: CustomTextStyle.defaultTextStyle,
                           ),
+                          Divider(),
                           Text(
                             "Jumlah Pertanyaan: ${state.quiz?.questionCount ?? 0}",
                             style: CustomTextStyle.defaultTextStyle,
