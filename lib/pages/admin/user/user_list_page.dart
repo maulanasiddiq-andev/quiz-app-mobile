@@ -80,6 +80,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   controller: scrollController,
                   children: [
                     ...state.users.map((user) {

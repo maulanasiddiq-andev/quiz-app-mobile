@@ -79,6 +79,7 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   controller: scrollController,
                   children: [
                     ...state.roles.map((role) {

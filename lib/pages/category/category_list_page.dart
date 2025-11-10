@@ -80,6 +80,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                physics: AlwaysScrollableScrollPhysics(),
                 controller: scrollController,
                   children: [
                     ...state.categories.map((category) {

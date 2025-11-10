@@ -176,6 +176,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: ListView(
+                        physics: AlwaysScrollableScrollPhysics(),
                         controller: scrollController,
                         children: [
                           ...state.quizzes.map((quiz) {

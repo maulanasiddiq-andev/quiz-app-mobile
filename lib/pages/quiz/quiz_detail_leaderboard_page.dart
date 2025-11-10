@@ -42,6 +42,7 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
             child: CircularProgressIndicator(color: colors.primary),
           )
         : ListView(
+            physics: AlwaysScrollableScrollPhysics(),
             controller: scrollController,
             children: [
               SizedBox(height: 5),
