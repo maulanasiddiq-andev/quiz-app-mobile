@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/routes/router.dart';
@@ -6,7 +9,14 @@ import 'package:quiz_app/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FirebaseMessagingService.initNotifications();
+
+  // if the platform is not web
+  if (!kIsWeb) {
+    // if the platform is android or iOS
+    if (Platform.isAndroid || Platform.isIOS) {
+      await FirebaseMessagingService.initNotifications();
+    }
+  }
 
   runApp(const ProviderScope(child: MyApp()));
 }
