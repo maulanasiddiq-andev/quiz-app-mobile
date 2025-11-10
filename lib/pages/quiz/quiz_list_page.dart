@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/check_module_component.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_container_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/module_constant.dart';
 import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
@@ -198,14 +200,17 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                       ),
                   ),
               ),
-              TextButton(
-                onPressed: () {
-                  context.push("/${ResourceConstant.quiz}/${ActionConstant.create}");
-                },
-                child: Text("Buat Kuis"),
-              ),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: CheckModuleComponent(
+        moduleNames: [ModuleConstant.createCategory],
+        child: FloatingActionButton(
+          onPressed: () {
+            context.push("/${ResourceConstant.quiz}/${ActionConstant.create}");
+          },
+          child: Icon(Icons.create),
         ),
       ),
     );

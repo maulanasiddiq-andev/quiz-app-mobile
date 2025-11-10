@@ -11,6 +11,7 @@ import 'package:quiz_app/constants/action_constant.dart';
 import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/constants/select_data_constant.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
+import 'package:quiz_app/states/quiz/quiz_create_state.dart';
 
 class QuizDetailCreatePage extends ConsumerStatefulWidget {
   const QuizDetailCreatePage({super.key});
@@ -25,13 +26,32 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController timeController = TextEditingController();
-  String? selectedCategoryId;
+
+  void _syncControllers(QuizCreateState? previous, QuizCreateState next) {
+    final updates = {
+      titleController: next.title,
+      descriptionController: next.description,
+      timeController: next.time.toString(),
+    };
+
+    for (final entry in updates.entries) {
+      final controller = entry.key;
+      final newText = entry.value;
+      if (controller.text != newText) {
+        controller.text = newText;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizCreateProvider);
     final notifier = ref.read(quizCreateProvider.notifier);
     final colors = Theme.of(context).colorScheme;
+
+    ref.listen(quizCreateProvider, (previous, next) {
+      if (previous != next) _syncControllers(previous, next);
+    });
 
     return Scaffold(
       appBar: CustomAppbarComponent(title: "Buat Kuis"),
