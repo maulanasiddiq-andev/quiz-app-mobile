@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/constants/action_constant.dart';
@@ -29,6 +30,16 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
     });
   }
 
+  Future<bool> confirmDelete(String name) async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah anda yakin ingin menghapus kategori $name?"
+    );
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(categoryListProvider);
@@ -36,21 +47,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: CustomAppbarComponent(
-        title: "Daftar Kategori",
-        actions: [
-          IconButton(
-            onPressed: () async {
-              final result = await context.push("/${ResourceConstant.category}/${ActionConstant.create}");
-
-              if (result != null && result == true) {
-                notifier.refreshCategories();
-              }
-            }, 
-            icon: Icon(Icons.add)
-          )
-        ],
-      ),
+      appBar: CustomAppbarComponent(title: "Daftar Kategori"),
       body: RefreshIndicator(
         onRefresh: () => notifier.refreshCategories(),
         child: Column(
@@ -140,7 +137,11 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
                                     break;
                                   case 'delete':
                                     // handle delete action
-                                    notifier.deleteCategory(category.categoryId);
+                                    final result = await confirmDelete(category.name);
+
+                                    if (result == true) {
+                                      notifier.deleteCategory(category.categoryId);
+                                    }
                                     break;
                                 }
                               },
@@ -174,6 +175,16 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await context.push("/${ResourceConstant.category}/${ActionConstant.create}");
+
+          if (result != null && result == true) {
+            notifier.refreshCategories();
+          }
+        },
+        child: Icon(Icons.create),
       ),
     );
   }
