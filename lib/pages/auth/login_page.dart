@@ -131,7 +131,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         isDense: true,
                                         hintText: 'Email',
                                         hintStyle: TextStyle(
-                                          color: colors.secondary
+                                          color: colors.onSurface.withAlpha(100)
                                         ),
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(0)

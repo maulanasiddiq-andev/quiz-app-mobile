@@ -66,7 +66,10 @@ class _SearchSortComponentState extends State<SearchSortComponent> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
-                  hintText: "Cari ${widget.feature}"
+                  hintText: "Cari ${widget.feature}",
+                  hintStyle: TextStyle(
+                    color: colors.onSurface.withAlpha(100)
+                  )
                 ),
               ),
             ),

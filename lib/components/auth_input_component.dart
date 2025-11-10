@@ -52,7 +52,7 @@ class AuthInputComponent extends StatelessWidget {
                 isDense: true,
                 hintText: hinText,
                 hintStyle: TextStyle(
-                  color: colors.secondary
+                  color: colors.onSurface.withAlpha(100)
                 ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(0)
