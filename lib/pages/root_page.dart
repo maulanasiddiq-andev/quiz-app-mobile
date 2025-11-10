@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/constants/module_constant.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
@@ -16,6 +18,7 @@ class RootPage extends ConsumerStatefulWidget {
 }
 
 class _RootPageState extends ConsumerState<RootPage> {
+  List<int> indexes = [0];
   int _currentIndex = 0;
 
   final List<BottomMenuModel> menus = [
@@ -50,13 +53,19 @@ class _RootPageState extends ConsumerState<RootPage> {
 
   void _onTabTapped(int index) {
     setState(() {
-      _currentIndex = index;
+      indexes.add(index);
+      _currentIndex = indexes[indexes.length - 1];
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Future<bool> confirmExit() async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah Anda yakin ingin keluar dari aplikasi ini?"
+    );
+
+    return result;
   }
 
   @override
@@ -69,31 +78,54 @@ class _RootPageState extends ConsumerState<RootPage> {
       .where((menu) => modules != null && menu.moduleNames.every((moduleName) => modules.any((module) => module.roleModuleName == moduleName)))
       .toList();
 
-    return Scaffold(
-      body: shownMenus[_currentIndex].page,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        onTap: _onTabTapped,
-        currentIndex: _currentIndex,
-        backgroundColor: colors.primary,
-        selectedItemColor: colors.onPrimary,
-        unselectedItemColor: Colors.white,
-        items: shownMenus.map((menu) {
-            if (menu.icon != null) {
-              return BottomNavigationBarItem(
-                icon: Icon(menu.icon),
-                label: menu.title
-              );            
-            }
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          if (indexes.length > 1) {
+            // if user press back button
+            // remove the indexes from the last
+            setState(() {
+              indexes.removeLast();
+              _currentIndex = indexes[indexes.length - 1];
+            });
+          } else {
+            final exitConfirmed = await confirmExit();
 
-            return BottomNavigationBarItem(
-              icon: ProfileImageComponent(
-                profileImage: state.token?.user?.profileImage,
-                radius: 11,
-              ),
-              label: menu.title
-            );
-          }).toList()
+            if (exitConfirmed && context.mounted) {
+              SystemNavigator.pop();
+            }
+          }
+        }
+
+        return;
+      },
+      child: Scaffold(
+        body: shownMenus[_currentIndex].page,
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          onTap: _onTabTapped,
+          currentIndex: _currentIndex,
+          backgroundColor: colors.primary,
+          selectedItemColor: colors.onPrimary,
+          unselectedItemColor: Colors.white,
+          items: shownMenus.map((menu) {
+              if (menu.icon != null) {
+                return BottomNavigationBarItem(
+                  icon: Icon(menu.icon),
+                  label: menu.title
+                );            
+              }
+      
+              return BottomNavigationBarItem(
+                icon: ProfileImageComponent(
+                  profileImage: state.token?.user?.profileImage,
+                  radius: 11,
+                ),
+                label: menu.title
+              );
+            }).toList()
+        ),
       ),
     );
   }
