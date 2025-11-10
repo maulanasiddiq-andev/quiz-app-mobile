@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/check_module_component.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/detail_field_component.dart';
@@ -21,9 +22,14 @@ class UserDetailPage extends ConsumerStatefulWidget {
 }
 
 class _UserDetailPageState extends ConsumerState<UserDetailPage> {
-  @override
-  void initState() {
-    super.initState();
+  Future<bool> confirmDelete() async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah anda yakin ingin menghapus user ini?"
+    );
+
+    return result;
   }
 
   @override
@@ -116,9 +122,21 @@ class _UserDetailPageState extends ConsumerState<UserDetailPage> {
                         moduleNames: [ModuleConstant.deleteUser],
                         child: Expanded(
                           child: CustomButtonComponent(
-                            onTap: () {},
+                            onTap: () async {
+                              final deleteConfirmed = await confirmDelete();
+
+                              if (deleteConfirmed) {
+                                // if user has confirmed user deletion
+
+                                final result = await notifier.deleteUser();
+                                if (result == true && context.mounted) {
+                                  context.pop();
+                                }
+                              }
+                            },
                             text: "Hapus",
                             isError: true,
+                            isLoading: state.isLoadingDelete,
                           ),
                         ),
                       ),
