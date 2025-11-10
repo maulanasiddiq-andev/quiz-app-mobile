@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
@@ -23,6 +24,16 @@ class QuizDetailPage extends ConsumerStatefulWidget {
 }
 
 class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
+  Future<bool> confirmDelete() async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah anda yakin ingin menghapus kuis ini?"
+    );
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizDetailProvider(widget.quizId));
@@ -134,10 +145,14 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                           child: CustomButtonComponent(
                             isLoading: state.isLoadingDelete,
                             onTap: () async {
-                              final result = await notifier.deleteQuiz(widget.quizId);
+                              final deleteConfirmed = await confirmDelete();
 
-                              if (result == true && context.mounted) {
-                                context.pop(state.quiz);
+                              if (deleteConfirmed) {
+                                final result = await notifier.deleteQuiz(widget.quizId);
+
+                                if (result == true && context.mounted) {
+                                  context.pop(state.quiz);
+                                } 
                               }
                             },
                             text: "Hapus",
