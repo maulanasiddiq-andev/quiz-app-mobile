@@ -79,4 +79,19 @@ class RoleService {
 
     return result;
   }
+
+  static Future<BaseResponse<RoleModel>> deleteRole(String roleId) async {
+    final response = await client.dio.delete(
+      '$url$roleId',
+    );
+
+    final BaseResponse<RoleModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => RoleModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
 }

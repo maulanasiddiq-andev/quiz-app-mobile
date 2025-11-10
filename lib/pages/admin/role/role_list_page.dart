@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/check_module_component.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
 import 'package:quiz_app/constants/action_constant.dart';
@@ -29,6 +30,16 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
         notifier.loadMoreDatas();
       }
     });
+  }
+
+  Future<bool> confirmDelete(String name) async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah anda yakin ingin menghapus role $name?"
+    );
+
+    return result;
   }
 
   @override
@@ -91,6 +102,16 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                                 Text(role.name),
                                 if (role.isMain)
                                   Icon(Icons.check, color: Colors.green),
+                                if (state.deletedRoleId == role.roleId)
+                                  SizedBox(
+                                    height: 14,
+                                    width: 14,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: colors.primary,
+                                      ),
+                                    ),
+                                  )
                               ],
                             ),
                             subtitle: Text(
@@ -114,7 +135,11 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                                     }
                                     break;
                                   case 'delete':
-                                    // handle delete action
+                                    final deleteConfirmed = await confirmDelete(role.name);
+
+                                    if (deleteConfirmed) {
+                                      notifier.deleteRole(role.roleId);
+                                    }
                                     break;
                                 }
                               },

@@ -69,6 +69,25 @@ class RoleListNotifier extends StateNotifier<RoleListState> {
     state = state.copyWith(sortDir: value);
     await refreshRoles();
   }
+
+  Future<void> deleteRole(String id) async {
+    state = state.copyWith(deletedRoleId: id);
+
+    try {
+      final result = await RoleService.deleteRole(id);
+
+      final roles = [...state.roles];
+
+      roles.removeWhere((c) => c.roleId == id);
+      state = state.copyWith(roles: [...roles]);
+
+      Fluttertoast.showToast(msg: result.messages[0]);
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    }
+  }
 }
 
 final roleListProvider = StateNotifierProvider.autoDispose<RoleListNotifier, RoleListState>((ref) => RoleListNotifier());

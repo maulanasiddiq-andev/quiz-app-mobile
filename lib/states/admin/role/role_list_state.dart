@@ -11,6 +11,7 @@ class RoleListState {
   final bool hasNextPage;
   final bool hasPreviousPage;
   final List<RoleModel> roles;
+  final String? deletedRoleId;
 
   RoleListState({
     this.sortDir = SortDirConstant.desc,
@@ -22,6 +23,7 @@ class RoleListState {
     this.hasNextPage = false,
     this.hasPreviousPage = false,
     this.roles = const [],
+    this.deletedRoleId
   });
 
   RoleListState copyWith({
@@ -33,7 +35,8 @@ class RoleListState {
     bool? hasPreviousPage,
     List<RoleModel>? roles,
     String? search,
-    String? sortDir
+    String? sortDir,
+    String? deletedRoleId
   }) {
     return RoleListState(
       isLoading: isLoading ?? this.isLoading,
@@ -44,7 +47,8 @@ class RoleListState {
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       roles: roles ?? this.roles,
       search: search ?? this.search,
-      sortDir: sortDir ?? this.sortDir
+      sortDir: sortDir ?? this.sortDir,
+      deletedRoleId: deletedRoleId ?? this.deletedRoleId
     );
   }
 }
