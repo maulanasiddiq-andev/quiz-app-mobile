@@ -4,6 +4,7 @@ import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_leaderboard_notifier.dart';
 import 'package:quiz_app/pages/quiz_history/quiz_history_detail_page.dart';
+import 'package:quiz_app/styles/text_style.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
 class QuizDetailLeaderboardPage extends ConsumerStatefulWidget {
@@ -41,9 +42,17 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
             child: CircularProgressIndicator(color: colors.primary),
           )
         : ListView(
+            physics: AlwaysScrollableScrollPhysics(),
             controller: scrollController,
             children: [
               SizedBox(height: 5),
+              if (state.histories.isEmpty)
+                Center(
+                  child: Text(
+                    "Kuis belum dikerjakan",
+                    style: CustomTextStyle.defaultTextStyle,
+                  ),
+                ),
               ...state.histories.map((history) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -67,7 +76,7 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => QuizHistoryDetailPage(quizHistory: history),
+                            builder: (context) => QuizHistoryDetailPage(quizHistoryId: history.quizHistoryId),
                           ),
                         );
                       },
@@ -78,10 +87,7 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
                         children: [
                           Text(
                             history.quiz!.title, // quiz must be included from the backend
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
-                            ),
+                            style: CustomTextStyle.defaultBoldTextStyle,
                           ),
                           Row(
                             spacing: 5,
@@ -91,16 +97,18 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
                                 profileImage: history.user?.profileImage,
                               ),
                               Text(
-                                history.user?.name ??
-                                    "user",
+                                history.user?.name ?? "user",
+                                style: CustomTextStyle.defaultTextStyle,
                               ),
                             ],
                           ),
                           Text(
                             "Nilai: ${history.score.toString()}",
+                              style: CustomTextStyle.defaultTextStyle,
                           ),
                           Text(
                             "Durasi: ${formatTime(history.duration)}",
+                              style: CustomTextStyle.defaultTextStyle,
                           ),
                         ],
                       ),

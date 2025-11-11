@@ -59,4 +59,19 @@ class UserService {
 
     return result;
   }
+
+  static Future<BaseResponse<UserModel>> deleteUser(String userId) async {
+    final response = await client.dio.delete(
+      '$url$userId',
+    );
+
+    final BaseResponse<UserModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => UserModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
 }

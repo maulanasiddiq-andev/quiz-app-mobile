@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/check_module_component.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/module_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/admin/user/user_list_notifier.dart';
 
 class UserListPage extends ConsumerStatefulWidget {
@@ -26,6 +31,16 @@ class _UserListPageState extends ConsumerState<UserListPage> {
         notifier.loadMoreDatas();
       }
     });
+  }
+
+  Future<bool> confirmDelete(String name) async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah anda yakin ingin menghapus user $name?"
+    );
+
+    return result;
   }
 
   @override
@@ -65,6 +80,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   controller: scrollController,
                   children: [
                     ...state.users.map((user) {
@@ -79,7 +95,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                         ),
                         child: ListTile(
                           onTap: () {
-                            context.push("/user-detail/${user.userId}");
+                            context.push("/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
                           },
                           leading: ProfileImageComponent(
                             profileImage: user.profileImage,
@@ -89,24 +105,32 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          subtitle: Text(user.email),
+                          subtitle: Text(
+                            user.email,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           trailing: PopupMenuButton<String>(
                             padding: EdgeInsets.zero,
                             icon: const Icon(Icons.more_vert),
                             onSelected: (value) async {
                               switch (value) {
                                 case 'view':
-                                  context.push("/user-detail/${user.userId}");
+                                  context.push("/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
                                   break;
                                 case 'edit':
-                                  final result = await context.push("/user-edit/${user.userId}");
+                                  final result = await context.push("/${ResourceConstant.user}/${ActionConstant.edit}/${user.userId}");
                 
                                   if (result != null && result == true) {
                                     notifier.refreshUsers();
                                   }
                                   break;
                                 case 'delete':
-                                  // handle delete action
+                                  final deleteConfirmed = await confirmDelete(user.name);
+
+                                  if (deleteConfirmed == true) {
+                                    notifier.deleteUser(user.userId);
+                                  }
                                   break;
                               }
                             },
@@ -138,6 +162,13 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                 )
             ),
           ],
+        ),
+      ),
+      floatingActionButton: CheckModuleComponent(
+        moduleNames: [ModuleConstant.createUser],
+        child: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(Icons.create),  
         ),
       ),
     );

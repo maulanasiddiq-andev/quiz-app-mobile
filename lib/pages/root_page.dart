@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/constants/module_constant.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
@@ -16,6 +18,7 @@ class RootPage extends ConsumerStatefulWidget {
 }
 
 class _RootPageState extends ConsumerState<RootPage> {
+  List<int> indexes = [0];
   int _currentIndex = 0;
 
   final List<BottomMenuModel> menus = [
@@ -23,36 +26,46 @@ class _RootPageState extends ConsumerState<RootPage> {
       page: QuizListPage(),
       title: 'Beranda',
       icon: Icons.home,
-      moduleNames: [ModuleConstant.searchQuiz]
+      moduleNames: [ModuleConstant.searchQuiz],
+      index: 0
     ),
     BottomMenuModel(
       page: CategoryListPage(),
       title: 'Kategori',
       icon: Icons.category,
-      moduleNames: [ModuleConstant.searchCategory, ModuleConstant.detailCategory]
+      moduleNames: [ModuleConstant.searchCategory, ModuleConstant.detailCategory],
+      index: 1
     ),
     BottomMenuModel(
       page: AdminPage(),
       title: 'Admin',
       icon: Icons.admin_panel_settings,
-      moduleNames: [ModuleConstant.searchUser, ModuleConstant.searchRole]
+      moduleNames: [ModuleConstant.searchUser, ModuleConstant.searchRole],
+      index: 2
     ),
     BottomMenuModel(
       page: ProfilePage(),
       title: 'Profile',
-      moduleNames: []
+      moduleNames: [],
+      index: 3
     )
   ];
 
   void _onTabTapped(int index) {
     setState(() {
-      _currentIndex = index;
+      indexes.add(index);
+      _currentIndex = indexes[indexes.length - 1];
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Future<bool> confirmExit() async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah Anda yakin ingin keluar dari aplikasi ini?"
+    );
+
+    return result;
   }
 
   @override
@@ -61,33 +74,58 @@ class _RootPageState extends ConsumerState<RootPage> {
     final modules = state.token?.user?.role?.roleModules;
     final colors = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      body: menus[_currentIndex].page,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        onTap: _onTabTapped,
-        currentIndex: _currentIndex,
-        backgroundColor: colors.primary,
-        selectedItemColor: colors.onPrimary,
-        unselectedItemColor: Colors.white,
-        items: menus
-          .where((menu) => modules != null && menu.moduleNames.every((moduleName) => modules.any((module) => module.roleModuleName == moduleName)))
-          .map((menu) {
-            if (menu.icon != null) {
-              return BottomNavigationBarItem(
-                icon: Icon(menu.icon),
-                label: menu.title
-              );            
-            }
+    final shownMenus = menus
+      .where((menu) => modules != null && menu.moduleNames.every((moduleName) => modules.any((module) => module.roleModuleName == moduleName)))
+      .toList();
 
-            return BottomNavigationBarItem(
-              icon: ProfileImageComponent(
-                profileImage: state.token?.user?.profileImage,
-                radius: 11,
-              ),
-              label: menu.title
-            );
-          }).toList()
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          if (indexes.length > 1) {
+            // if user press back button
+            // remove the indexes from the last
+            setState(() {
+              indexes.removeLast();
+              _currentIndex = indexes[indexes.length - 1];
+            });
+          } else {
+            final exitConfirmed = await confirmExit();
+
+            if (exitConfirmed && context.mounted) {
+              SystemNavigator.pop();
+            }
+          }
+        }
+
+        return;
+      },
+      child: Scaffold(
+        body: shownMenus[_currentIndex].page,
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          onTap: _onTabTapped,
+          currentIndex: _currentIndex,
+          backgroundColor: colors.primary,
+          selectedItemColor: colors.onPrimary,
+          unselectedItemColor: Colors.white,
+          items: shownMenus.map((menu) {
+              if (menu.icon != null) {
+                return BottomNavigationBarItem(
+                  icon: Icon(menu.icon),
+                  label: menu.title
+                );            
+              }
+      
+              return BottomNavigationBarItem(
+                icon: ProfileImageComponent(
+                  profileImage: state.token?.user?.profileImage,
+                  radius: 11,
+                ),
+                label: menu.title
+              );
+            }).toList()
+        ),
       ),
     );
   }
@@ -97,12 +135,14 @@ class BottomMenuModel {
   Widget page;
   String title;
   List<String> moduleNames;
+  int index;
   IconData? icon;
 
   BottomMenuModel({
     required this.page,
     required this.title,
     required this.moduleNames,
+    required this.index,
     this.icon,
   });
 }

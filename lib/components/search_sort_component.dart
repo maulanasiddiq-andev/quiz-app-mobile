@@ -53,21 +53,58 @@ class _SearchSortComponentState extends State<SearchSortComponent> {
                 border: Border.all(color: colors.onSurface),
                 borderRadius: BorderRadius.circular(10)
               ),
-              child: TextField(
-                controller: searchController,
-                onChanged: (value) {
-                  if (debounce?.isActive ?? false) debounce!.cancel();
+              child: Row(
+                spacing: 5,
+                children: [
+                  Icon(Icons.search),
+                  Expanded(
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: (value) {
+                        if (debounce?.isActive ?? false) debounce!.cancel();
+                    
+                        // Start a new 1-second timer
+                        debounce = Timer(const Duration(seconds: 1), () async {
+                          widget.onSearchChanged(value);
+                          debounce?.cancel();
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                        hintText: "Cari ${widget.feature}",
+                        hintStyle: TextStyle(
+                          color: colors.onSurface.withAlpha(100)
+                        )
+                      ),
+                    ),
+                  ),
+                  if (searchController.text.isNotEmpty)
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          searchController.text = "";
+                        });
 
-                  // Start a new 1-second timer
-                  debounce = Timer(const Duration(seconds: 1), () async {
-                    widget.onSearchChanged(value);
-                  });
-                },
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
-                  hintText: "Cari ${widget.feature}"
-                ),
+                        if (debounce?.isActive ?? false) debounce!.cancel();
+                      
+                        // Start a new 1-second timer
+                        debounce = Timer(const Duration(seconds: 1), () async {
+                          widget.onSearchChanged(searchController.text);
+                          debounce?.cancel();
+                        });
+                      },
+                      child: Container(
+                        height: 20,
+                        width: 20,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colors.secondary
+                        ),
+                        child: Center(child: Icon(Icons.close, size: 16)),
+                      ),
+                    )
+                ],
               ),
             ),
           ),

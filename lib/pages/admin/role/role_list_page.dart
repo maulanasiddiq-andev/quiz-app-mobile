@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/check_module_component.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/module_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/admin/role/role_list_notifier.dart';
 
 class RoleListPage extends ConsumerStatefulWidget {
@@ -25,6 +30,16 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
         notifier.loadMoreDatas();
       }
     });
+  }
+
+  Future<bool> confirmDelete(String name) async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah anda yakin ingin menghapus role $name?"
+    );
+
+    return result;
   }
 
   @override
@@ -64,12 +79,13 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                   child: CircularProgressIndicator(color: colors.primary),
                 )
               : ListView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   controller: scrollController,
                   children: [
                     ...state.roles.map((role) {
                       return GestureDetector(
                         onTap: () {
-                          context.push("/role-detail/${role.roleId}");
+                          context.push("/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
                         },
                         child: Container(
                           width: double.infinity,
@@ -82,10 +98,21 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                           ),
                           child: ListTile(
                             title: Row(
+                              spacing: 10,
                               children: [
                                 Text(role.name),
                                 if (role.isMain)
                                   Icon(Icons.check, color: Colors.green),
+                                if (state.deletedRoleId == role.roleId)
+                                  SizedBox(
+                                    height: 14,
+                                    width: 14,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: colors.primary,
+                                      ),
+                                    ),
+                                  )
                               ],
                             ),
                             subtitle: Text(
@@ -99,17 +126,21 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                               onSelected: (value) async {
                                 switch (value) {
                                   case 'view':
-                                    context.push("/role-detail/${role.roleId}");
+                                    context.push("/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
                                     break;
                                   case 'edit':
-                                    final result = await context.push("/role-edit/${role.roleId}");
+                                    final result = await context.push("/${ResourceConstant.role}/${ActionConstant.edit}/${role.roleId}");
                   
                                     if (result != null && result == true) {
                                       notifier.refreshRoles();
                                     }
                                     break;
                                   case 'delete':
-                                    // handle delete action
+                                    final deleteConfirmed = await confirmDelete(role.name);
+
+                                    if (deleteConfirmed) {
+                                      notifier.deleteRole(role.roleId);
+                                    }
                                     break;
                                 }
                               },
@@ -142,6 +173,19 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                 )
             ),
           ],
+        ),
+      ),
+      floatingActionButton: CheckModuleComponent(
+        moduleNames: [ModuleConstant.createRole],
+        child: FloatingActionButton(
+          onPressed: () async {
+            final result = await context.push("/${ResourceConstant.role}/${ActionConstant.create}");
+
+            if (result != null && result == true) {
+              notifier.refreshRoles();
+            }
+          },
+          child: Icon(Icons.create),
         ),
       ),
     );

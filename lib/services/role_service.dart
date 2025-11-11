@@ -41,6 +41,19 @@ class RoleService {
     return result;
   }
 
+  static Future<BaseResponse<RoleModel>> createRole(Map<String, dynamic>? data) async {
+    final response = await client.dio.post(url, data: jsonEncode(data));
+
+    final BaseResponse<RoleModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => RoleModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
   static Future<BaseResponse<RoleWithSelectModulesModel>> getRoleByIdWithSelectableModules(String id) async {
     final response = await client.dio.get('$url$id/with-modules');
 
@@ -56,6 +69,21 @@ class RoleService {
 
   static Future<BaseResponse<RoleModel>> updateRoleById(String id, Map<String, dynamic>? data) async {
     final response = await client.dio.put('$url$id', data: jsonEncode(data));
+
+    final BaseResponse<RoleModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => RoleModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<RoleModel>> deleteRole(String roleId) async {
+    final response = await client.dio.delete(
+      '$url$roleId',
+    );
 
     final BaseResponse<RoleModel> result = BaseResponse.fromJson(
       response.data,

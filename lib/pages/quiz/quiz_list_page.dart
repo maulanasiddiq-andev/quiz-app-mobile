@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/check_module_component.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/quiz_container_component.dart';
 import 'package:quiz_app/components/search_sort_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/module_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_list_notifier.dart';
@@ -172,12 +176,13 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: ListView(
+                        physics: AlwaysScrollableScrollPhysics(),
                         controller: scrollController,
                         children: [
                           ...state.quizzes.map((quiz) {
                             return QuizContainerComponent(
                               onTap: () async {
-                                final result = await context.push("/detail/${quiz.quizId}");
+                                final result = await context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${quiz.quizId}");
 
                                 // if the delete succeed in detail page
                                 // remove the quiz from the list
@@ -196,14 +201,17 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
                       ),
                   ),
               ),
-              TextButton(
-                onPressed: () {
-                  context.push("/create-quiz");
-                },
-                child: Text("Buat Kuis"),
-              ),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: CheckModuleComponent(
+        moduleNames: [ModuleConstant.createCategory],
+        child: FloatingActionButton(
+          onPressed: () {
+            context.push("/${ResourceConstant.quiz}/${ActionConstant.create}");
+          },
+          child: Icon(Icons.create),
         ),
       ),
     );

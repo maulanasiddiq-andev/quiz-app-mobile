@@ -6,9 +6,11 @@ import 'package:quiz_app/components/quiz_navigation_button_component.dart';
 import 'package:quiz_app/models/quiz_history/answer_history_model.dart';
 import 'package:quiz_app/models/quiz_history/question_history_model.dart';
 import 'package:quiz_app/notifiers/quiz_history/quiz_history_detail_notifier.dart';
+import 'package:quiz_app/styles/text_style.dart';
 
 class QuizHistoryReviewPage extends ConsumerStatefulWidget {
-  const QuizHistoryReviewPage({super.key});
+  final String quizHistoryId;
+  const QuizHistoryReviewPage({super.key, required this.quizHistoryId});
 
   @override
   ConsumerState<QuizHistoryReviewPage> createState() => _QuizHistoryReviewPageState();
@@ -30,12 +32,12 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final state = ref.watch(quizHistoryDetailProvider);
-    final notifier = ref.read(quizHistoryDetailProvider.notifier);
+    final state = ref.watch(quizHistoryDetailProvider(widget.quizHistoryId));
+    final notifier = ref.read(quizHistoryDetailProvider(widget.quizHistoryId).notifier);
     QuestionHistoryModel? currentQuestion;
 
-    if (state.questions.isNotEmpty) {
-      currentQuestion = state.questions[state.questionIndex];
+    if (state.quizHistory != null && state.quizHistory!.questions.isNotEmpty) {
+      currentQuestion = state.quizHistory!.questions[state.questionIndex];
     }
 
     return Scaffold(
@@ -43,7 +45,7 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
       drawer: Drawer(
         child: ListView(
           children: [
-            ...state.questions.asMap().entries.map((value) {
+            ...state.quizHistory!.questions.asMap().entries.map((value) {
               final question = value.value;
               final key = value.key;
 
@@ -103,15 +105,21 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
                       padding: const EdgeInsets.all(10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 10,
                         children: [
-                          Text("Pertanyaan ${(state.questionIndex + 1).toString()}/${state.questions.length.toString()}"),
-                          Text(currentQuestion.text),
-                          currentQuestion.imageUrl != null
-                            ? Image.network(
-                                currentQuestion.imageUrl!,
-                                width: double.infinity,
-                              )
-                            : SizedBox(),
+                          Text(
+                            "Pertanyaan ${(state.questionIndex + 1).toString()}/${state.quizHistory!.questions.length.toString()}",
+                            style: CustomTextStyle.defaultBoldTextStyle,  
+                          ),
+                          Text(
+                            currentQuestion.text,
+                            style: CustomTextStyle.defaultTextStyle,  
+                          ),
+                          if (currentQuestion.imageUrl != null)
+                            Image.network(
+                              currentQuestion.imageUrl!,
+                              width: double.infinity,
+                            ),
                           RadioGroup(
                             groupValue: currentQuestion.selectedAnswerOrder,
                             onChanged: (_) {},
@@ -122,7 +130,12 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
                                     color: changeBackgroundColor(currentQuestion, answer),
                                     child: RadioListTile<int>(
                                       value: answer.answerOrder,
-                                      title: answer.text != null ? Text(answer.text!) : null,
+                                      title: answer.text != null 
+                                        ? Text(
+                                            answer.text!,
+                                            style: CustomTextStyle.defaultTextStyle,  
+                                          ) 
+                                        : null,
                                       secondary: answer.imageUrl != null
                                         ? Image.network(
                                             answer.imageUrl!,
@@ -141,7 +154,10 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
                       ),
                     ),
                   )
-                : SizedBox(),
+                : Text(
+                    "Pertanyaan tidak tersedia",
+                    style: CustomTextStyle.defaultTextStyle,
+                  ),
             ),
             Row(
               children: [
@@ -155,14 +171,16 @@ class _QuizHistoryReviewPageState extends ConsumerState<QuizHistoryReviewPage> {
                 Expanded(
                   child: QuizNavigationButtonComponent(
                     onTap: () {
-                      if (state.questionIndex < state.questions.length - 1) {
+                      if (state.questionIndex < state.quizHistory!.questions.length - 1) {
                         notifier.toNextQuestion();
+                      } else {
+                        Navigator.of(context).pop();
                       }
                     }, 
-                    icon: state.questionIndex < state.questions.length - 1
+                    icon: state.questionIndex < state.quizHistory!.questions.length - 1
                       ? Icons.arrow_forward
                       : Icons.check,
-                    text: state.questionIndex < state.questions.length - 1
+                    text: state.questionIndex < state.quizHistory!.questions.length - 1
                       ? "Selanjutnya"
                       : "Selesai",
                     textDirection: TextDirection.rtl,

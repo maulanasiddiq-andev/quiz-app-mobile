@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
+import 'package:quiz_app/components/profile_image_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_detail_notifier.dart';
 import 'package:quiz_app/notifiers/quiz/take_quiz_notifier.dart';
+import 'package:quiz_app/styles/text_style.dart';
+import 'package:quiz_app/utils/format_date.dart';
 import 'package:quiz_app/utils/format_time.dart';
 
 class QuizDetailPage extends ConsumerStatefulWidget {
@@ -18,18 +24,14 @@ class QuizDetailPage extends ConsumerStatefulWidget {
 }
 
 class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
-  final ScrollController scrollController = ScrollController();
+  Future<bool> confirmDelete() async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah anda yakin ingin menghapus kuis ini?"
+    );
 
-  @override
-  void initState() {
-    super.initState();
-
-    scrollController.addListener(() {
-      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
-        final notifier = ref.read(quizDetailProvider(widget.quizId).notifier);
-        notifier.loadMoreHistories();
-      }
-    });
+    return result;
   }
 
   @override
@@ -49,7 +51,6 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    controller: scrollController,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 15,
@@ -57,42 +58,57 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 10,
                         children: [
                           Text(
                             state.quiz?.title ?? "Judul Kuis",
-                            style: TextStyle(fontSize: 20),
+                            style: CustomTextStyle.headerStyle,
                           ),
-                          state.quiz?.imageUrl != null
-                              ? Column(
-                                  children: [
-                                    SizedBox(height: 10),
-                                    ClipRRect(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(10),
-                                      child: Image.network(
-                                        state.quiz!.imageUrl!,
-                                        width: double.infinity,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                  ],
-                                )
-                              : SizedBox(height: 10),
+                          // user is always included while getting quiz detail
+                          if (state.quiz?.user != null)
+                            Row(
+                              spacing: 5,
+                              children: [
+                                Text(
+                                  "Oleh:",
+                                  style: CustomTextStyle.defaultTextStyle,
+                                ),
+                                ProfileImageComponent(profileImage: state.quiz?.user?.profileImage),
+                                Text(
+                                  state.quiz!.user!.name,
+                                  style: CustomTextStyle.defaultTextStyle,
+                                ),
+
+                              ],
+                            ),
+                          Text(
+                            "Dibuat pada ${formatDate(state.quiz?.modifiedTime)}",
+                            style: CustomTextStyle.defaultTextStyle,
+                          ),
+                          if (state.quiz?.imageUrl != null)
+                            ClipRRect(
+                              borderRadius: BorderRadiusGeometry.circular(10),
+                              child: Image.network(
+                                state.quiz!.imageUrl!,
+                                width: double.infinity,
+                              ),
+                            ),
                           Text(
                             state.quiz?.description ?? "Deskripsi Kuis",
-                            style: TextStyle(fontSize: 16),
+                            style: CustomTextStyle.defaultTextStyle,
                           ),
-                          SizedBox(height: 10),
+                          Divider(),
                           Text(
                             "Jumlah Pertanyaan: ${state.quiz?.questionCount ?? 0}",
+                            style: CustomTextStyle.defaultTextStyle,
                           ),
-                          SizedBox(height: 10),
                           Text(
                             "Waktu pengerjaan: ${formatTime(state.quiz?.time == null ? 0 : state.quiz!.time * 60)}",
+                            style: CustomTextStyle.defaultTextStyle,
                           ),
-                          SizedBox(height: 10),
                           Text(
                             "Dikerjakan: ${state.quiz?.historiesCount ?? 0} kali",
+                            style: CustomTextStyle.defaultTextStyle,
                           ),
                         ],
                       ),
@@ -103,7 +119,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   child: GestureDetector(
                     onTap: () {
-                      context.push("/detail-leaderboard/${widget.quizId}");
+                      context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${widget.quizId}/${ActionConstant.leaderboard}");
                     },
                     child: Container(
                       width: double.infinity,
@@ -114,9 +130,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                       ),
                       child: Text(
                         "Leaderboard",
-                        style: TextStyle(
-                          fontSize: 16
-                        ),
+                        style: CustomTextStyle.defaultTextStyle,
                       ),
                     ),
                   ),
@@ -131,10 +145,14 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                           child: CustomButtonComponent(
                             isLoading: state.isLoadingDelete,
                             onTap: () async {
-                              final result = await notifier.deleteQuiz(widget.quizId);
+                              final deleteConfirmed = await confirmDelete();
 
-                              if (result == true && context.mounted) {
-                                context.pop(state.quiz);
+                              if (deleteConfirmed) {
+                                final result = await notifier.deleteQuiz(widget.quizId);
+
+                                if (result == true && context.mounted) {
+                                  context.pop(state.quiz);
+                                } 
                               }
                             },
                             text: "Hapus",
@@ -165,7 +183,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                               .getQuizWithQuestions(state.quiz!);
             
                           if (result == true && context.mounted) {
-                            context.push("/take-quiz");
+                            context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${widget.quizId}/${ActionConstant.take}");
                           }
                         },
                         text: "Mulai",

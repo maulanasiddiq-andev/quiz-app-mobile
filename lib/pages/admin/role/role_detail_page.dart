@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/check_module_component.dart';
+import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/detail_field_component.dart';
+import 'package:quiz_app/constants/action_constant.dart';
 import 'package:quiz_app/constants/module_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/admin/role/role_detail_notifier.dart';
 
 class RoleDetailPage extends ConsumerStatefulWidget {
@@ -17,9 +20,14 @@ class RoleDetailPage extends ConsumerStatefulWidget {
 }
 
 class _RoleDetailPageState extends ConsumerState<RoleDetailPage> {
-  @override
-  void initState() {
-    super.initState();
+  Future<bool> confirmDelete() async {
+    final result = confirmDialog(
+      context: context, 
+      title: "Perhatian", 
+      content: "Apakah anda yakin ingin menghapus role ini?"
+    );
+
+    return result;
   }
 
   @override
@@ -94,7 +102,7 @@ class _RoleDetailPageState extends ConsumerState<RoleDetailPage> {
                         child: Expanded(
                           child: CustomButtonComponent(
                             onTap: () async {
-                              final result = await context.push("/role-edit/${widget.roleId}");
+                              final result = await context.push("/${ResourceConstant.role}/${ActionConstant.edit}/${widget.roleId}");
 
                               if (result != null && result == true) {
                                 notifier.getRoleById(widget.roleId);
@@ -108,9 +116,20 @@ class _RoleDetailPageState extends ConsumerState<RoleDetailPage> {
                         moduleNames: [ModuleConstant.deleteRole],
                         child: Expanded(
                           child: CustomButtonComponent(
-                            onTap: () {},
+                            onTap: () async {
+                              final deleteConfirmed = await confirmDelete();
+
+                              if (deleteConfirmed == true) {
+                                final result = await notifier.deleteRole();
+
+                                if (result == true && context.mounted) {
+                                  context.pop();
+                                }
+                              }
+                            },
                             text: "Hapus",
                             isError: true,
+                            isLoading: state.isLoadingDelete,
                           ),
                         ),
                       ),

@@ -11,6 +11,7 @@ class UserListState {
   final bool hasNextPage;
   final bool hasPreviousPage;
   final List<UserModel> users;
+  final String? deletedUserId;
 
   UserListState({
     this.sortDir = SortDirConstant.desc,
@@ -22,6 +23,7 @@ class UserListState {
     this.hasNextPage = false,
     this.hasPreviousPage = false,
     this.users = const [],
+    this.deletedUserId
   });
 
   UserListState copyWith({
@@ -33,7 +35,8 @@ class UserListState {
     bool? hasPreviousPage,
     List<UserModel>? users,
     String? search,
-    String? sortDir
+    String? sortDir,
+    String? deletedUserId
   }) {
     return UserListState(
       isLoading: isLoading ?? this.isLoading,
@@ -44,7 +47,8 @@ class UserListState {
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       users: users ?? this.users,
       search: search ?? this.search,
-      sortDir: sortDir ?? this.sortDir
+      sortDir: sortDir ?? this.sortDir,
+      deletedUserId: deletedUserId ?? this.deletedUserId
     );
   }
 }

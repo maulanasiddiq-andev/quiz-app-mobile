@@ -7,7 +7,10 @@ import 'package:quiz_app/services/quiz_history_service.dart';
 import 'package:quiz_app/states/quiz_history/quiz_history_detail_state.dart';
 
 class QuizHistoryDetailNotifier extends StateNotifier<QuizHistoryDetailState> {
-  QuizHistoryDetailNotifier() : super(QuizHistoryDetailState());
+  final String quizHistoryId;
+  QuizHistoryDetailNotifier(this.quizHistoryId) : super(QuizHistoryDetailState()) {
+    getQuizHistoryById(quizHistoryId);
+  }
 
   Future<void> getQuizHistoryById(String id) async {
     state = state.copyWith(isLoading: true, quizHistoryId: id);
@@ -16,7 +19,7 @@ class QuizHistoryDetailNotifier extends StateNotifier<QuizHistoryDetailState> {
 
       if (result.data != null) {
         state = state.copyWith(
-          questions: [...state.questions, ...result.data!.questions],
+          quizHistory: result.data
         );
       }
 
@@ -31,7 +34,7 @@ class QuizHistoryDetailNotifier extends StateNotifier<QuizHistoryDetailState> {
   }
 
   void toNextQuestion() {
-    if (state.questionIndex < state.questions.length - 1) {
+    if (state.questionIndex < state.quizHistory!.questions.length - 1) {
       var index = state.questionIndex + 1;
 
       state = state.copyWith(
@@ -55,4 +58,4 @@ class QuizHistoryDetailNotifier extends StateNotifier<QuizHistoryDetailState> {
   }
 }
 
-final quizHistoryDetailProvider = StateNotifierProvider.autoDispose<QuizHistoryDetailNotifier, QuizHistoryDetailState>((ref) => QuizHistoryDetailNotifier());
+final quizHistoryDetailProvider = StateNotifierProvider.autoDispose.family<QuizHistoryDetailNotifier, QuizHistoryDetailState, String>((ref, quizHistoryId) => QuizHistoryDetailNotifier(quizHistoryId));

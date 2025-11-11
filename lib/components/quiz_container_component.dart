@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
+import 'package:quiz_app/styles/text_style.dart';
 
 class QuizContainerComponent extends StatelessWidget {
   final Function onTap;
@@ -29,9 +30,15 @@ class QuizContainerComponent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(quiz.title, style: TextStyle(fontSize: 18)),
+            Text(
+              quiz.title, 
+              style: CustomTextStyle.headerStyle
+            ),
             SizedBox(height: 5),
-            Text(quiz.category!.name),
+            Text(
+              quiz.category!.name,
+              style: CustomTextStyle.defaultTextStyle,
+            ),
             quiz.imageUrl != null
               ? Column(
                   children: [
@@ -44,7 +51,10 @@ class QuizContainerComponent extends StatelessWidget {
                   ],
                 )
               : SizedBox(height: 10),
-            Text("${quiz.historiesCount} kali dikerjakan"),
+            Text(
+              "${quiz.historiesCount} kali dikerjakan",
+              style: CustomTextStyle.defaultTextStyle,
+            ),
           ],
         ),
       ),

@@ -53,7 +53,12 @@ class _SelectDataComponentState extends State<SelectDataComponent> {
           widget.selectedData == null
             ? "Pilih ${widget.title}"
             : widget.selectedData!.name, 
-          style: TextStyle(fontSize: 16)
+          style: TextStyle(
+            fontSize: 16,
+            color: widget.selectedData == null 
+              ? colors.onSurface.withAlpha(100)
+              : null
+          )
         ),
       ),
     );

@@ -69,6 +69,25 @@ class UserListNotifier extends StateNotifier<UserListState> {
     state = state.copyWith(sortDir: value);
     await refreshUsers();
   }
+
+  Future<void> deleteUser(String id) async {
+    state = state.copyWith(deletedUserId: id);
+
+    try {
+      final result = await UserService.deleteUser(id);
+
+      final users = [...state.users];
+
+      users.removeWhere((c) => c.userId == id);
+      state = state.copyWith(users: [...users]);
+
+      Fluttertoast.showToast(msg: result.messages[0]);
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    }
+  }
 }
 
 final userListProvider = StateNotifierProvider.autoDispose<UserListNotifier, UserListState>((ref) => UserListNotifier());
