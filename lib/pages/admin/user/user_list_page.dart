@@ -33,6 +33,12 @@ class _UserListPageState extends ConsumerState<UserListPage> {
     });
   }
 
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   Future<bool> confirmDelete(String name) async {
     final result = confirmDialog(
       context: context, 

@@ -19,6 +19,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   bool _obscureText = true;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void _onSubmitText() {
     if (formKey.currentState!.validate()) {
       String email = _emailController.value.text;

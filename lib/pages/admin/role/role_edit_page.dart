@@ -20,6 +20,13 @@ class _RoleEditPageState extends ConsumerState<RoleEditPage> {
   final TextEditingController descriptionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
   void _syncControllers(RoleEditState? previous, RoleEditState next) {
     final updates = {
       nameController: next.role?.name,

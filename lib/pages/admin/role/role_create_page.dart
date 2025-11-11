@@ -32,6 +32,13 @@ class _RoleCreatePageState extends ConsumerState<RoleCreatePage> {
   }
 
   @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(roleCreateProvider);
     

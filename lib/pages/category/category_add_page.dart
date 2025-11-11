@@ -18,6 +18,13 @@ class _CategoryAddPageState extends ConsumerState<CategoryAddPage> {
   final TextEditingController descriptionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
   Future<bool> submitCategory() async {
     if (formKey.currentState!.validate()) {
       return await ref.read(categoryAddProvider.notifier).addCategory(

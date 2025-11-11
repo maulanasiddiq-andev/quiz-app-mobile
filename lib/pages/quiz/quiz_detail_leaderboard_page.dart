@@ -31,6 +31,12 @@ class _QuizDetailLeaderboardPageState extends ConsumerState<QuizDetailLeaderboar
   }
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(quizDetailLeaderBoardProvider(widget.quizId));
     final colors = Theme.of(context).colorScheme;

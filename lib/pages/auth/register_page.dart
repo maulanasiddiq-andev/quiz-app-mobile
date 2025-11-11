@@ -20,6 +20,15 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
   bool _obscureText = true;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _nameController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   Future<bool> onSubmitText() async {
     final email = _emailController.text;
     final name = _nameController.text;
