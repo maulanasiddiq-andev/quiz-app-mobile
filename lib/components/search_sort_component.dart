@@ -35,6 +35,7 @@ class _SearchSortComponentState extends State<SearchSortComponent> {
   @override
   void dispose() {
     debounce?.cancel();
+    searchController.dispose();
     super.dispose();
   }
 

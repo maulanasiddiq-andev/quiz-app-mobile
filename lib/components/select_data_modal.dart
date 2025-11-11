@@ -27,6 +27,12 @@ class _SelectDataModalState extends ConsumerState<SelectDataModal> {
   }
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(selectDataProvider(widget.data));
     final colors = Theme.of(context).colorScheme;

@@ -30,6 +30,9 @@ class _OtpPageState extends ConsumerState<OtpPage> {
   @override
   void dispose() {
     timer?.cancel();
+    for (var controller in controllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 

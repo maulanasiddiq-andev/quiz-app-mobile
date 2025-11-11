@@ -20,6 +20,13 @@ class _CategoryEditPageState extends ConsumerState<CategoryEditPage> {
   final TextEditingController descriptionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
   void _syncControllers(CategoryEditState? previous, CategoryEditState next) {
     final updates = {
       nameController: next.category?.name,

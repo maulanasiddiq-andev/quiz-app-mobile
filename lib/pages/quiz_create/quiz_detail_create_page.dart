@@ -27,6 +27,14 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController timeController = TextEditingController();
 
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    timeController.dispose();
+    super.dispose();
+  }
+
   void _syncControllers(QuizCreateState? previous, QuizCreateState next) {
     final updates = {
       titleController: next.title,

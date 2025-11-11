@@ -25,6 +25,15 @@ class _UserEditPageState extends ConsumerState<UserEditPage> {
   final TextEditingController descriptionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    usernameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
   void _syncControllers(UserEditState? previous, UserEditState next) {
     final updates = {
       nameController: next.user?.name,
