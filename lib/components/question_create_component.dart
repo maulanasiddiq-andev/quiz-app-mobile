@@ -49,10 +49,17 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
     // delete the answer
     if (widget.question.answers.length < oldWidget.question.answers.length) {
       for (var i = 0; i < oldWidget.question.answers.length; i++) {
-        if (oldWidget.question.answers[i] != widget.question.answers[i]) {
+        // if the deleted index is not the last
+        if (i != oldWidget.question.answers.length - 1 && oldWidget.question.answers[i] != widget.question.answers[i]) {
           answerControllers.removeAt(i);
           answerFocuses.removeAt(i);
           break;
+        }
+
+        // if the deleted answer is the last
+        if (i == oldWidget.question.answers.length - 1) {
+          answerControllers.removeAt(i);
+          answerFocuses.removeAt(i);
         }
       }
     }
