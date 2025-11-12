@@ -97,9 +97,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         isAuthenticated: true,
         token: result.data
       );
-    } on GoogleSignInException catch (_) {
+    } on GoogleSignInException catch (e) {
       Fluttertoast.showToast(msg: "Proses dibatalkan");
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false);

@@ -268,7 +268,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               ),
                             ),
                           ),
-                        )
+                        ),
+                        if (authState.errorMessage != null)
+                          Text(authState.errorMessage!)
                       ],
                     ),
                   ),
