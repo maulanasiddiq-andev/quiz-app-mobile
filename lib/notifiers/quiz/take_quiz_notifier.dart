@@ -16,8 +16,7 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
     List<TakeQuestionModel> questionExams = [];
 
     try {
-      BaseResponse<TakeQuizModel> result =
-          await QuizService.getQuizByIdWithQuestions(quiz.quizId);
+      BaseResponse<TakeQuizModel> result = await QuizService.takeQuiz(quiz.quizId);
 
       for (var question in result.data!.questions) {
         questionExams.add(question);

@@ -2,25 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/components/input_component.dart';
 import 'package:quiz_app/components/pick_image_component.dart';
-import 'package:quiz_app/models/quiz_create/question_create_model.dart';
-import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
+import 'package:quiz_app/models/quiz/questions_model.dart';
+import 'package:quiz_app/notifiers/quiz_edit/quiz_edit_notifier.dart';
 
-class QuestionCreateComponent extends ConsumerStatefulWidget {
-  final QuestionCreateModel question;
+class QuestionEditComponent extends ConsumerStatefulWidget {
+  final String quizId;
+  final QuestionModel question;
   final int questionIndex;
   final int questionsCount;
-  const QuestionCreateComponent({
+  const QuestionEditComponent({
     super.key, 
+    required this.quizId,
     required this.question,
     required this.questionIndex,
     required this.questionsCount  
   });
 
   @override
-  ConsumerState<QuestionCreateComponent> createState() => _QuestionCreateComponentState();
+  ConsumerState<QuestionEditComponent> createState() => _QuestionEditComponentState();
 }
 
-class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponent> {
+class _QuestionEditComponentState extends ConsumerState<QuestionEditComponent> {
   final TextEditingController questionController = TextEditingController();
   final List<TextEditingController> answerControllers = [];
   final List<FocusNode> answerFocuses = [];
@@ -33,7 +35,7 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
   }
 
   @override
-  void didUpdateWidget(covariant QuestionCreateComponent oldWidget) {
+  void didUpdateWidget(covariant QuestionEditComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     // add answer
@@ -94,7 +96,7 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final notifier = ref.read(quizCreateProvider.notifier);
+    final notifier = ref.read(quizEditProvider(widget.quizId).notifier);
 
     return SingleChildScrollView(
       child: Padding(
@@ -127,7 +129,8 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
             ),
             PickImageComponent(
               pickImage: () => notifier.pickQuestionImage(colors.primary, colors.onPrimary),
-              image: widget.question.image,
+              image: widget.question.newImage,
+              oldImage: widget.question.imageUrl,
             ),
             RadioGroup(
               groupValue: widget.question.trueAnswerIndex,

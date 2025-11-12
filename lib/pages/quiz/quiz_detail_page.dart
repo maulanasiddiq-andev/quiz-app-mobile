@@ -163,7 +163,7 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                           child: CustomButtonComponent(
                             isLoading: ref.watch(takeQuizProvider).isLoading,
                             onTap: () {
-                          
+                              context.push('/${ResourceConstant.quiz}/${ActionConstant.edit}/${widget.quizId}');
                             },
                             text: "Edit",
                           ),

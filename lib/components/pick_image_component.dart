@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class PickImageComponent extends StatelessWidget {
   final Function pickImage;
-  final File? image;
-  const PickImageComponent({super.key, required this.pickImage, this.image});
+  final File? image; // newly picked image
+  final String? oldImage; // already existing image
+  const PickImageComponent({super.key, required this.pickImage, this.image, this.oldImage});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class PickImageComponent extends StatelessWidget {
               : null,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: image == null
+        child: image == null && oldImage == null
             ? Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 60,
@@ -35,11 +36,15 @@ class PickImageComponent extends StatelessWidget {
                   ),
                 ),
               )
-            : ClipRRect(
-                borderRadius:
-                    BorderRadiusGeometry.circular(10),
-                child: Image.file(image!),
-              ),
+            : image != null
+              ? ClipRRect(
+                  borderRadius: BorderRadiusGeometry.circular(10),
+                  child: Image.file(image!),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadiusGeometry.circular(10),
+                  child: Image.network(oldImage!),
+                ),
       ),
     );
   }

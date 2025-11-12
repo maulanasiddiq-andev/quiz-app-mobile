@@ -44,6 +44,35 @@ class QuizService {
     return result;
   }
   
+  static Future<BaseResponse<QuizModel>> getQuizWithQuestionsById(String id) async {
+    final response = await client.dio.get('$url$id/with-questions');
+
+    final BaseResponse<QuizModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => QuizModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+  
+  static Future<BaseResponse<QuizModel>> updateQuiz(String id, Map<String, dynamic> data) async {
+    final response = await client.dio.put(
+      '$url$id',
+      data: jsonEncode(data)
+    );
+
+    final BaseResponse<QuizModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => QuizModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+  
   static Future<BaseResponse<QuizModel>> deleteQuiz(String id) async {
     final response = await client.dio.delete('$url$id');
 
@@ -57,7 +86,7 @@ class QuizService {
     return result;
   }
 
-  static Future<BaseResponse<TakeQuizModel>> getQuizByIdWithQuestions(
+  static Future<BaseResponse<TakeQuizModel>> takeQuiz(
     String id,
   ) async {
     final response = await client.dio.get('$url$id/take-quiz');
