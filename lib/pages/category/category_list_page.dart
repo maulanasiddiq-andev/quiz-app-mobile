@@ -184,6 +184,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "categoryFab",
         onPressed: () async {
           final result = await context.push("/${ResourceConstant.category}/${ActionConstant.create}");
 
