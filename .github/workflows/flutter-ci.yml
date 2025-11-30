@@ -21,6 +21,21 @@ jobs:
         with:
           flutter-version: '3.35.4'
 
+      # Recreate keystore from Base64 secret
+      - name: Restore Android keystore
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-key.keystore
+
+      # Create key.properties
+      - name: Create key.properties
+        run: |
+          cat <<EOF > android/key.properties
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyPassword=$ANDROID_KEY_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          storeFile=./release-key.keystore
+          EOF
+
       # Setup Java & Gradle
       - name: Setup Java
         uses: actions/setup-java@v4
