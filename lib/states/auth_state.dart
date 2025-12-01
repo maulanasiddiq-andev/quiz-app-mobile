@@ -6,7 +6,6 @@ class AuthState {
   final bool isLoadingLogout;
   final TokenModel? token;
   final bool isCheckAuthLoading;
-  final String? errorMessage;
   
   AuthState({
     this.isLoading = false,
@@ -14,7 +13,6 @@ class AuthState {
     this.token,
     this.isCheckAuthLoading = false,
     this.isLoadingLogout = false,
-    this.errorMessage
   });
 
   AuthState copyWith({
@@ -22,8 +20,7 @@ class AuthState {
     bool? isAuthenticated,
     TokenModel? token,
     bool? isCheckAuthLoading,
-    bool? isLoadingLogout,
-    String? errorMessage
+    bool? isLoadingLogout
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
@@ -31,7 +28,6 @@ class AuthState {
       token: token ?? this.token,
       isCheckAuthLoading: isCheckAuthLoading ?? this.isCheckAuthLoading,
       isLoadingLogout: isLoadingLogout ?? this.isLoadingLogout,
-      errorMessage: errorMessage ?? this.errorMessage
     );
   }
 }

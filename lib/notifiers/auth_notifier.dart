@@ -76,7 +76,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final googleAuth = GoogleAuthService();
       await googleAuth.initialize(
         serverClientId: "1065568145771-ok1ilooqacp3ls0phli5bhdnu4pem614.apps.googleusercontent.com",
-        clientId: "1065568145771-lmgbl2pqcc76h1ekumtiess1hdr1bnbo.apps.googleusercontent.com"  
+        clientId: "1065568145771-k3psvrln98sprpvfh1mu10cnt06ibran.apps.googleusercontent.com"  
       );
 
       final account = await googleAuth.signIn();
@@ -97,9 +97,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         isAuthenticated: true,
         token: result.data
       );
-    } on GoogleSignInException catch (e) {
+    } on GoogleSignInException catch (_) {
       Fluttertoast.showToast(msg: "Proses dibatalkan");
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false);
