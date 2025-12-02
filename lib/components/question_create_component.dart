@@ -98,7 +98,7 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
         child: Column(
           spacing: 15,
           crossAxisAlignment: CrossAxisAlignment.start,
