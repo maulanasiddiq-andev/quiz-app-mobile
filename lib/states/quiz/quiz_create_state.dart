@@ -12,6 +12,8 @@ class QuizCreateState {
   final SelectDataModel? category;
   final int questionIndex;
   final List<QuestionCreateModel> questions;
+  final QuestionCreateModel? recommendedQuestion;
+  final bool isLoadingRecommendation;
 
   QuizCreateState({
     this.isLoadingCategories = false,
@@ -22,7 +24,9 @@ class QuizCreateState {
     this.category,
     this.questionIndex = 0,
     this.questions = const [],
-    this.image
+    this.image,
+    this.recommendedQuestion,
+    this.isLoadingRecommendation = false,
   });
 
   QuizCreateState copyWith({
@@ -34,7 +38,9 @@ class QuizCreateState {
     int? questionIndex,
     List<QuestionCreateModel>? questions,
     File? image,
-    SelectDataModel? category
+    SelectDataModel? category,
+    QuestionCreateModel? recommendedQuestion,
+    bool? isLoadingRecommendation
   }) {
     return QuizCreateState(
       isLoadingCategories: isLoadingCategories ?? this.isLoadingCategories,
@@ -45,7 +51,9 @@ class QuizCreateState {
       questionIndex: questionIndex ?? this.questionIndex,
       questions: questions ?? this.questions,
       image: image ?? this.image,
-      category: category ?? this.category
+      category: category ?? this.category,
+      recommendedQuestion: recommendedQuestion ?? this.recommendedQuestion,
+      isLoadingRecommendation: isLoadingRecommendation ?? this.isLoadingRecommendation
     );
   }
 }

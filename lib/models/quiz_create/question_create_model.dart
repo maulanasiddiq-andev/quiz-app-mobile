@@ -38,4 +38,15 @@ class QuestionCreateModel {
       "answers": answers.map((answer) => answer.toJson()).toList(),
     };
   }
+
+  factory QuestionCreateModel.fromJson(Map<String, dynamic> json) {
+    return QuestionCreateModel(
+      text: json['text'] ?? '',
+      trueAnswerIndex: null,
+      answers: (json['answers'] as List?)
+          ?.map((answer) => AnswerCreateModel.fromJson(answer))
+          .toList() ?? [],
+      image: null,
+    );
+  }
 }

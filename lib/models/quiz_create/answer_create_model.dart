@@ -23,4 +23,12 @@ class AnswerCreateModel {
       "isTrueAnswer": isTrueAnswer
     };
   }
+  
+  factory AnswerCreateModel.fromJson(Map<String, dynamic> json) {
+    return AnswerCreateModel(
+      text: json['text'] ?? "",
+      isTrueAnswer: json['isTrueAnswer'] ?? false
+    );
+  }
+
 }
