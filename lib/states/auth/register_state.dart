@@ -1,18 +1,20 @@
+import 'package:quiz_app/models/identity/user_model.dart';
+
 class RegisterState {
-  final String? email;
+  final UserModel? user;
   final bool isLoading;
 
   RegisterState({
-    this.email,
+    this.user,
     this.isLoading = false
   });
 
   RegisterState copyWith({
-    String? email,
+    UserModel? user,
     bool? isLoading
   }) {
     return RegisterState(
-      email: email ?? this.email,
+      user: user ?? this.user,
       isLoading: isLoading ?? this.isLoading
     );
   }
