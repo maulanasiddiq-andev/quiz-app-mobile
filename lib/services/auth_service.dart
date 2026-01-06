@@ -3,6 +3,7 @@ import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/interceptor/client_settings.dart';
 import 'package:quiz_app/models/auth/token_model.dart';
 import 'package:quiz_app/models/identity/simple_user_model.dart';
+import 'package:quiz_app/models/identity/user_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/services/firebase_messaging_service.dart';
 
@@ -52,17 +53,15 @@ class AuthService {
     return result;
   }
 
-  static Future<BaseResponse<TokenModel>> register(
+  static Future<BaseResponse<UserModel>> register(
     String email,
     String name,
-    String username,
     String password,
   ) async {
     final body = jsonEncode({
       "email": email,
       "name": name,
-      "username": username,
-      "password": password,
+      "password": password
     });
 
     final response = await client.dio.post(
@@ -70,9 +69,25 @@ class AuthService {
       data: body
     );
 
-    final BaseResponse<TokenModel> result = BaseResponse.fromJson(
+    final BaseResponse<UserModel> result = BaseResponse.fromJson(
       response.data,
-      fromJsonT: (data) => TokenModel.fromJson(data),
+      fromJsonT: (data) => UserModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<UserModel>> changeEmail(UserModel user) async {
+    final response = await client.dio.post(
+      '${url}change-email',
+      data: user.toJson()
+    );
+
+    final BaseResponse<UserModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => UserModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
@@ -110,6 +125,25 @@ class AuthService {
     final BaseResponse<TokenModel> result = BaseResponse.fromJson(
       response.data,
       fromJsonT: (data) => TokenModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<UserModel>> resendOtp(
+    UserModel user
+  ) async {
+    final body = user.toJson();
+    final response = await client.dio.post(
+      '${url}resend-otp',
+      data: body
+    );
+
+    final BaseResponse<UserModel> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => UserModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);

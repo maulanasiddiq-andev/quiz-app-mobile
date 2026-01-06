@@ -5,6 +5,7 @@ class AuthInputComponent extends StatelessWidget {
   final String hinText;
   final TextInputType keyboardType;
   final TextInputAction action;
+  final TextCapitalization textCapitalization;
   final String? Function(String? value)? validator;
   final bool isLast;
 
@@ -22,7 +23,8 @@ class AuthInputComponent extends StatelessWidget {
     this.isPassword = false,
     this.isTextObscure = false,
     this.onTap,
-    this.isLast = false
+    this.isLast = false,
+    this.textCapitalization = TextCapitalization.none
   });
 
   @override
@@ -48,6 +50,7 @@ class AuthInputComponent extends StatelessWidget {
               keyboardType: keyboardType,
               textInputAction: action,
               obscureText: isTextObscure,
+              textCapitalization: textCapitalization,
               decoration: InputDecoration(
                 isDense: true,
                 hintText: hinText,

@@ -5,46 +5,38 @@ import 'package:quiz_app/components/auth_container.dart';
 import 'package:quiz_app/components/auth_input_component.dart';
 import 'package:quiz_app/notifiers/auth/register_notifier.dart';
 
-class RegisterPage extends ConsumerStatefulWidget {
-  const RegisterPage({super.key});
+class ChangeEmailPage extends ConsumerStatefulWidget {
+  const ChangeEmailPage({super.key});
 
   @override
-  ConsumerState<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<ChangeEmailPage> createState() => _ChangeEmailPageState();
 }
 
-class _RegisterPageState extends ConsumerState<RegisterPage> {
+class _ChangeEmailPageState extends ConsumerState<ChangeEmailPage> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  bool _obscureText = true;
 
   @override
   void dispose() {
     _emailController.dispose();
-    _nameController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
   Future<bool> onSubmitText() async {
     final email = _emailController.text;
-    final name = _nameController.text;
-    final password = _passwordController.text;
 
-    return await ref.read(registerProvider.notifier).register(email, name, password);
+    return await ref.read(registerProvider.notifier).changeEmail(email);
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    final state = ref.watch(registerProvider);
-
+    var colors = Theme.of(context).colorScheme;
+    var state = ref.watch(registerProvider);
+    
     return Scaffold(
       backgroundColor: colors.primary,
       body: AuthContainer(
-        title: "Register",
+        title: "Ganti Email",
         child: Form(
           key: formKey,
           child: Column(
@@ -67,6 +59,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       controller: _emailController, 
                       keyboardType: TextInputType.emailAddress,
                       hinText: "Email",
+                      isLast: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Masukkan email anda';
@@ -78,48 +71,17 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         return null;
                       },
                     ),
-                    AuthInputComponent(
-                      controller: _nameController, 
-                      textCapitalization: TextCapitalization.sentences,
-                      hinText: "Name",
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Masukkan nama anda';
-                        }
-
-                        return null;
-                      },
-                    ),
-                    AuthInputComponent(
-                      controller: _passwordController, 
-                      hinText: "Password",
-                      isPassword: true,
-                      isTextObscure: _obscureText,
-                      action: TextInputAction.done,
-                      isLast: true,
-                      onTap: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Masukkan username anda';
-                        }
-
-                        return null;
-                      }
-                    ),
                   ],
                 ),
               ),
-              SizedBox(height: 50),
+              Expanded(child: SizedBox()),
               GestureDetector(
                 onTap: () async {
                   final result = await onSubmitText();
 
                   if (result == true && context.mounted) {
-                    context.push("/otp");
+                    _emailController.clear();
+                    context.pop(true);
                   }
                 },
                 child: Container(
@@ -138,7 +100,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           ),
                         )
                       : Text(
-                          'Register',
+                          'Ganti',
                           style: TextStyle(
                             color: colors.onPrimary,
                             fontSize: 16,
@@ -148,31 +110,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Sudah punya akun? ',
-                    style: TextStyle(
-                      color: colors.secondary
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      context.go("/login");
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: colors.primary
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Expanded(child: SizedBox()),
-              SizedBox(height: 25),
+              SizedBox(height: 50),
             ],
           ),
         ),

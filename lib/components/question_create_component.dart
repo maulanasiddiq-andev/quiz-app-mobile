@@ -4,6 +4,7 @@ import 'package:quiz_app/components/input_component.dart';
 import 'package:quiz_app/components/pick_image_component.dart';
 import 'package:quiz_app/models/quiz_create/question_create_model.dart';
 import 'package:quiz_app/notifiers/quiz/quiz_create_notifier.dart';
+import 'package:quiz_app/states/quiz/quiz_create_state.dart';
 
 class QuestionCreateComponent extends ConsumerStatefulWidget {
   final QuestionCreateModel question;
@@ -38,9 +39,17 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
 
     // add answer
     if (widget.question.answers.length > oldWidget.question.answers.length) {
-      final controller = TextEditingController();
-      answerControllers.add(controller);
-      answerFocuses.add(FocusNode());
+      // empty the answer controllers and focus nodes
+      answerControllers.clear();
+      answerFocuses.clear();
+      for (var answer in widget.question.answers) {
+        // assign value to the controller
+        final controller = TextEditingController();
+        controller.text = answer.text;
+
+        answerControllers.add(controller);
+        answerFocuses.add(FocusNode());
+      }
 
       // immediately focus the newly added answer field
       answerFocuses[answerFocuses.length - 1].requestFocus();
@@ -70,6 +79,20 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
     }
   }
 
+  void _syncControllers(QuizCreateState? previous, QuizCreateState next) {
+    final updates = {
+      questionController: next.questions[widget.questionIndex].text
+    };
+
+    for (final entry in updates.entries) {
+      final controller = entry.key;
+      final newText = entry.value;
+      if (controller.text != newText) {
+        controller.text = newText;
+      }
+    }
+  }
+
   @override
   void dispose() {
     questionController.dispose();
@@ -81,7 +104,7 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
   }
 
   void initControllers() {
-    questionController.text = widget.question.text;
+    // questionController.text = widget.question.text;
     answerControllers.clear();
     answerFocuses.clear();
     for (var answer in widget.question.answers) {
@@ -95,6 +118,10 @@ class _QuestionCreateComponentState extends ConsumerState<QuestionCreateComponen
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final notifier = ref.read(quizCreateProvider.notifier);
+
+    ref.listen(quizCreateProvider, (previous, next) {
+      if (previous != next) _syncControllers(previous, next);
+    });
 
     return SingleChildScrollView(
       child: Padding(
