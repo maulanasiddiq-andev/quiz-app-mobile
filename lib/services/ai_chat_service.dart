@@ -1,17 +1,20 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:quiz_app/models/quiz_create/question_create_model.dart';
 
 class AIChatService {
   static String url = "https://api.mistral.ai/v1/";
+  static String? apiKey = dotenv.env["MISTRAL_API_KEY"];
+
   static final Dio _dio = Dio(
     BaseOptions(
       baseUrl: url,
       headers: {
         // 'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ==API KEY=='
+        'Authorization': 'Bearer ${apiKey ?? ""}'
       },
     ),
   );
@@ -19,7 +22,8 @@ class AIChatService {
   static Future<QuestionCreateModel> askAIRecommendation(
     String title,
     String description,
-    String? category
+    String? category,
+    String existingQuestions
   ) async {
     final response = await _dio.post(
       "${url}chat/completions",
@@ -29,6 +33,7 @@ class AIChatService {
             "role": "user",
             "content":
                 "You are a quiz generator. Return only valid minified JSON.\n\n"
+                "DO NOT duplicate existing questions"
                 "DO NOT include commentary or any markdown formatting, and do not start with \"```json\" and do not end \"```\".\n\n"
                 "Generate ONE quiz question with this exact structure:\n\n"
                 "{\n"
@@ -49,6 +54,7 @@ class AIChatService {
                 "- Title: $title.\n"
                 "- Description: $description.\n"
                 "- Category: $category.\n"
+                "- Existing Questions: $existingQuestions.\n"
           }
         ],
         "model": "mistral-large-latest"

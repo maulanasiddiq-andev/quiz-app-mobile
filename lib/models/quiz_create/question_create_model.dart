@@ -39,6 +39,15 @@ class QuestionCreateModel {
     };
   }
 
+  // for AI recommendation
+  Map<String, dynamic> toJsonWithoutImage() {
+    return {
+      "text": text,
+      "trueAnswerIndex": trueAnswerIndex,
+      "answers": answers.map((answer) => answer.toJson()).toList()
+    };
+  }
+
   factory QuestionCreateModel.fromJson(Map<String, dynamic> json) {
     return QuestionCreateModel(
       text: json['text'] ?? '',

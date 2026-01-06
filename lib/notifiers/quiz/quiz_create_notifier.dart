@@ -165,10 +165,14 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     state = state.copyWith(isLoadingRecommendation: true);
 
     try {
+      var existingQuestions = state.questions.map((question) => question.toJsonWithoutImage()).toList();
+      var existingQuestionsString = existingQuestions.toString();
+
       final result = await AIChatService.askAIRecommendation(
         state.title,
         state.description,
-        state.category?.name
+        state.category?.name,
+        existingQuestionsString
       );
       QuestionCreateModel? question = result;
 
