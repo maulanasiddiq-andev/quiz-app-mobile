@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/auth_container.dart';
 import 'package:quiz_app/components/auth_input_component.dart';
 import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
@@ -21,7 +22,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    // _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -44,241 +45,189 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
 
     final authState = ref.watch(authProvider);
-    final screenHeight = MediaQuery.of(context).size.height;
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
       backgroundColor: colors.primary,
-      body: SingleChildScrollView(
-        child: Container(
-          height: screenHeight,
-          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      body: AuthContainer(
+        title: "Login",
+        child: Form(
+          key: formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 60),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                  'Login',
-                  style: TextStyle(
-                    color: colors.onPrimary,
-                    fontSize: 45
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  color: colors.surface,
+                  boxShadow: [
+                    BoxShadow(
+                      color: colors.shadow,
+                      blurRadius: 20,
+                      offset: Offset(0, 10)
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(10)
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                  'Everyday Quiz',
-                  style: TextStyle(
-                    color: colors.onPrimary,
-                    fontSize: 20
-                  ),
-                ),
-              ),
-              SizedBox(height: 30),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
-                  decoration: BoxDecoration(
-                    color: colors.surface,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(60),
-                      topRight: Radius.circular(60)
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey.shade200
+                          )
+                        )
+                      ),
+                      child: Autocomplete(
+                        optionsBuilder: (TextEditingValue value) async {
+                          if (value.text.isEmpty) {
+                            return const Iterable<String>.empty();
+                          }
+                          var emails = await ref.read(authProvider.notifier).showSubmittedEmails();
+                    
+                          return emails.where((email) {
+                            return email.toLowerCase().contains(value.text.toLowerCase());
+                          }).take(4);
+                        },
+                        fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
+                          _emailController = textEditingController;
+                    
+                          return TextFormField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            focusNode: focusNode,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              hintText: 'Email',
+                              hintStyle: TextStyle(
+                                color: colors.onSurface.withAlpha(100)
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.all(0)
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Masukkan email anda';
+                              }
+
+                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                return 'Masukkan email valid';
+                              }
+                              return null;
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    AuthInputComponent(
+                      controller: _passwordController, 
+                      hinText: "Password",
+                      action: TextInputAction.done,
+                      isLast: true,
+                      isPassword: true,
+                      isTextObscure: _obscureText,
+                      onTap: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Masukkan password anda";
+                        }
+
+                        return null;
+                      },
                     )
+                  ],
+                ),
+              ),
+              SizedBox(height: 40),
+              GestureDetector(
+                onTap: () {
+                  _onSubmitText();
+                },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: colors.primary,
+                    borderRadius: BorderRadius.circular(25)
                   ),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: colors.surface,
-                            boxShadow: [
-                              BoxShadow(
-                                color: colors.shadow,
-                                blurRadius: 20,
-                                offset: Offset(0, 10)
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(10)
+                  child: Center(
+                    child: authState.isLoading 
+                      ? SizedBox(
+                          height: 45,
+                          width: 45,
+                          child: Center(
+                            child: CircularProgressIndicator(color: colors.onPrimary)
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.grey.shade200
-                                    )
-                                  )
-                                ),
-                                child: Autocomplete(
-                                  optionsBuilder: (TextEditingValue value) async {
-                                    if (value.text.isEmpty) {
-                                      return const Iterable<String>.empty();
-                                    }
-                                    var emails = await ref.read(authProvider.notifier).showSubmittedEmails();
-                    
-                                    return emails.where((email) {
-                                      return email.toLowerCase().contains(value.text.toLowerCase());
-                                    }).take(4);
-                                  },
-                                  fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
-                                    _emailController = textEditingController;
-                    
-                                    return TextFormField(
-                                      controller: _emailController,
-                                      keyboardType: TextInputType.emailAddress,
-                                      textInputAction: TextInputAction.next,
-                                      focusNode: focusNode,
-                                      decoration: InputDecoration(
-                                        isDense: true,
-                                        hintText: 'Email',
-                                        hintStyle: TextStyle(
-                                          color: colors.onSurface.withAlpha(100)
-                                        ),
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.all(0)
-                                      ),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Masukkan email anda';
-                                        }
-
-                                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                                          return 'Masukkan email valid';
-                                        }
-                                        return null;
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                              AuthInputComponent(
-                                controller: _passwordController, 
-                                hinText: "Password",
-                                action: TextInputAction.done,
-                                isLast: true,
-                                isPassword: true,
-                                isTextObscure: _obscureText,
-                                onTap: () {
-                                  setState(() {
-                                    _obscureText = !_obscureText;
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Masukkan password anda";
-                                  }
-
-                                  return null;
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 40),
-                        Text(
-                          'Lupa Password?',
+                        )
+                      : Text(
+                          'Login',
                           style: TextStyle(
-                            color: colors.secondary
+                            color: colors.onPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
                           ),
                         ),
-                        SizedBox(height: 50),
-                        GestureDetector(
-                          onTap: () {
-                            _onSubmitText();
-                          },
-                          child: Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: colors.primary,
-                              borderRadius: BorderRadius.circular(25)
-                            ),
-                            child: Center(
-                              child: authState.isLoading 
-                                ? SizedBox(
-                                    height: 45,
-                                    width: 45,
-                                    child: Center(
-                                      child: CircularProgressIndicator(color: colors.onPrimary)
-                                    ),
-                                  )
-                                : Text(
-                                    'Login',
-                                    style: TextStyle(
-                                      color: colors.onPrimary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                            ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Belum punya akun? ',
+                    style: TextStyle(
+                      color: colors.secondary
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      context.go("/register");
+                    },
+                    child: Text(
+                      'Daftar',
+                      style: TextStyle(
+                        color: colors.primary
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 25),
+              GestureDetector(
+                onTap: () async {
+                  ref.read(authProvider.notifier).loginWithGoogle();
+                },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(color: colors.primary),
+                  ),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Login With Google',
+                          style: TextStyle(
+                            color: colors.onSurface,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
                           ),
                         ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Belum punya akun? ',
-                              style: TextStyle(
-                                color: colors.secondary
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                context.go("/register");
-                              },
-                              child: Text(
-                                'Daftar',
-                                style: TextStyle(
-                                  color: colors.primary
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 25),
-                        GestureDetector(
-                          onTap: () async {
-                            ref.read(authProvider.notifier).loginWithGoogle();
-                          },
-                          child: Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              border: Border.all(color: colors.primary),
-                            ),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Login With Google',
-                                    style: TextStyle(
-                                      color: colors.onSurface,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        if (authState.errorMessage != null)
-                          Text(authState.errorMessage!)
                       ],
                     ),
                   ),
-                )
+                ),
               )
             ],
           ),
-        ),
+        )
       ),
     );
   }

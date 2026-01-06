@@ -39,7 +39,7 @@ class _QuizDetailCreatePageState extends ConsumerState<QuizDetailCreatePage> {
     final updates = {
       titleController: next.title,
       descriptionController: next.description,
-      timeController: next.time.toString(),
+      timeController: next.time != 0 ? next.time.toString() : '',
     };
 
     for (final entry in updates.entries) {

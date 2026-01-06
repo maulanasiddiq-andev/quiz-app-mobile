@@ -5,6 +5,7 @@ import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/models/quiz_create/answer_create_model.dart';
 import 'package:quiz_app/models/quiz_create/question_create_model.dart';
 import 'package:quiz_app/models/select_data_model.dart';
+import 'package:quiz_app/services/ai_chat_service.dart';
 import 'package:quiz_app/services/file_service.dart';
 import 'package:quiz_app/services/quiz_service.dart';
 import 'package:quiz_app/states/quiz/quiz_create_state.dart';
@@ -160,6 +161,49 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
     state = state.copyWith(questionIndex: questionIndex);
   }
 
+  Future<void> askAIRecommendation() async {
+    state = state.copyWith(isLoadingRecommendation: true);
+
+    try {
+      var existingQuestions = state.questions.map((question) => question.toJsonWithoutImage()).toList();
+      var existingQuestionsString = existingQuestions.toString();
+
+      final result = await AIChatService.askAIRecommendation(
+        state.title,
+        state.description,
+        state.category?.name,
+        existingQuestionsString
+      );
+      QuestionCreateModel? question = result;
+
+      for (var i = 0; i < question!.answers.length; i++) {
+        if (question.answers[i].isTrueAnswer) {
+          question = question.copyWith(trueAnswerIndex: i);
+          break;
+        }
+      }
+
+      state = state.copyWith(
+        isLoadingRecommendation: false,
+        recommendedQuestion: question
+      );
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+      state = state.copyWith(isLoadingRecommendation: false);
+    }
+  }
+
+  void applyAIRecommendation() {
+    // take the questions
+    final questions = [...state.questions];
+
+    // update the current question
+    questions[state.questionIndex] = state.recommendedQuestion!;
+
+    // update the state
+    state = state.copyWith(questions: questions);
+  }
+
   Future<bool> createQuiz() async {
     state = state.copyWith(isLoadingCreate: true);
 
@@ -197,6 +241,4 @@ class QuizCreateNotifier extends StateNotifier<QuizCreateState> {
   }
 }
 
-final quizCreateProvider = StateNotifierProvider.autoDispose(
-  (ref) => QuizCreateNotifier(),
-);
+final quizCreateProvider = StateNotifierProvider.autoDispose((ref) => QuizCreateNotifier());

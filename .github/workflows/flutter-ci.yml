@@ -21,6 +21,33 @@ jobs:
         with:
           flutter-version: '3.35.4'
 
+      # FIX LATER !!
+      # keystore base64 is corrupted
+      # release-key.keystore is empty
+
+      # Recreate keystore from Base64 secret
+      - name: Restore Android keystore
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-key.keystore
+
+      # Create key.properties
+      - name: Create key.properties
+        run: |
+          cat <<EOF > android/key.properties
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyPassword=$ANDROID_KEY_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          storeFile=./release-key.keystore
+          EOF
+
+      # Print SHA1 and SHA256 fingerprints
+      # - name: Print SHA1 and SHA256 fingerprints
+      #   run: |
+      #     keytool -list -v -keystore android/app/release-key.keystore \
+      #       -alias "$ANDROID_KEY_ALIAS" \
+      #       -storepass "$ANDROID_KEYSTORE_PASSWORD" \
+      #       -keypass "$ANDROID_KEY_PASSWORD"
+
       # Setup Java & Gradle
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -37,6 +64,12 @@ jobs:
           else
             echo "No GOOGLE_SERVICES_JSON secret found, skipping..."
           fi
+
+      - name: Create .env file
+        run: |
+          cat <<EOF > .env
+          MISTRAL_API_KEY=${{ secrets.MISTRAL_API_KEY }}
+          EOF
 
       # Install dependencies
       - name: Install dependencies

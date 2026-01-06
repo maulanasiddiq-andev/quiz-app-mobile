@@ -101,7 +101,10 @@ class _RootPageState extends ConsumerState<RootPage> {
         return;
       },
       child: Scaffold(
-        body: shownMenus[_currentIndex].page,
+        body: IndexedStack(
+          index: _currentIndex,
+          children: shownMenus.map((menu) => menu.page).toList(),
+        ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           onTap: _onTabTapped,

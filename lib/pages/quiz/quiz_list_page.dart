@@ -208,6 +208,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
       floatingActionButton: CheckModuleComponent(
         moduleNames: [ModuleConstant.createCategory],
         child: FloatingActionButton(
+          heroTag: "quizFab",
           onPressed: () {
             context.push("/${ResourceConstant.quiz}/${ActionConstant.create}");
           },
