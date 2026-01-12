@@ -31,6 +31,13 @@ class _QuizDetailUserPageState extends ConsumerState<QuizDetailUserPage> {
       }
     });
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var state = ref.watch(quizDetailUserProvider(widget.userId));
