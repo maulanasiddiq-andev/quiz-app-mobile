@@ -64,6 +64,11 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                             state.quiz?.title ?? "Judul Kuis",
                             style: CustomTextStyle.headerStyle,
                           ),
+                          if (state.quiz?.category != null)
+                            Text(
+                              state.quiz!.category!.name,
+                              style: CustomTextStyle.defaultTextStyle,
+                            ),
                           // user is always included while getting quiz detail
                           if (state.quiz?.user != null)
                             Row(
@@ -73,12 +78,19 @@ class _QuizDetailPageState extends ConsumerState<QuizDetailPage> {
                                   "Oleh:",
                                   style: CustomTextStyle.defaultTextStyle,
                                 ),
-                                ProfileImageComponent(profileImage: state.quiz?.user?.profileImage),
-                                Text(
-                                  state.quiz!.user!.name,
-                                  style: CustomTextStyle.defaultTextStyle,
+                                GestureDetector(
+                                  onTap: () => context.push("/${ResourceConstant.quiz}/${ResourceConstant.user}/${state.quiz!.userId}"),
+                                  child: Row(
+                                    spacing: 5,
+                                    children: [
+                                      ProfileImageComponent(profileImage: state.quiz?.user?.profileImage),
+                                      Text(
+                                        state.quiz!.user!.name,
+                                        style: CustomTextStyle.defaultTextStyle,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-
                               ],
                             ),
                           Text(
