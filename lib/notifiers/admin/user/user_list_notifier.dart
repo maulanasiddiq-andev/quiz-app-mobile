@@ -30,17 +30,15 @@ class UserListNotifier extends StateNotifier<UserListState> {
       final BaseResponse<SearchResponse<UserModel>> result = await UserService.getUsers(queryParameters);
 
       state = state.copyWith(
-        isLoading: false,
-        isLoadingMore: false,
         users: [...state.users, ...result.data!.items],
         hasNextPage: result.data!.hasNextPage,
         hasPreviousPage: result.data!.hasPreviousPage,
       );
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false, isLoadingMore: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false, isLoadingMore: false);
     }
   }

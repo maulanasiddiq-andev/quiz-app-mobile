@@ -16,15 +16,12 @@ class UserDetailNotifier extends StateNotifier<UserDetailState> {
     try {
       final result = await UserService.getUserById(id);
 
-      state = state.copyWith(
-        isLoading: false,
-        user: result.data
-      );
+      state = state.copyWith(user: result.data);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
