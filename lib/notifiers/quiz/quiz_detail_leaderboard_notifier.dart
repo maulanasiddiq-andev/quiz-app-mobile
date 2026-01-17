@@ -28,16 +28,14 @@ class QuizDetailLeaderboardNotifier extends StateNotifier<QuizDetailLeaderboardS
       );
 
       state = state.copyWith(
-        isLoading: false, 
-        isLoadingMore: false,
         histories: [...state.histories, ...result.data!.items],
         hasNextPage: result.data!.hasNextPage
       );
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false, isLoadingMore: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false, isLoadingMore: false);
     }
   }

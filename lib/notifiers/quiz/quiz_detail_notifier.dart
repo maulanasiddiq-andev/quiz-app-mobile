@@ -17,12 +17,12 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
     try {
       final BaseResponse<QuizModel> result = await QuizService.getQuizById(quizId);
 
-      state = state.copyWith(isLoading: false, quiz: result.data);
+      state = state.copyWith(quiz: result.data);
     }  on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -33,19 +33,17 @@ class QuizDetailNotifier extends StateNotifier<QuizDetailState> {
     try {
       await QuizService.deleteQuiz(quizId);
 
-      state = state.copyWith(isLoadingDelete: false);
-
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingDelete: false);
 
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingDelete: false);
 
       return false;
+    } finally {
+      state = state.copyWith(isLoadingDelete: false);
     }
   }
 }

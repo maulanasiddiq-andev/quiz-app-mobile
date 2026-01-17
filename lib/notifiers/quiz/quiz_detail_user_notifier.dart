@@ -21,15 +21,12 @@ class QuizDetailUserNotifier extends StateNotifier<QuizDetailUserState> {
     try {
       final BaseResponse<SimpleUserModel> result = await UserService.getSimpleUser(userId);
       
-      state = state.copyWith(
-        isLoadingUser: false,
-        user: result.data,
-      );
+      state = state.copyWith(user: result.data);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingUser: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoadingUser: false);
     }
   }
@@ -46,15 +43,12 @@ class QuizDetailUserNotifier extends StateNotifier<QuizDetailUserState> {
 
       final BaseResponse<SearchResponse<QuizModel>> result = await UserService.getQuizzesByUserId(userId, queryParameters);
 
-      state = state.copyWith(
-        isLoading: false,
-        quizzes: result.data?.items,
-      );
+      state = state.copyWith(quizzes: result.data?.items);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
