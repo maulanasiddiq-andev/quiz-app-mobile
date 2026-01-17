@@ -273,7 +273,7 @@ class QuizEditNotifier extends StateNotifier<QuizEditState> {
     state = state.copyWith(questionIndex: questionIndex);
   }
 
-  Future<bool> createQuiz() async {
+  Future<bool> updateQuiz() async {
     state = state.copyWith(isLoadingUpdate: true);
 
     try {
