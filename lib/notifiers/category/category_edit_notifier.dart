@@ -16,12 +16,12 @@ class CategoryEditNotifier extends StateNotifier<CategoryEditState> {
     try {
       final result = await CategoryService.getCategoryById(id);
 
-      state = state.copyWith(isLoading: false, category: result.data);
+      state = state.copyWith(category: result.data);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -63,14 +63,14 @@ class CategoryEditNotifier extends StateNotifier<CategoryEditState> {
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingUpdate: false);
 
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingUpdate: false);
 
       return false;
+    } finally {
+      state = state.copyWith(isLoadingUpdate: false);
     }
   }
 }
