@@ -16,15 +16,12 @@ class RoleDetailNotifier extends StateNotifier<RoleDetailState> {
     try {
       final result = await RoleService.getRoleById(id);
 
-      state = state.copyWith(
-        isLoading: false,
-        role: result.data
-      );
+      state = state.copyWith(role: result.data);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -35,20 +32,20 @@ class RoleDetailNotifier extends StateNotifier<RoleDetailState> {
     try {
       final result = await RoleService.deleteRole(roleId);
 
-      state = state.copyWith(isLoadingDelete: false, role: result.data);
+      state = state.copyWith(role: result.data);
       Fluttertoast.showToast(msg: result.messages[0]);
 
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingDelete: false);
 
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingDelete: false);
 
       return false;
+    } finally {
+      state = state.copyWith(isLoadingDelete: false); 
     }
   }
 }
