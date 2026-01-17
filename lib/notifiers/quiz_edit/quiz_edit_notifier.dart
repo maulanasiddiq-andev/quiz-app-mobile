@@ -41,15 +41,14 @@ class QuizEditNotifier extends StateNotifier<QuizEditState> {
       quiz = quiz.copyWith(questions: questions);
 
       state = state.copyWith(
-        isLoading: false,
         quiz: quiz,
         selectedCategory: selectedCategory
       );
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -298,20 +297,19 @@ class QuizEditNotifier extends StateNotifier<QuizEditState> {
 
       var result = await QuizService.updateQuiz(state.quiz!.quizId, data);
 
-      state = state.copyWith(isLoadingUpdate: false);
       Fluttertoast.showToast(msg: result.messages[0]);
 
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingUpdate: false);
 
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingUpdate: false);
 
       return false;
+    } finally {
+      state = state.copyWith(isLoadingUpdate: false);
     }
   }
 }
