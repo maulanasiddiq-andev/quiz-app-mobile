@@ -5,6 +5,7 @@ import 'package:quiz_app/interceptor/client_settings.dart';
 import 'package:quiz_app/models/identity/simple_user_model.dart';
 import 'package:quiz_app/models/identity/user_model.dart';
 import 'package:quiz_app/models/quiz/quiz_model.dart';
+import 'package:quiz_app/models/quiz_history/quiz_history_model.dart';
 import 'package:quiz_app/models/responses/base_response.dart';
 import 'package:quiz_app/models/responses/search_responses.dart';
 
@@ -103,6 +104,64 @@ class UserService {
       fromJsonT: (data) => SearchResponse.fromJson(
         data,
         (item) => QuizModel.fromJson(item),
+      ),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<int>> getSelfQuizCount() async {
+    final response = await client.dio.get('${url}self-quiz-count');
+
+    final result = BaseResponse<int>.fromJson(response.data);
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<int>> getSelfHistoryCount() async {
+    final response = await client.dio.get('${url}self-history-count');
+
+    final result = BaseResponse<int>.fromJson(response.data);
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<SearchResponse<QuizModel>>> getSelfQuiz(Map<String, dynamic> queryParameters) async {
+    final response = await client.dio.get(
+      '${url}self-quiz',
+      queryParameters: queryParameters,
+    );
+
+    final BaseResponse<SearchResponse<QuizModel>> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => SearchResponse.fromJson(
+        data,
+        (item) => QuizModel.fromJson(item),
+      ),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<SearchResponse<QuizHistoryModel>>> getSelfHistory(Map<String, dynamic> queryParameters) async {
+    final response = await client.dio.get(
+      '${url}self-history',
+      queryParameters: queryParameters,
+    );
+
+    final BaseResponse<SearchResponse<QuizHistoryModel>> result = BaseResponse.fromJson(
+      response.data,
+      fromJsonT: (data) => SearchResponse.fromJson(
+        data,
+        (item) => QuizHistoryModel.fromJson(item),
       ),
     );
 
