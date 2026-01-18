@@ -41,12 +41,12 @@ jobs:
           EOF
 
       # Print SHA1 and SHA256 fingerprints
-      # - name: Print SHA1 and SHA256 fingerprints
-      #   run: |
-      #     keytool -list -v -keystore android/app/release-key.keystore \
-      #       -alias "$ANDROID_KEY_ALIAS" \
-      #       -storepass "$ANDROID_KEYSTORE_PASSWORD" \
-      #       -keypass "$ANDROID_KEY_PASSWORD"
+      - name: Print SHA1 and SHA256 fingerprints
+        run: |
+          keytool -list -v -keystore android/app/release-key.keystore \
+            -alias "$ANDROID_KEY_ALIAS" \
+            -storepass "$ANDROID_KEYSTORE_PASSWORD" \
+            -keypass "$ANDROID_KEY_PASSWORD"
 
       # Setup Java & Gradle
       - name: Setup Java
