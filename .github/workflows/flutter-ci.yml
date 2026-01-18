@@ -27,8 +27,14 @@ jobs:
 
       # Recreate keystore from Base64 secret
       - name: Restore Android keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-key.keystore
+
+      - name: Verify keystore file
+        run: |
+          ls -lh android/app/release-key.keystore
 
       # Create key.properties
       - name: Create key.properties
@@ -37,11 +43,15 @@ jobs:
           storePassword=$ANDROID_KEYSTORE_PASSWORD
           keyPassword=$ANDROID_KEY_PASSWORD
           keyAlias=$ANDROID_KEY_ALIAS
-          storeFile=./release-key.keystore
+          storeFile=android/app/release-key.keystore
           EOF
 
       # Print SHA1 and SHA256 fingerprints
       - name: Print SHA1 and SHA256 fingerprints
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
           keytool -list -v -keystore android/app/release-key.keystore \
             -alias "$ANDROID_KEY_ALIAS" \
