@@ -224,7 +224,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ),
                 ),
-              )
+              ),
+              if (authState.errorMessage != null) ...[
+                SizedBox(height: 20),
+                Text(
+                  authState.errorMessage!,
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+              ]
             ],
           ),
         )
