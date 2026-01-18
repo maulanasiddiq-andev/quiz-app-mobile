@@ -125,7 +125,7 @@ class _QuizEditReviewPageState extends ConsumerState<QuizEditReviewPage> {
             child: CustomButtonComponent(
               isLoading: state.isLoadingUpdate,
               onTap: () async {
-                final result = await notifier.createQuiz();
+                final result = await notifier.updateQuiz();
 
                 if (result == true && context.mounted) {
                   // back to list page

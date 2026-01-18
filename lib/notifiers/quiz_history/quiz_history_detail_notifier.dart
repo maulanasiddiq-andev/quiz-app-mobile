@@ -22,13 +22,11 @@ class QuizHistoryDetailNotifier extends StateNotifier<QuizHistoryDetailState> {
           quizHistory: result.data
         );
       }
-
-      state = state.copyWith(isLoading: false);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }

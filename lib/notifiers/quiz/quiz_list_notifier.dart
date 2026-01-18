@@ -39,23 +39,19 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
 
       if (result.data != null) {
         state = state.copyWith(
-          isLoadingQuizzes: false,
-          isLoadingMoreQuizzes: false,
           quizzes: [...state.quizzes, ...result.data!.items],
           quizHasNextPage: result.data!.hasNextPage,
-        );
-      } else {
-        state = state.copyWith(
-          isLoadingQuizzes: false,
-          isLoadingMoreQuizzes: false,
         );
       }
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingQuizzes: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingQuizzes: false);
+    } finally {
+      state = state.copyWith(
+        isLoadingQuizzes: false,
+        isLoadingMoreQuizzes: false,
+      );
     }
   }
 
@@ -78,23 +74,19 @@ class QuizListNotifier extends StateNotifier<QuizListState> {
 
       if (result.data != null) {
         state = state.copyWith(
-          isLoadingCategories: false,
-          isLoadingMoreCategories: false,
           categories: [...state.categories, ...result.data!.items],
           categoryHasNextPage: result.data!.hasNextPage,
-        );
-      } else {
-        state = state.copyWith(
-          isLoadingCategories: false,
-          isLoadingMoreCategories: false,
         );
       }
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingCategories: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingCategories: false);
+    } finally {
+      state = state.copyWith(
+        isLoadingCategories: false,
+        isLoadingMoreCategories: false,
+      );
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:quiz_app/constants/action_constant.dart';
 import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/pages/quiz/quiz_detail_leaderboard_page.dart';
 import 'package:quiz_app/pages/quiz/quiz_detail_page.dart';
+import 'package:quiz_app/pages/quiz/quiz_detail_user_page.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_create_review_page.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_detail_create_page.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_question_create_page.dart';
@@ -87,5 +88,13 @@ final GoRoute quizRoute = GoRoute(
         ),
       ]
     ),
+    // get quizzes by user
+    GoRoute(
+      path: "${ResourceConstant.user}/:id",
+      builder: (context, state) {
+        final userId = state.pathParameters["id"];
+        return QuizDetailUserPage(userId: userId!);
+      },
+    )
   ]
 );

@@ -28,16 +28,15 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
         questions: [...questionExams],
       );
 
-      state = state.copyWith(isLoading: false);
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoading: false);
       return false;
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -92,16 +91,15 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
       state = state.copyWith(quizHistory: result.data);
       Fluttertoast.showToast(msg: result.messages[0]);
 
-      state = state.copyWith(isLoading: false);
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoading: false);
       return false;
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 

@@ -23,14 +23,14 @@ class RoleCreateNotifier extends StateNotifier<RoleCreateState> {
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
 
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoading: false);
 
       return false;
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 }

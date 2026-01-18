@@ -18,12 +18,12 @@ class RoleEditNotifier extends StateNotifier<RoleEditState> {
     try {
       final result = await RoleService.getRoleByIdWithSelectableModules(roleId);
 
-      state = state.copyWith(isLoading: false, role: result.data);
+      state = state.copyWith(role: result.data);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -74,14 +74,14 @@ class RoleEditNotifier extends StateNotifier<RoleEditState> {
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingUpdate: false);
 
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingUpdate: false);
 
       return false;
+    } finally {
+      state = state.copyWith(isLoadingUpdate: false);
     }
   }
 }

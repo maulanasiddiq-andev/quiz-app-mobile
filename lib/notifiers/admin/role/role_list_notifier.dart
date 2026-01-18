@@ -30,17 +30,15 @@ class RoleListNotifier extends StateNotifier<RoleListState> {
       final BaseResponse<SearchResponse<RoleModel>> result = await RoleService.getRoles(queryParameters);
 
       state = state.copyWith(
-        isLoading: false,
-        isLoadingMore: false,
         roles: [...state.roles, ...result.data!.items],
         hasNextPage: result.data!.hasNextPage,
         hasPreviousPage: result.data!.hasPreviousPage,
       );
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false, isLoadingMore: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false, isLoadingMore: false);
     }
   }

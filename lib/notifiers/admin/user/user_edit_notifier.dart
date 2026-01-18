@@ -30,15 +30,14 @@ class UserEditNotifier extends StateNotifier<UserEditState> {
       }
 
       state = state.copyWith(
-        isLoading: false, 
         user: result.data,
         role: role
       );
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -72,14 +71,14 @@ class UserEditNotifier extends StateNotifier<UserEditState> {
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingUpdate: false);
 
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingUpdate: false);
 
       return false;
+    } finally {
+      state = state.copyWith(isLoadingUpdate: false);
     }
   }
 }

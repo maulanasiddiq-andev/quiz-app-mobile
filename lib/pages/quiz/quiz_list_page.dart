@@ -37,6 +37,12 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final state = ref.watch(quizListProvider);

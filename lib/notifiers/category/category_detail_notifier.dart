@@ -16,12 +16,12 @@ class CategoryDetailNotifier extends StateNotifier<CategoryDetailState>{
     try {
       final result = await CategoryService.getCategoryById(id);
 
-      state = state.copyWith(isLoading: false, category: result.data);
+      state = state.copyWith(category: result.data);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -32,20 +32,20 @@ class CategoryDetailNotifier extends StateNotifier<CategoryDetailState>{
     try {
       final result = await CategoryService.deleteCategory(id);
 
-      state = state.copyWith(isLoadingDelete: false, category: result.data);
+      state = state.copyWith(category: result.data);
       Fluttertoast.showToast(msg: result.messages[0]);
 
       return true;
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoadingDelete: false);
 
       return false;
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
-      state = state.copyWith(isLoadingDelete: false);
 
       return false;
+    } finally {
+      state = state.copyWith(isLoadingDelete: false);
     }
   }
 }

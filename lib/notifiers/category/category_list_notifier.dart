@@ -30,17 +30,15 @@ class CategoryListNotifier extends StateNotifier<CategoryListState> {
       final BaseResponse<SearchResponse<CategoryModel>> result = await CategoryService.getCategories(queryParameters);
 
       state = state.copyWith(
-        isLoading: false,
-        isLoadingMore: false,
         categories: [...state.categories, ...result.data!.items],
         hasNextPage: result.data!.hasNextPage,
         hasPreviousPage: result.data!.hasPreviousPage,
       );
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      state = state.copyWith(isLoading: false, isLoadingMore: false);
     } catch (e) {
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
+    } finally {
       state = state.copyWith(isLoading: false, isLoadingMore: false);
     }
   }

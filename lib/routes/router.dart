@@ -5,6 +5,7 @@ import 'package:quiz_app/pages/auth/login_page.dart';
 import 'package:quiz_app/pages/auth/otp_page.dart';
 import 'package:quiz_app/pages/auth/register_page.dart';
 import 'package:quiz_app/routes/category_route.dart';
+import 'package:quiz_app/routes/profile_route.dart';
 import 'package:quiz_app/routes/quiz_route.dart';
 import 'package:quiz_app/routes/role_route.dart';
 import 'package:quiz_app/routes/user_route.dart';
@@ -42,6 +43,8 @@ final GoRouter router = GoRouter(
     // role routes
     roleRoute,
     // user pages
-    userRoute
+    userRoute,
+    // profile pages
+    ...profileRoute
   ]
 );
