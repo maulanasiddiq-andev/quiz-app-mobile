@@ -91,7 +91,7 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                     ...state.roles.map((role) {
                       return GestureDetector(
                         onTap: () {
-                          context.push("/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
+                          context.push("/admin/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
                         },
                         child: Container(
                           width: double.infinity,
@@ -132,11 +132,11 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
                               onSelected: (value) async {
                                 switch (value) {
                                   case 'view':
-                                    context.push("/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
+                                    context.push("/admin/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
                                     break;
                                   case 'edit':
-                                    final result = await context.push("/${ResourceConstant.role}/${ActionConstant.edit}/${role.roleId}");
-                  
+                                    final result = await context.push("/admin/${ResourceConstant.role}/${ActionConstant.edit}/${role.roleId}");
+
                                     if (result != null && result == true) {
                                       notifier.refreshRoles();
                                     }
@@ -185,7 +185,7 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
         moduleNames: [ModuleConstant.createRole],
         child: FloatingActionButton(
           onPressed: () async {
-            final result = await context.push("/${ResourceConstant.role}/${ActionConstant.create}");
+            final result = await context.push("/admin/${ResourceConstant.role}/${ActionConstant.create}");
 
             if (result != null && result == true) {
               notifier.refreshRoles();

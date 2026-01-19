@@ -108,7 +108,7 @@ class _UserDetailPageState extends ConsumerState<UserDetailPage> {
                         child: Expanded(
                           child: CustomButtonComponent(
                             onTap: () async {
-                              final result = await context.push("/${ResourceConstant.user}/${ActionConstant.edit}/${widget.userId}");
+                              final result = await context.push("/admin/${ResourceConstant.user}/${ActionConstant.edit}/${widget.userId}");
 
                               if (result != null && result == true) {
                                 notifier.getUserById(widget.userId);

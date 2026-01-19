@@ -33,7 +33,7 @@ class _AdminPageState extends State<AdminPage> {
             ...menus.map((menu) {
               return GestureDetector(
                 onTap: () {
-                  context.push("/${menu.title.toLowerCase()}");
+                  context.push("/admin/${menu.title.toLowerCase()}");
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),

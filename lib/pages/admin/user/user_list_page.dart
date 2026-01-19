@@ -101,7 +101,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                         ),
                         child: ListTile(
                           onTap: () {
-                            context.push("/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
+                            context.push("/admin/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
                           },
                           leading: ProfileImageComponent(
                             profileImage: user.profileImage,
@@ -122,11 +122,11 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                             onSelected: (value) async {
                               switch (value) {
                                 case 'view':
-                                  context.push("/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
+                                  context.push("/admin/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
                                   break;
                                 case 'edit':
-                                  final result = await context.push("/${ResourceConstant.user}/${ActionConstant.edit}/${user.userId}");
-                
+                                  final result = await context.push("/admin/${ResourceConstant.user}/${ActionConstant.edit}/${user.userId}");
+
                                   if (result != null && result == true) {
                                     notifier.refreshUsers();
                                   }

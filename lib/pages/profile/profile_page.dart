@@ -67,7 +67,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 ),
                                 CustomButtonComponent(
                                   onTap: () {
-                                    context.push('/profile-quiz');
+                                    context.push('/profile/profile-quiz');
                                   }, 
                                   text: "Lihat"
                                 )
@@ -85,7 +85,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 ),
                                 CustomButtonComponent(
                                   onTap: () {
-                                    context.push('/profile-history');
+                                    context.push('/profile/profile-history');
                                   }, 
                                   text: "Lihat"
                                 )

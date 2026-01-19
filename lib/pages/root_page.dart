@@ -1,61 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/constants/module_constant.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
+import 'package:quiz_app/models/identity/role_module_model.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
-import 'package:quiz_app/pages/admin/admin_page.dart';
-import 'package:quiz_app/pages/category/category_list_page.dart';
-import 'package:quiz_app/pages/profile/profile_page.dart';
-import 'package:quiz_app/pages/quiz/quiz_list_page.dart';
 
 class RootPage extends ConsumerStatefulWidget {
-  const RootPage({super.key});
+  final Widget child;
+  const RootPage({super.key, required this.child});
 
   @override
   ConsumerState<RootPage> createState() => _RootPageState();
 }
 
 class _RootPageState extends ConsumerState<RootPage> {
-  List<int> indexes = [0];
-  int _currentIndex = 0;
-
   final List<BottomMenuModel> menus = [
     BottomMenuModel(
-      page: QuizListPage(),
       title: 'Beranda',
       icon: Icons.home,
       moduleNames: [ModuleConstant.searchQuiz],
-      index: 0
+      path: "/${ResourceConstant.quiz}"
     ),
     BottomMenuModel(
-      page: CategoryListPage(),
       title: 'Kategori',
       icon: Icons.category,
       moduleNames: [ModuleConstant.searchCategory, ModuleConstant.detailCategory],
-      index: 1
+      path: "/${ResourceConstant.category}"
     ),
     BottomMenuModel(
-      page: AdminPage(),
       title: 'Admin',
       icon: Icons.admin_panel_settings,
       moduleNames: [ModuleConstant.searchUser, ModuleConstant.searchRole],
-      index: 2
+      path: "/admin"
     ),
     BottomMenuModel(
-      page: ProfilePage(),
       title: 'Profile',
       moduleNames: [],
-      index: 3
+      path: "/profile"
     )
   ];
 
-  void _onTabTapped(int index) {
-    setState(() {
-      indexes.add(index);
-      _currentIndex = indexes[indexes.length - 1];
-    });
+  List<BottomMenuModel> visibleMenus(List<RoleModuleModel>? modules) {
+    return menus
+      .where((menu) => modules != null && menu.moduleNames.every((moduleName) => modules.any((module) => module.roleModuleName == moduleName)))
+      .toList();
   }
 
   Future<bool> confirmExit() async {
@@ -70,64 +62,59 @@ class _RootPageState extends ConsumerState<RootPage> {
 
   @override
   Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).matchedLocation;
+    
     final state = ref.watch(authProvider);
     final modules = state.token?.user?.role?.roleModules;
     final colors = Theme.of(context).colorScheme;
 
-    final shownMenus = menus
-      .where((menu) => modules != null && menu.moduleNames.every((moduleName) => modules.any((module) => module.roleModuleName == moduleName)))
-      .toList();
+    final shownMenus = visibleMenus(modules);
+    int index = shownMenus.indexWhere((menu) => location.startsWith(menu.path));
+
+    // fallback if user deep-links to hidden tab
+    if (index == -1) {
+      index = 0;
+    }
 
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          if (indexes.length > 1) {
-            // if user press back button
-            // remove the indexes from the last
-            setState(() {
-              indexes.removeLast();
-              _currentIndex = indexes[indexes.length - 1];
-            });
-          } else {
-            final exitConfirmed = await confirmExit();
+          final exitConfirmed = await confirmExit();
 
-            if (exitConfirmed && context.mounted) {
-              SystemNavigator.pop();
-            }
+          if (exitConfirmed && context.mounted) {
+            SystemNavigator.pop();
           }
         }
 
         return;
       },
       child: Scaffold(
-        body: IndexedStack(
-          index: _currentIndex,
-          children: shownMenus.map((menu) => menu.page).toList(),
-        ),
+        body: widget.child,
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          onTap: _onTabTapped,
-          currentIndex: _currentIndex,
           backgroundColor: colors.primary,
           selectedItemColor: colors.onPrimary,
-          unselectedItemColor: Colors.white,
+          currentIndex: index,
+          onTap: (value) {
+            context.go(shownMenus[value].path);
+          },
           items: shownMenus.map((menu) {
-              if (menu.icon != null) {
-                return BottomNavigationBarItem(
-                  icon: Icon(menu.icon),
-                  label: menu.title
-                );            
-              }
-      
+            if (menu.icon != null) {
               return BottomNavigationBarItem(
-                icon: ProfileImageComponent(
-                  profileImage: state.token?.user?.profileImage,
-                  radius: 11,
-                ),
+                icon: Icon(menu.icon),
                 label: menu.title
-              );
-            }).toList()
+              );            
+            }
+      
+            return BottomNavigationBarItem(
+              icon: ProfileImageComponent(
+                profileImage: state.token?.user?.profileImage,
+                radius: 11,
+              ),
+              label: menu.title
+            );
+          }).toList()
         ),
       ),
     );
@@ -135,17 +122,15 @@ class _RootPageState extends ConsumerState<RootPage> {
 }
 
 class BottomMenuModel {
-  Widget page;
   String title;
   List<String> moduleNames;
-  int index;
+  String path;
   IconData? icon;
 
   BottomMenuModel({
-    required this.page,
     required this.title,
     required this.moduleNames,
-    required this.index,
+    required this.path,
     this.icon,
   });
 }

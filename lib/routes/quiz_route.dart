@@ -4,19 +4,19 @@ import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/pages/quiz/quiz_detail_leaderboard_page.dart';
 import 'package:quiz_app/pages/quiz/quiz_detail_page.dart';
 import 'package:quiz_app/pages/quiz/quiz_detail_user_page.dart';
+import 'package:quiz_app/pages/quiz/quiz_list_page.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_create_review_page.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_detail_create_page.dart';
 import 'package:quiz_app/pages/quiz_create/quiz_question_create_page.dart';
 import 'package:quiz_app/pages/quiz_edit/quiz_edit_description_page.dart';
 import 'package:quiz_app/pages/quiz_edit/quiz_edit_questions_page.dart';
 import 'package:quiz_app/pages/quiz_edit/quiz_edit_review_page.dart';
-import 'package:quiz_app/pages/root_page.dart';
 import 'package:quiz_app/pages/take_quiz/take_quiz_page.dart';
 import 'package:quiz_app/pages/take_quiz/take_quiz_result_page.dart';
 
 final GoRoute quizRoute = GoRoute(
   path: "/${ResourceConstant.quiz}",
-  builder: (context, state) => RootPage(),
+  builder: (context, state) => QuizListPage(),
   routes: [
     GoRoute(
       path: "${ActionConstant.detail}/:id",

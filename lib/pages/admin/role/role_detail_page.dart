@@ -102,7 +102,7 @@ class _RoleDetailPageState extends ConsumerState<RoleDetailPage> {
                         child: Expanded(
                           child: CustomButtonComponent(
                             onTap: () async {
-                              final result = await context.push("/${ResourceConstant.role}/${ActionConstant.edit}/${widget.roleId}");
+                              final result = await context.push("/admin/${ResourceConstant.role}/${ActionConstant.edit}/${widget.roleId}");
 
                               if (result != null && result == true) {
                                 notifier.getRoleById(widget.roleId);
