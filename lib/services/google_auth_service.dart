@@ -8,7 +8,6 @@ class GoogleAuthService {
   Future<void> initialize({String? clientId, String? serverClientId}) async {
     if (!_isInitialized) {
       await _googleSignIn.initialize(
-        clientId: clientId,
         serverClientId: serverClientId,
       );
       _isInitialized = true;
