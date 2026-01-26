@@ -43,7 +43,7 @@ jobs:
           storePassword=$ANDROID_KEYSTORE_PASSWORD
           keyPassword=$ANDROID_KEY_PASSWORD
           keyAlias=$ANDROID_KEY_ALIAS
-          storeFile=android/app/release-key.keystore
+          storeFile=release-key.keystore
           EOF
 
       # Print SHA1 and SHA256 fingerprints
