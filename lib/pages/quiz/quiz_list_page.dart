@@ -70,11 +70,7 @@ class _QuizListPageState extends ConsumerState<QuizListPage> {
           else
             IconButton(
               onPressed: () async {
-                final result = await ref.read(authProvider.notifier).logout();
-
-                if (result == true && context.mounted) {
-                  context.go("/login");
-                }
+                await ref.read(authProvider.notifier).logout();
               }, 
               icon: Icon(Icons.logout)
             )
