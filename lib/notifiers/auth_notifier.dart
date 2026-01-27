@@ -101,7 +101,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       Fluttertoast.showToast(msg: "Proses dibatalkan");
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       Fluttertoast.showToast(msg: "Sedang terjadi masalah");
       state = state.copyWith(isLoading: false);
     }
@@ -131,26 +131,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
     return emails;
   }
 
-  Future<bool> logout() async {
+  Future<void> logout() async {
     state = state.copyWith(isLoadingLogout: true);
     try {
       // delete the fcm token from the backend
       await AuthService.logout();
 
       await deleteCredential();
-      state = state.copyWith(isLoadingLogout: false); 
-
-      return true;
     } on ApiException catch (_) {
       await deleteCredential();
-      state = state.copyWith(isLoadingLogout: false);
-
-      return false;
     } on DioException catch (_) {
       await deleteCredential();
-      state = state.copyWith(isLoadingLogout: false);
-
-      return false;
+    } finally {
+      state = state.copyWith(isLoadingLogout: false, isAuthenticated: false);
     }
   }
 
