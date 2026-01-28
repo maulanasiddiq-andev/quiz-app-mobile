@@ -30,7 +30,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         return isAuthenticated ? '/quiz' : '/login';
       }
 
-      if (!isAuthenticated && path != '/login') {
+      if (!isAuthenticated && path != '/login' && path != '/register' && path != '/otp' && path != '/change-email') {
         return '/login';
       }
 
