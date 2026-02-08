@@ -1,11 +1,16 @@
 // routing with go
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/constants/resource_constant.dart';
 import 'package:quiz_app/notifiers/auth_notifier.dart';
+import 'package:quiz_app/pages/admin/admin_page.dart';
 import 'package:quiz_app/pages/auth/change_email_page.dart';
 import 'package:quiz_app/pages/auth/login_page.dart';
 import 'package:quiz_app/pages/auth/otp_page.dart';
 import 'package:quiz_app/pages/auth/register_page.dart';
+import 'package:quiz_app/pages/category/category_list_page.dart';
+import 'package:quiz_app/pages/profile/profile_page.dart';
+import 'package:quiz_app/pages/quiz/quiz_list_page.dart';
 import 'package:quiz_app/pages/root_page.dart';
 import 'package:quiz_app/routes/admin_route.dart';
 import 'package:quiz_app/routes/category_route.dart';
@@ -69,12 +74,28 @@ final routerProvider = Provider<GoRouter>((ref) {
           return RootPage(child: child);
         },
         routes: [
-          quizRoute,
-          categoryRoute,
-          adminRoute,
-          profileRoute
+          GoRoute(
+            path: "/${ResourceConstant.quiz}",
+            builder: (context, state) => QuizListPage(),
+          ),
+          GoRoute(
+            path: "/${ResourceConstant.category}",
+            builder: (context, state) => CategoryListPage(),
+          ),
+          GoRoute(
+            path: "/admin",
+            builder: (context, state) => AdminPage(),
+          ),
+          GoRoute(
+            path: "/profile",
+            builder: (context, state) => ProfilePage(),
+          ),
         ]
-      )
+      ),
+      ...quizRoutes,
+      ...categoryRoutes,
+      ...adminRoutes,
+      ...profileRoutes
     ],
   );
 });

@@ -7,7 +7,7 @@ import 'package:quiz_app/pages/admin/role/role_edit_page.dart';
 import 'package:quiz_app/pages/admin/role/role_list_page.dart';
 
 final GoRoute roleRoute = GoRoute(
-  path: "/${ResourceConstant.role}",
+  path: "/admin/${ResourceConstant.role}",
   builder: (context, state) => RoleListPage(),
   routes: [
     GoRoute(

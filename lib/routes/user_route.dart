@@ -6,7 +6,7 @@ import 'package:quiz_app/pages/admin/user/user_edit_page.dart';
 import 'package:quiz_app/pages/admin/user/user_list_page.dart';
 
 final GoRoute userRoute = GoRoute(
-  path: "/${ResourceConstant.user}",
+  path: "/admin/${ResourceConstant.user}",
   builder: (context, state) => UserListPage(),
   routes: [
     GoRoute(

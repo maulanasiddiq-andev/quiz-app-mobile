@@ -42,17 +42,20 @@ class _ProfileQuizzesPageState extends ConsumerState<ProfileQuizzesPage> {
                   ...state.quizzes.map((quiz) {
                     return Column(
                       children: [
-                        QuizContainerComponent(
-                          onTap: () async {
-                            final result = await context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${quiz.quizId}");
-                                    
-                            // if the delete succeed in detail page
-                            // remove the quiz from the list
-                            if (result != null && result is QuizModel) {
-                              // ref.read(profileQuizzesProvider.notifier).removeQuizByIdFromList(result);
-                            }
-                          },
-                          quiz: quiz,
+                        SizedBox(
+                          width: double.infinity,
+                          child: QuizContainerComponent(
+                            onTap: () async {
+                              final result = await context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${quiz.quizId}");
+                                      
+                              // if the delete succeed in detail page
+                              // remove the quiz from the list
+                              if (result != null && result is QuizModel) {
+                                // ref.read(profileQuizzesProvider.notifier).removeQuizByIdFromList(result);
+                              }
+                            },
+                            quiz: quiz,
+                          ),
                         ),
                         SizedBox(height: 10),
                       ],
