@@ -14,7 +14,7 @@ class RoleWithSelectModulesModel extends BaseModel {
     required super.modifiedBy,
     required super.modifiedTime,
     required super.recordStatus,
-    required super.version,
+    // required super.version,
     required this.roleId,
     required this.name,
     required this.isMain,
@@ -56,7 +56,7 @@ class RoleWithSelectModulesModel extends BaseModel {
     List<SelectModuleModel>? roleModules,
   }) {
     return RoleWithSelectModulesModel(
-      version: version ?? this.version,
+      // version: version ?? this.version,
       description: description ?? this.description,
       recordStatus: recordStatus ?? this.recordStatus,
       createdTime: createdTime ?? this.createdTime,

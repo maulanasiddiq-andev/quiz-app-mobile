@@ -12,7 +12,7 @@ class RoleModuleModel extends BaseModel {
     required super.modifiedBy,
     required super.modifiedTime,
     required super.recordStatus,
-    required super.version,
+    // required super.version,
     required this.roleId,
     required this.roleModuleId,
     required this.roleModuleName

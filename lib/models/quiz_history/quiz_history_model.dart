@@ -24,7 +24,7 @@ class QuizHistoryModel extends BaseModel {
     required super.modifiedTime,
     required super.description,
     required super.recordStatus,
-    required super.version,
+    // required super.version,
     required this.quizHistoryId,
     required this.quizId,
     required this.quizVersion,

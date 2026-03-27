@@ -12,7 +12,7 @@ class CategoryModel extends BaseModel {
     required super.modifiedBy,
     required super.modifiedTime,
     required super.recordStatus,
-    required super.version,
+    // required super.version,
     required this.categoryId,
     required this.name,
     required this.isMain
@@ -45,7 +45,7 @@ class CategoryModel extends BaseModel {
       modifiedBy: modifiedBy ?? this.modifiedBy,
       modifiedTime: modifiedTime ?? this.modifiedTime,
       recordStatus: recordStatus ?? this.recordStatus,
-      version: version ?? this.version,
+      // version: version ?? this.version,
       isMain: isMain ?? this.isMain
     );
   }
@@ -62,7 +62,7 @@ class CategoryModel extends BaseModel {
       'modifiedBy': modifiedBy,
       'modifiedTime': modifiedTime.toIso8601String(),
       'recordStatus': recordStatus,
-      'version': version,
+      // 'version': version,
     };
   }
 }

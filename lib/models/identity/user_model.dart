@@ -17,7 +17,7 @@ class UserModel extends BaseModel {
   UserModel({
     required super.description,
     required super.recordStatus,
-    required super.version,
+    // required super.version,
     required super.createdBy,
     required super.createdTime,
     required super.modifiedBy,
@@ -89,7 +89,7 @@ class UserModel extends BaseModel {
     RoleModel? role,
   }) {
     return UserModel(
-      version: version ?? this.version,
+      // version: version ?? this.version,
       description: description ?? this.description,
       recordStatus: recordStatus ?? this.recordStatus,
       createdTime: createdTime ?? this.createdTime,

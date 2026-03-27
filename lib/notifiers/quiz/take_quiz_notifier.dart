@@ -78,7 +78,7 @@ class TakeQuizNotifier extends StateNotifier<TakeQuizState> {
 
     try {
       var quiz = {
-        "quizVersion": state.quiz!.version,
+        // "quizVersion": state.quiz!.version,
         "questionCount": state.questions.length,
         "duration": duration,
         "questions": state.questions

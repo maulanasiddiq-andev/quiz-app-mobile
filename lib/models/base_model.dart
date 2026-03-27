@@ -1,5 +1,5 @@
 class BaseModel {
-  final int version;
+  // final int version;
   final String description;
   final String recordStatus;
   final DateTime createdTime;
@@ -8,7 +8,7 @@ class BaseModel {
   final String modifiedBy;
 
   BaseModel({
-    required this.version,
+    // required this.version,
     required this.description,
     required this.recordStatus,
     required this.createdTime,
@@ -18,7 +18,7 @@ class BaseModel {
   });
 
   BaseModel.fromJson(Map<String, dynamic> json) :
-    version = json['version'], 
+    // version = json['version'], 
     description = json['description'], 
     recordStatus = json['recordStatus'], 
     createdTime = DateTime.parse(json['createdTime']), 
@@ -28,7 +28,7 @@ class BaseModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'version': version,
+      // 'version': version,
       'description': description,
       'recordStatus': recordStatus,
       'createdTime': createdTime.toIso8601String(),

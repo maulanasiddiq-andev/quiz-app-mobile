@@ -11,7 +11,7 @@ class AnswerModel extends BaseModel {
   AnswerModel({
     required super.description,
     required super.recordStatus,
-    required super.version,
+    // required super.version,
     required super.createdBy,
     required super.createdTime,
     required super.modifiedBy,
@@ -52,7 +52,7 @@ class AnswerModel extends BaseModel {
     return AnswerModel(
       description: description ?? this.description,
       recordStatus: recordStatus ?? this.recordStatus,
-      version: version ?? this.version,
+      // version: version ?? this.version,
       createdBy: createdBy ?? this.createdBy,
       createdTime: createdTime ?? this.createdTime,
       modifiedBy: modifiedBy ?? this.modifiedBy,

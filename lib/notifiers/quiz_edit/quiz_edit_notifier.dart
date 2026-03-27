@@ -104,7 +104,7 @@ class QuizEditNotifier extends StateNotifier<QuizEditState> {
       modifiedBy: '',
       modifiedTime: DateTime.now(),
       recordStatus: '',
-      version: 0,
+      // version: 0,
       isTrueAnswer: false
     );
 
@@ -199,7 +199,7 @@ class QuizEditNotifier extends StateNotifier<QuizEditState> {
       quizId: quiz.quizId,
       recordStatus: '',
       text: '',
-      version: 0,
+      // version: 0,
     );
 
     var answer = AnswerModel(
@@ -212,7 +212,7 @@ class QuizEditNotifier extends StateNotifier<QuizEditState> {
       modifiedBy: '',
       modifiedTime: DateTime.now(),
       recordStatus: '',
-      version: 0,
+      // version: 0,
       isTrueAnswer: false
     );
 

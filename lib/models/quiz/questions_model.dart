@@ -17,7 +17,7 @@ class QuestionModel extends BaseModel {
   QuestionModel({
     required super.description,
     required super.recordStatus,
-    required super.version,
+    // required super.version,
     required super.createdBy,
     required super.createdTime,
     required super.modifiedBy,
@@ -64,7 +64,7 @@ class QuestionModel extends BaseModel {
     return QuestionModel(
       description: description ?? this.description,
       recordStatus: recordStatus ?? this.recordStatus,
-      version: version ?? this.version,
+      // version: version ?? this.version,
       createdBy: createdBy ?? this.createdBy,
       createdTime: createdTime ?? this.createdTime,
       modifiedBy: modifiedBy ?? this.modifiedBy,

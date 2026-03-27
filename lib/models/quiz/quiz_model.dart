@@ -26,7 +26,7 @@ class QuizModel extends BaseModel {
   QuizModel({
     required super.description,
     required super.recordStatus,
-    required super.version,
+    // required super.version,
     required super.createdBy,
     required super.createdTime,
     required super.modifiedBy,
@@ -71,7 +71,7 @@ class QuizModel extends BaseModel {
     return QuizModel(
       description: description ?? this.description,
       recordStatus: recordStatus ?? this.recordStatus,
-      version: version ?? this.version,
+      // version: version ?? this.version,
       createdBy: createdBy ?? this.createdBy,
       createdTime: createdTime ?? this.createdTime,
       modifiedBy: modifiedBy ?? this.modifiedBy,
