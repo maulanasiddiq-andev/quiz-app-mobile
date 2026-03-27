@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/background_container_component.dart';
 import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/profile_image_component.dart';
 import 'package:quiz_app/constants/module_constant.dart';
@@ -89,32 +90,34 @@ class _RootPageState extends ConsumerState<RootPage> {
 
         return;
       },
-      child: Scaffold(
-        body: widget.child,
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: colors.primary,
-          selectedItemColor: colors.onPrimary,
-          currentIndex: index,
-          onTap: (value) {
-            context.go(shownMenus[value].path);
-          },
-          items: shownMenus.map((menu) {
-            if (menu.icon != null) {
+      child: BackgroundContainerComponent(
+        child: Scaffold(
+          body: widget.child,
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: colors.primary,
+            selectedItemColor: colors.onPrimary,
+            currentIndex: index,
+            onTap: (value) {
+              context.go(shownMenus[value].path);
+            },
+            items: shownMenus.map((menu) {
+              if (menu.icon != null) {
+                return BottomNavigationBarItem(
+                  icon: Icon(menu.icon),
+                  label: menu.title
+                );            
+              }
+        
               return BottomNavigationBarItem(
-                icon: Icon(menu.icon),
+                icon: ProfileImageComponent(
+                  profileImage: state.token?.user?.profileImage,
+                  radius: 11,
+                ),
                 label: menu.title
-              );            
-            }
-      
-            return BottomNavigationBarItem(
-              icon: ProfileImageComponent(
-                profileImage: state.token?.user?.profileImage,
-                radius: 11,
-              ),
-              label: menu.title
-            );
-          }).toList()
+              );
+            }).toList()
+          ),
         ),
       ),
     );
