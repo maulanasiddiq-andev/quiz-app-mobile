@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:quiz_app/exceptions/api_exception.dart';
 import 'package:quiz_app/interceptor/client_settings.dart';
 import 'package:quiz_app/models/auth/token_model.dart';
@@ -15,14 +16,20 @@ class AuthService {
     String email,
     String password,
   ) async {
+    // if it is not web
     // send fcm token to backend for handling push notification
-    final fcmToken = await FirebaseMessagingService.getFcmToken();
+    String? fcmToken;
+    if (!kIsWeb) {
+      fcmToken = await FirebaseMessagingService.getFcmToken();
+    }
+
     // String? device;
     final body = jsonEncode({
       "email": email, 
       "password": password,
       "fcmToken": fcmToken
     });
+    
     final response = await client.dio.post(
       '${url}login',
       data: body
