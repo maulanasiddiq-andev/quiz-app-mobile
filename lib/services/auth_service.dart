@@ -162,11 +162,16 @@ class AuthService {
     String idToken,
   ) async {
     // send fcm token to backend for handling push notification
-    final fcmToken = await FirebaseMessagingService.getFcmToken();
+    String? fcmToken;
+    if (!kIsWeb) {
+      fcmToken = await FirebaseMessagingService.getFcmToken();
+    }
+
     final body = jsonEncode({
       "idToken": idToken,
       "fcmToken": fcmToken
     });
+    
     final response = await client.dio.post(
       '${url}login-with-google',
       data: body
@@ -184,10 +189,15 @@ class AuthService {
   
   static Future<BaseResponse<TokenModel>> logout() async {
     // send fcm token to backend for handling push notification
-    final fcmToken = await FirebaseMessagingService.getFcmToken();
+    String? fcmToken;
+    if (!kIsWeb) {
+      fcmToken = await FirebaseMessagingService.getFcmToken();
+    }
+
     final body = jsonEncode({
       "fcmToken": fcmToken
     });
+    
     final response = await client.dio.post(
       '${url}logout',
       data: body
