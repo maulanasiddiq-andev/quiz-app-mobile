@@ -130,14 +130,14 @@ jobs:
         with:
           flutter-version: '3.35.4'
 
-      - name: Install dependencies
-        run: flutter pub get
-
       - name: Create .env file
         run: |
           cat <<EOF > .env
           MISTRAL_API_KEY=${{ secrets.MISTRAL_API_KEY }}
           EOF
+
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Build Web
         run: flutter build web --release
@@ -166,6 +166,8 @@ jobs:
           # 2. Overwrite the default config with a specific Cloud Run config
           RUN echo "server { \
               listen 8080; \
+              gzip on; \
+              gzip_types text/plain text/css application/json application/javascript text/xml; \
               location / { \
                   root /usr/share/nginx/html; \
                   index  index.html index.htm; \
