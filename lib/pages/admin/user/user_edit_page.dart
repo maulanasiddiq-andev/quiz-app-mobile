@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/background_container_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/input_component.dart';
@@ -68,87 +69,89 @@ class _UserEditPageState extends ConsumerState<UserEditPage> {
       if (previous != next) _syncControllers(previous, next);
     });
 
-    return Scaffold(
-      appBar: CustomAppbarComponent(title: "Edit User"),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 15,
-                    children: [
-                      Center(
-                        child: ProfileImageComponent(
-                          profileImage: state.user?.profileImage,
-                          radius: 60,
+    return BackgroundContainerComponent(
+      child: Scaffold(
+        appBar: CustomAppbarComponent(title: "Edit User"),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 15,
+                      children: [
+                        Center(
+                          child: ProfileImageComponent(
+                            profileImage: state.user?.profileImage,
+                            radius: 60,
+                          ),
                         ),
-                      ),
-                      InputComponent(
-                        title: "Nama", 
-                        controller: nameController,
-                        onChanged: (value) {
-                          notifier.updateName(value);
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Nama user harus diisi";
-                          }
-
-                          return null;
-                        },
-                      ),
-                      InputComponent(
-                        title: "Email", 
-                        controller: emailController,
-                        enabled: false,
-                      ),
-                      InputComponent(
-                        title: "Username", 
-                        controller: usernameController,
-                        enabled: false,
-                      ),
-                      InputComponent(
-                        title: "Deskripsi", 
-                        controller: descriptionController,
-                        onChanged: (value) {
-                          notifier.updateDescription(value);
-                        },
-                      ),
-                      SelectDataComponent(
-                        title: "Role", 
-                        data: SelectDataConstant.role,
-                        selectedData: state.role,
-                        onSelected: (value) {
-                          notifier.updateRole(value);
-                        },
-                      )
-                    ],
+                        InputComponent(
+                          title: "Nama", 
+                          controller: nameController,
+                          onChanged: (value) {
+                            notifier.updateName(value);
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Nama user harus diisi";
+                            }
+      
+                            return null;
+                          },
+                        ),
+                        InputComponent(
+                          title: "Email", 
+                          controller: emailController,
+                          enabled: false,
+                        ),
+                        InputComponent(
+                          title: "Username", 
+                          controller: usernameController,
+                          enabled: false,
+                        ),
+                        InputComponent(
+                          title: "Deskripsi", 
+                          controller: descriptionController,
+                          onChanged: (value) {
+                            notifier.updateDescription(value);
+                          },
+                        ),
+                        SelectDataComponent(
+                          title: "Role", 
+                          data: SelectDataConstant.role,
+                          selectedData: state.role,
+                          onSelected: (value) {
+                            notifier.updateRole(value);
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: CustomButtonComponent(
-              onTap: () async {
-                final result = await submitUser();
-
-                if (result == true && context.mounted) {
-                  context.pop(true);
-                }
-              }, 
-              text: "Submit",
-              isLoading: state.isLoadingUpdate,
-            ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: CustomButtonComponent(
+                onTap: () async {
+                  final result = await submitUser();
+      
+                  if (result == true && context.mounted) {
+                    context.pop(true);
+                  }
+                }, 
+                text: "Submit",
+                isLoading: state.isLoadingUpdate,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

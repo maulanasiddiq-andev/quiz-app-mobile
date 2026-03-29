@@ -48,9 +48,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final authState = ref.watch(authProvider);
     final colors = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      body: BackgroundContainerComponent(
-        child: AuthContainer(
+    return BackgroundContainerComponent(
+      child: Scaffold(
+        body: AuthContainer(
           title: "Login",
           child: Form(
             key: formKey,

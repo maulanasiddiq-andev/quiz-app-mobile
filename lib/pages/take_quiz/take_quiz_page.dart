@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/background_container_component.dart';
 import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/connection_check_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
@@ -145,52 +146,36 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
           }
         }
       },
-      child: Scaffold(
-        appBar: CustomAppbarComponent(title: state.quiz?.title ?? "Kuis"),
-        drawer: Drawer(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero
-          ),
-          child: ListView(
-            children: [
-              ...state.questions.asMap().entries.map((value) {
-                final question = value.value;
-                final key = value.key;
-
-                return GestureDetector(
-                  onTap: () {
-                    notifier.goToQuestion(key);
-                    // close drawer navigation
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                    color: state.questionIndex == key
-                      ? colors.onSurface
-                      : colors.surface,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            (key + 1).toString(),
-                            style: TextStyle(
-                              color: state.questionIndex == key
-                                ? colors.surface
-                                : colors.onSurface,
-                              fontSize: 16
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerRight,
+      child: BackgroundContainerComponent(
+        child: Scaffold(
+          appBar: CustomAppbarComponent(title: state.quiz?.title ?? "Kuis"),
+          drawer: Drawer(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero
+            ),
+            child: ListView(
+              children: [
+                ...state.questions.asMap().entries.map((value) {
+                  final question = value.value;
+                  final key = value.key;
+        
+                  return GestureDetector(
+                    onTap: () {
+                      notifier.goToQuestion(key);
+                      // close drawer navigation
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                      color: state.questionIndex == key
+                        ? colors.onSurface
+                        : colors.surface,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
                             child: Text(
-                              question.selectedAnswerOrder != null
-                                ? question.answers[question.selectedAnswerOrder!].text!
-                                : "Belum dijawab",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              (key + 1).toString(),
                               style: TextStyle(
                                 color: state.questionIndex == key
                                   ? colors.surface
@@ -199,137 +184,155 @@ class _TakeQuizPageState extends ConsumerState<TakeQuizPage> {
                               ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              })
-            ],
-          ),
-        ),
-        body: ConnectionCheckComponent(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Center(
-                  child: Text(
-                    formatTime(seconds),
-                    style: TextStyle(
-                      color: seconds > 10
-                          ? colors.onSurface
-                          : seconds % 2 == 0
-                          ? colors.onSurface
-                          : colors.error,
-                      fontFamily: "Orbitron",
-                      fontSize: 16
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      spacing: 10,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Pertanyaan ${(state.questionIndex + 1).toString()}/${state.questions.length.toString()}",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          currentQuestion.text,
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        if (currentQuestion.imageUrl != null)
-                          Column(
-                            children: [
-                              Image.network(
-                                currentQuestion.imageUrl!,
-                                width: double.infinity,
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                question.selectedAnswerOrder != null
+                                  ? question.answers[question.selectedAnswerOrder!].text!
+                                  : "Belum dijawab",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: state.questionIndex == key
+                                    ? colors.surface
+                                    : colors.onSurface,
+                                  fontSize: 16
+                                ),
                               ),
-                            ],
-                          ),
-                        RadioGroup(
-                          groupValue: currentQuestion.selectedAnswerOrder,
-                          onChanged: (int? value) {
-                            currentQuestion.selectedAnswerOrder = value;
-                          },
-                          child: Column(
-                            children: [
-                              ...currentQuestion.answers.map((answer) {
-                                return RadioListTile(
-                                  value: answer.answerOrder,
-                                  title: answer.text != null
-                                      ? Text(
-                                          answer.text!,
-                                          style: TextStyle(fontSize: 18),
-                                        )
-                                      : null,
-                                  secondary: answer.imageUrl != null
-                                      ? Image.network(
-                                          answer.imageUrl!,
-                                          width: 40,
-                                          height: 40,
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                })
+              ],
+            ),
+          ),
+          body: ConnectionCheckComponent(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Center(
+                    child: Text(
+                      formatTime(seconds),
+                      style: TextStyle(
+                        color: seconds > 10
+                            ? colors.onSurface
+                            : seconds % 2 == 0
+                            ? colors.onSurface
+                            : colors.error,
+                        fontFamily: "Orbitron",
+                        fontSize: 16
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: QuizNavigationButtonComponent(
-                      onTap: () => notifier.toPreviousQuestion(),
-                      icon: Icons.arrow_back,
-                      text: "Sebelumnya",
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        spacing: 10,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Pertanyaan ${(state.questionIndex + 1).toString()}/${state.questions.length.toString()}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            currentQuestion.text,
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          if (currentQuestion.imageUrl != null)
+                            Column(
+                              children: [
+                                Image.network(
+                                  currentQuestion.imageUrl!,
+                                  width: double.infinity,
+                                ),
+                              ],
+                            ),
+                          RadioGroup(
+                            groupValue: currentQuestion.selectedAnswerOrder,
+                            onChanged: (int? value) {
+                              currentQuestion.selectedAnswerOrder = value;
+                            },
+                            child: Column(
+                              children: [
+                                ...currentQuestion.answers.map((answer) {
+                                  return RadioListTile(
+                                    value: answer.answerOrder,
+                                    title: answer.text != null
+                                        ? Text(
+                                            answer.text!,
+                                            style: TextStyle(fontSize: 18),
+                                          )
+                                        : null,
+                                    secondary: answer.imageUrl != null
+                                        ? Image.network(
+                                            answer.imageUrl!,
+                                            width: 40,
+                                            height: 40,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : null,
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  Expanded(
-                    child: QuizNavigationButtonComponent(
-                      onTap: () async {
-                        if (state.questionIndex < state.questions.length - 1) {
-                          notifier.toNextQuestion();
-                        } else {
-                          final unansweredQuestionCount = notifier.countUnansweredQuestions();
-                          final confirmResult = await confirmSubmittingQuiz(unansweredQuestionCount);
-          
-                          if (confirmResult) {
-                            final result = await notifier.finishQuiz(duration);
-          
-                            if (result == true && context.mounted) {
-                              context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${state.quiz!.quizId}/${ActionConstant.take}/${ActionConstant.result}");
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: QuizNavigationButtonComponent(
+                        onTap: () => notifier.toPreviousQuestion(),
+                        icon: Icons.arrow_back,
+                        text: "Sebelumnya",
+                      ),
+                    ),
+                    Expanded(
+                      child: QuizNavigationButtonComponent(
+                        onTap: () async {
+                          if (state.questionIndex < state.questions.length - 1) {
+                            notifier.toNextQuestion();
+                          } else {
+                            final unansweredQuestionCount = notifier.countUnansweredQuestions();
+                            final confirmResult = await confirmSubmittingQuiz(unansweredQuestionCount);
+            
+                            if (confirmResult) {
+                              final result = await notifier.finishQuiz(duration);
+            
+                              if (result == true && context.mounted) {
+                                context.push("/${ResourceConstant.quiz}/${ActionConstant.detail}/${state.quiz!.quizId}/${ActionConstant.take}/${ActionConstant.result}");
+                              }
                             }
                           }
-                        }
-                      },
-                      icon: state.questionIndex < state.questions.length - 1
-                          ? Icons.arrow_forward
-                          : Icons.check,
-                      text: state.questionIndex < state.questions.length - 1
-                          ? "Selanjutnya"
-                          : "Selesai",
-                      textDirection: TextDirection.rtl,
+                        },
+                        icon: state.questionIndex < state.questions.length - 1
+                            ? Icons.arrow_forward
+                            : Icons.check,
+                        text: state.questionIndex < state.questions.length - 1
+                            ? "Selanjutnya"
+                            : "Selesai",
+                        textDirection: TextDirection.rtl,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

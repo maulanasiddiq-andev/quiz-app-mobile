@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/background_container_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/input_component.dart';
@@ -38,55 +39,57 @@ class _CategoryAddPageState extends ConsumerState<CategoryAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppbarComponent(title: "Tambah Kategori"),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    spacing: 10,
-                    children: [
-                      InputComponent(
-                        title: "Nama Kategori", 
-                        controller: nameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Nama kategori harus diisi.";
-                          }
-
-                          return null;
-                        },
-                      ),
-                      InputComponent(
-                        title: "Deskripsi", 
-                        controller: descriptionController
-                      ),
-                    ],
+    return BackgroundContainerComponent(
+      child: Scaffold(
+        appBar: CustomAppbarComponent(title: "Tambah Kategori"),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      spacing: 10,
+                      children: [
+                        InputComponent(
+                          title: "Nama Kategori", 
+                          controller: nameController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Nama kategori harus diisi.";
+                            }
+      
+                            return null;
+                          },
+                        ),
+                        InputComponent(
+                          title: "Deskripsi", 
+                          controller: descriptionController
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: CustomButtonComponent(
-              onTap: () async {
-                final result = await submitCategory();
-            
-                if (result == true && context.mounted) {
-                  context.pop(true);
-                }
-              }, 
-              text: "Tambah",
-              isLoading: ref.watch(categoryAddProvider).isLoading,
-            ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: CustomButtonComponent(
+                onTap: () async {
+                  final result = await submitCategory();
+              
+                  if (result == true && context.mounted) {
+                    context.pop(true);
+                  }
+                }, 
+                text: "Tambah",
+                isLoading: ref.watch(categoryAddProvider).isLoading,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

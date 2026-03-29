@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/background_container_component.dart';
 import 'package:quiz_app/components/check_module_component.dart';
 import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
@@ -53,128 +54,130 @@ class _UserListPageState extends ConsumerState<UserListPage> {
   Widget build(BuildContext context) {
     final state = ref.watch(userListProvider);
     final notifier = ref.read(userListProvider.notifier);
-
     final colors = Theme.of(context).colorScheme;
-    return Scaffold(
-      appBar: CustomAppbarComponent(title: "Daftar User"),
-      body: RefreshIndicator(
-        onRefresh: () => notifier.refreshUsers(),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: colors.onSurface)
-                )
+    
+    return BackgroundContainerComponent(
+      child: Scaffold(
+        appBar: CustomAppbarComponent(title: "Daftar User"),
+        body: RefreshIndicator(
+          onRefresh: () => notifier.refreshUsers(),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: colors.onSurface)
+                  )
+                ),
+                child: SearchSortComponent(
+                  feature: "User", 
+                  search: state.search, 
+                  sortDir: state.sortDir, 
+                  onSearchChanged: (value) {
+                    notifier.searchUsers(value);
+                  },
+                  onSortDirChanged: (value) {
+                    notifier.changeSortDir(value);
+                  },
+                ),
               ),
-              child: SearchSortComponent(
-                feature: "User", 
-                search: state.search, 
-                sortDir: state.sortDir, 
-                onSearchChanged: (value) {
-                  notifier.searchUsers(value);
-                },
-                onSortDirChanged: (value) {
-                  notifier.changeSortDir(value);
-                },
-              ),
-            ),
-            Expanded(
-              child: state.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(color: colors.primary),
-                )
-              : ListView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  controller: scrollController,
-                  children: [
-                    ...state.users.map((user) {
-                      return Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: colors.onSurface
+              Expanded(
+                child: state.isLoading
+                ? Center(
+                    child: CircularProgressIndicator(color: colors.primary),
+                  )
+                : ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    controller: scrollController,
+                    children: [
+                      ...state.users.map((user) {
+                        return Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: colors.onSurface
+                              )
                             )
-                          )
-                        ),
-                        child: ListTile(
-                          onTap: () {
-                            context.push("/admin/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
-                          },
-                          leading: ProfileImageComponent(
-                            profileImage: user.profileImage,
                           ),
-                          title: Text(
-                            "${user.name} | ${user.username}",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: Text(
-                            user.email,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: PopupMenuButton<String>(
-                            padding: EdgeInsets.zero,
-                            icon: const Icon(Icons.more_vert),
-                            onSelected: (value) async {
-                              switch (value) {
-                                case 'view':
-                                  context.push("/admin/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
-                                  break;
-                                case 'edit':
-                                  final result = await context.push("/admin/${ResourceConstant.user}/${ActionConstant.edit}/${user.userId}");
-
-                                  if (result != null && result == true) {
-                                    notifier.refreshUsers();
-                                  }
-                                  break;
-                                case 'delete':
-                                  final deleteConfirmed = await confirmDelete(user.name);
-
-                                  if (deleteConfirmed == true) {
-                                    notifier.deleteUser(user.userId);
-                                  }
-                                  break;
-                              }
+                          child: ListTile(
+                            onTap: () {
+                              context.push("/admin/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
                             },
-                            itemBuilder: (BuildContext context) => [
-                              const PopupMenuItem(
-                                value: 'view',
-                                child: Text('Lihat Detail'),
-                              ),
-                              const PopupMenuItem(
-                                value: 'edit',
-                                child: Text('Edit'),
-                              ),
-                              const PopupMenuItem(
-                                value: 'delete',
-                                child: Text('Hapus'),
-                              ),
-                            ],
+                            leading: ProfileImageComponent(
+                              profileImage: user.profileImage,
+                            ),
+                            title: Text(
+                              "${user.name} | ${user.username}",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Text(
+                              user.email,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: PopupMenuButton<String>(
+                              padding: EdgeInsets.zero,
+                              icon: const Icon(Icons.more_vert),
+                              onSelected: (value) async {
+                                switch (value) {
+                                  case 'view':
+                                    context.push("/admin/${ResourceConstant.user}/${ActionConstant.detail}/${user.userId}");
+                                    break;
+                                  case 'edit':
+                                    final result = await context.push("/admin/${ResourceConstant.user}/${ActionConstant.edit}/${user.userId}");
+      
+                                    if (result != null && result == true) {
+                                      notifier.refreshUsers();
+                                    }
+                                    break;
+                                  case 'delete':
+                                    final deleteConfirmed = await confirmDelete(user.name);
+      
+                                    if (deleteConfirmed == true) {
+                                      notifier.deleteUser(user.userId);
+                                    }
+                                    break;
+                                }
+                              },
+                              itemBuilder: (BuildContext context) => [
+                                const PopupMenuItem(
+                                  value: 'view',
+                                  child: Text('Lihat Detail'),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Edit'),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Hapus'),
+                                ),
+                              ],
+                            ),
+                          )
+                        );
+                      }),
+                      if (state.isLoadingMore)
+                        Center(
+                          child: CircularProgressIndicator(
+                            color: colors.primary,
                           ),
                         )
-                      );
-                    }),
-                    if (state.isLoadingMore)
-                      Center(
-                        child: CircularProgressIndicator(
-                          color: colors.primary,
-                        ),
-                      )
-                  ],
-                )
-            ),
-          ],
+                    ],
+                  )
+              ),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: CheckModuleComponent(
-        moduleNames: [ModuleConstant.createUser],
-        child: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(Icons.create),  
+        floatingActionButton: CheckModuleComponent(
+          moduleNames: [ModuleConstant.createUser],
+          child: FloatingActionButton(
+            onPressed: () {},
+            child: Icon(Icons.create),  
+          ),
         ),
       ),
     );

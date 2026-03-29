@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/background_container_component.dart';
 import 'package:quiz_app/components/check_module_component.dart';
 import 'package:quiz_app/components/confirm_dialog.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
@@ -54,144 +55,146 @@ class _RoleListPageState extends ConsumerState<RoleListPage> {
     final notifier = ref.read(roleListProvider.notifier);
     final colors = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: CustomAppbarComponent(title: "Daftar Role"),
-      body: RefreshIndicator(
-        onRefresh: () => notifier.refreshRoles(),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: colors.onSurface)
-                )
+    return BackgroundContainerComponent(
+      child: Scaffold(
+        appBar: CustomAppbarComponent(title: "Daftar Role"),
+        body: RefreshIndicator(
+          onRefresh: () => notifier.refreshRoles(),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: colors.onSurface)
+                  )
+                ),
+                child: SearchSortComponent(
+                  feature: "Role", 
+                  search: state.search, 
+                  sortDir: state.sortDir, 
+                  onSearchChanged: (value) {
+                    notifier.searchRoles(value);
+                  },
+                  onSortDirChanged: (value) {
+                    notifier.changeSortDir(value);
+                  },
+                ),
               ),
-              child: SearchSortComponent(
-                feature: "Role", 
-                search: state.search, 
-                sortDir: state.sortDir, 
-                onSearchChanged: (value) {
-                  notifier.searchRoles(value);
-                },
-                onSortDirChanged: (value) {
-                  notifier.changeSortDir(value);
-                },
-              ),
-            ),
-            Expanded(
-              child: state.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(color: colors.primary),
-                )
-              : ListView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  controller: scrollController,
-                  children: [
-                    ...state.roles.map((role) {
-                      return GestureDetector(
-                        onTap: () {
-                          context.push("/admin/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: colors.onSurface
+              Expanded(
+                child: state.isLoading
+                ? Center(
+                    child: CircularProgressIndicator(color: colors.primary),
+                  )
+                : ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    controller: scrollController,
+                    children: [
+                      ...state.roles.map((role) {
+                        return GestureDetector(
+                          onTap: () {
+                            context.push("/admin/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: colors.onSurface
+                                )
                               )
-                            )
-                          ),
-                          child: ListTile(
-                            title: Row(
-                              spacing: 10,
-                              children: [
-                                Text(role.name),
-                                if (role.isMain)
-                                  Icon(Icons.check, color: Colors.green),
-                                if (state.deletedRoleId == role.roleId)
-                                  SizedBox(
-                                    height: 14,
-                                    width: 14,
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        color: colors.primary,
+                            ),
+                            child: ListTile(
+                              title: Row(
+                                spacing: 10,
+                                children: [
+                                  Text(role.name),
+                                  if (role.isMain)
+                                    Icon(Icons.check, color: Colors.green),
+                                  if (state.deletedRoleId == role.roleId)
+                                    SizedBox(
+                                      height: 14,
+                                      width: 14,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          color: colors.primary,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                              ],
-                            ),
-                            subtitle: Text(
-                              role.description.isEmpty
-                                ? "-"
-                                : role.description
-                            ),
-                            trailing: PopupMenuButton<String>(
-                              padding: EdgeInsets.zero,
-                              icon: const Icon(Icons.more_vert),
-                              onSelected: (value) async {
-                                switch (value) {
-                                  case 'view':
-                                    context.push("/admin/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
-                                    break;
-                                  case 'edit':
-                                    final result = await context.push("/admin/${ResourceConstant.role}/${ActionConstant.edit}/${role.roleId}");
-
-                                    if (result != null && result == true) {
-                                      notifier.refreshRoles();
-                                    }
-                                    break;
-                                  case 'delete':
-                                    final deleteConfirmed = await confirmDelete(role.name);
-
-                                    if (deleteConfirmed) {
-                                      notifier.deleteRole(role.roleId);
-                                    }
-                                    break;
-                                }
-                              },
-                              itemBuilder: (BuildContext context) => [
-                                const PopupMenuItem(
-                                  value: 'view',
-                                  child: Text('Lihat Detail'),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'edit',
-                                  child: Text('Edit'),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'delete',
-                                  child: Text('Hapus'),
-                                ),
-                              ],
+                                    )
+                                ],
+                              ),
+                              subtitle: Text(
+                                role.description.isEmpty
+                                  ? "-"
+                                  : role.description
+                              ),
+                              trailing: PopupMenuButton<String>(
+                                padding: EdgeInsets.zero,
+                                icon: const Icon(Icons.more_vert),
+                                onSelected: (value) async {
+                                  switch (value) {
+                                    case 'view':
+                                      context.push("/admin/${ResourceConstant.role}/${ActionConstant.detail}/${role.roleId}");
+                                      break;
+                                    case 'edit':
+                                      final result = await context.push("/admin/${ResourceConstant.role}/${ActionConstant.edit}/${role.roleId}");
+      
+                                      if (result != null && result == true) {
+                                        notifier.refreshRoles();
+                                      }
+                                      break;
+                                    case 'delete':
+                                      final deleteConfirmed = await confirmDelete(role.name);
+      
+                                      if (deleteConfirmed) {
+                                        notifier.deleteRole(role.roleId);
+                                      }
+                                      break;
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) => [
+                                  const PopupMenuItem(
+                                    value: 'view',
+                                    child: Text('Lihat Detail'),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: 'edit',
+                                    child: Text('Edit'),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: 'delete',
+                                    child: Text('Hapus'),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }),
-                    if (state.isLoadingMore)
-                      Center(
-                        child: CircularProgressIndicator(
-                          color: colors.primary,
-                        ),
-                      )
-                  ],
-                )
-            ),
-          ],
+                        );
+                      }),
+                      if (state.isLoadingMore)
+                        Center(
+                          child: CircularProgressIndicator(
+                            color: colors.primary,
+                          ),
+                        )
+                    ],
+                  )
+              ),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: CheckModuleComponent(
-        moduleNames: [ModuleConstant.createRole],
-        child: FloatingActionButton(
-          onPressed: () async {
-            final result = await context.push("/admin/${ResourceConstant.role}/${ActionConstant.create}");
-
-            if (result != null && result == true) {
-              notifier.refreshRoles();
-            }
-          },
-          child: Icon(Icons.create),
+        floatingActionButton: CheckModuleComponent(
+          moduleNames: [ModuleConstant.createRole],
+          child: FloatingActionButton(
+            onPressed: () async {
+              final result = await context.push("/admin/${ResourceConstant.role}/${ActionConstant.create}");
+      
+              if (result != null && result == true) {
+                notifier.refreshRoles();
+              }
+            },
+            child: Icon(Icons.create),
+          ),
         ),
       ),
     );

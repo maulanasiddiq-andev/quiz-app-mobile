@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quiz_app/components/background_container_component.dart';
 import 'package:quiz_app/components/custom_appbar_component.dart';
 import 'package:quiz_app/components/custom_button_component.dart';
 import 'package:quiz_app/components/input_component.dart';
@@ -60,75 +61,77 @@ class _CategoryEditPageState extends ConsumerState<CategoryEditPage> {
       if (previous != next) _syncControllers(previous, next);
     });
 
-    return Scaffold(
-      appBar: CustomAppbarComponent(title: "Edit Kategori"),
-      body: Column(
-        children: [
-          Expanded(
-            child: state.isLoading || state.category == null
-            ? Center(child: CircularProgressIndicator(color: colors.primary))
-            : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      spacing: 10,
-                      children: [
-                        InputComponent(
-                          title: "Nama Kategori", 
-                          controller: nameController,
-                          onChanged: (value) {
-                            notifier.updateName(value);
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Nama kategori harus diisi.";
-                            }
-
-                            return null;
-                          },
-                        ),
-                        InputComponent(
-                          title: "Deskripsi", 
-                          controller: descriptionController,
-                          onChanged: (value) {
-                            notifier.updateDescription(value);
-                          },
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Atur sebagai kategori default"),
-                            Switch(
-                              value: state.category!.isMain, 
-                              onChanged: (value) {
-                                notifier.updateIsMain(value);
+    return BackgroundContainerComponent(
+      child: Scaffold(
+        appBar: CustomAppbarComponent(title: "Edit Kategori"),
+        body: Column(
+          children: [
+            Expanded(
+              child: state.isLoading || state.category == null
+              ? Center(child: CircularProgressIndicator(color: colors.primary))
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        spacing: 10,
+                        children: [
+                          InputComponent(
+                            title: "Nama Kategori", 
+                            controller: nameController,
+                            onChanged: (value) {
+                              notifier.updateName(value);
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Nama kategori harus diisi.";
                               }
-                            ),
-                          ],
-                        ),
-                      ],
+      
+                              return null;
+                            },
+                          ),
+                          InputComponent(
+                            title: "Deskripsi", 
+                            controller: descriptionController,
+                            onChanged: (value) {
+                              notifier.updateDescription(value);
+                            },
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Atur sebagai kategori default"),
+                              Switch(
+                                value: state.category!.isMain, 
+                                onChanged: (value) {
+                                  notifier.updateIsMain(value);
+                                }
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: CustomButtonComponent(
-              onTap: () async {
-                final result = await submitCategory();
-            
-                if (result == true && context.mounted) {
-                  context.pop(true);
-                }
-              }, 
-              text: "Submit",
-              isLoading: state.isLoadingUpdate,
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: CustomButtonComponent(
+                onTap: () async {
+                  final result = await submitCategory();
+              
+                  if (result == true && context.mounted) {
+                    context.pop(true);
+                  }
+                }, 
+                text: "Submit",
+                isLoading: state.isLoadingUpdate,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
