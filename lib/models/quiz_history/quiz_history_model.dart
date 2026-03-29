@@ -6,7 +6,7 @@ import 'package:quiz_app/models/quiz_history/question_history_model.dart';
 class QuizHistoryModel extends BaseModel {
   final String quizHistoryId;
   final String quizId;
-  final int quizVersion;
+  // final int quizVersion;
   final String userId;
   final SimpleUserModel? user;
   final List<QuestionHistoryModel> questions;
@@ -27,7 +27,7 @@ class QuizHistoryModel extends BaseModel {
     // required super.version,
     required this.quizHistoryId,
     required this.quizId,
-    required this.quizVersion,
+    // required this.quizVersion,
     required this.userId,
     required this.user,
     required this.questions,
@@ -42,7 +42,7 @@ class QuizHistoryModel extends BaseModel {
   QuizHistoryModel.fromJson(Map<String, dynamic> json)
     : quizHistoryId = json['quizHistoryId'],
       quizId = json['quizId'],
-      quizVersion = json['quizVersion'],
+      // quizVersion = json['quizVersion'],
       userId = json['userId'],
       user = json['user'] != null
           ? SimpleUserModel.fromJson(json['user'])

@@ -6,7 +6,7 @@ class TakeQuizModel {
   final String? imageUrl;
   final int time;
   final int questionCount;
-  final int version;
+  // final int version;
   final List<TakeQuestionModel> questions;
 
   TakeQuizModel({
@@ -15,7 +15,7 @@ class TakeQuizModel {
     this.imageUrl,
     required this.time,
     required this.questionCount,
-    required this.version,
+    // required this.version,
     required this.questions,
   });
 
@@ -24,7 +24,7 @@ class TakeQuizModel {
     title: json['title'],
     time: json['time'],
     questionCount: json['questionCount'],
-    version: json['version'],
+    // version: json['version'],
     imageUrl: json['imageUrl'],
     questions: (json['questions'] as List)
         .map((data) => TakeQuestionModel.fromJson(data))
