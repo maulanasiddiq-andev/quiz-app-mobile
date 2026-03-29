@@ -166,6 +166,18 @@ jobs:
           CMD ["nginx", "-g", "daemon off;"]
           EOF
 
+      - name: Ensure Artifact Registry exists
+        run: |
+          if ! gcloud artifacts repositories describe ${{ env.REPOSITORY }} --location=${{ env.REGION }} > /dev/null 2>&1; then
+            echo "Repository not found. Creating..."
+            gcloud artifacts repositories create ${{ env.REPOSITORY }} \
+              --repository-format=docker \
+              --location=${{ env.REGION }} \
+              --description="Docker repository for Flutter Web"
+          else
+            echo "Repository already exists."
+          fi
+
       # Build and Push Image
       - name: Build and Push Container
         run: |
