@@ -18,6 +18,7 @@ class AuthContainer extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
         height: screenHeight,
+        color: colors.primary,
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
