@@ -4,7 +4,7 @@ FROM ghcr.io/cirruslabs/flutter:stable AS build-env
 WORKDIR /app
 COPY . .
 
-RUN touch .env
+RUN echo "MISTRAL_API_KEY=DUMMY_KEY" > .env
 
 RUN flutter build web --release --base-href /
 
