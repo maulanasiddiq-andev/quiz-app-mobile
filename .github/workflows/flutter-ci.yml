@@ -128,7 +128,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.4'
+          channel: 'stable'
 
       - name: Create .env file
         run: |
@@ -140,7 +140,7 @@ jobs:
         run: flutter pub get
 
       - name: Build Web
-        run: flutter build web --release
+        run: flutter build web --release --web-renderer html
 
       # Authenticate to GCP
       - id: 'auth'
@@ -157,7 +157,7 @@ jobs:
       # Create a Dockerfile on the fly
       - name: Create Dockerfile
         run: |
-          cat <<EOF > Dockerfile
+          cat <<'EOF' > Dockerfile
           FROM nginx:stable-alpine
           
           # 1. Copy the flutter web build
@@ -194,4 +194,4 @@ jobs:
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.REGION }}
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          flags: '--allow-unauthenticated'
+          flags: '--allow-unauthenticated --cpu-boost --memory=1Gi'
