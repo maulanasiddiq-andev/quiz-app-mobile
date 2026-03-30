@@ -6,7 +6,7 @@ COPY . .
 
 RUN touch .env
 
-RUN flutter build web --release
+RUN flutter build web --release --base-href /
 
 # Stage 2: Serve the app using Nginx
 FROM nginx:alpine
