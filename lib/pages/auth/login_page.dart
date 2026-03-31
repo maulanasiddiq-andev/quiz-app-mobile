@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -199,42 +200,43 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ],
                 ),
                 SizedBox(height: 25),
-                GestureDetector(
-                  onTap: () async {
-                    ref.read(authProvider.notifier).loginWithGoogle();
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(color: colors.primary),
-                    ),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Login With Google',
-                            style: TextStyle(
-                              color: colors.onSurface,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
+                if (!kIsWeb)
+                  GestureDetector(
+                    onTap: () async {
+                      ref.read(authProvider.notifier).loginWithGoogle();
+                    },
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        border: Border.all(color: colors.primary),
+                      ),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Login With Google',
+                              style: TextStyle(
+                                color: colors.onSurface,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                if (authState.errorMessage != null) ...[
-                  SizedBox(height: 20),
-                  Text(
-                    authState.errorMessage!,
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
-                  ),
-                ]
+                // if (authState.errorMessage != null) ...[
+                //   SizedBox(height: 20),
+                //   Text(
+                //     authState.errorMessage!,
+                //     style: TextStyle(
+                //       color: Colors.red,
+                //     ),
+                //   ),
+                // ]
               ],
             ),
           )
