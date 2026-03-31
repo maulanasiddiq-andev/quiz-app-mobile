@@ -111,3 +111,15 @@ jobs:
           token: ${{ secrets.FIREBASE_TOKEN }}
           groups: testers
           file: build/app/outputs/flutter-apk/app-release.apk
+
+      # Build AAB release
+      - name: Build release AAB
+        run: flutter build appbundle --release
+
+      # Upload AAB to GitHub Artifacts
+      - name: Store AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-bundle
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 7
